@@ -1,18 +1,24 @@
-import { useEffect } from "react";
 import { Building2, Car, Wrench, Palette } from "lucide-react";
 import type { Category } from "../../../categories/apiCategorie";
 import { useCategories } from "../../../categories/apiCategorie";
 
 interface CategoryStepProps {
-  selectedCategory: string;
-  setSelectedCategory: (v: string) => void;
+  value: string;
+  onChange: (v: string) => void;
+  categories?: Category[];
+  loading?: boolean;
 }
 
 export function CategoryStep({
-  selectedCategory,
-  setSelectedCategory,
+  value,
+  onChange,
+  categories: providedCategories,
+  loading,
 }: CategoryStepProps) {
-  const { data: categories, loading } = useCategories();
+  const { data: fetchedCategories, loading: loadingFromHook } = useCategories();
+
+  const categories = providedCategories ?? fetchedCategories;
+  const isLoading = loading ?? loadingFromHook;
 
   const iconMap: Record<string, any> = {
     immobilier: Building2,
@@ -21,11 +27,11 @@ export function CategoryStep({
     artisanat: Palette,
   };
 
-  if (loading) {
+  if (isLoading) {
     return <p className="text-gray-500">Chargement des catégories…</p>;
   }
 
-  const rootCategories = (categories || []).filter((c) => !c.parent_id);
+  const rootCategories = categories || [];
 
   return (
     <div className="space-y-6">
@@ -38,9 +44,9 @@ export function CategoryStep({
           return (
             <button
               key={cat.id}
-              onClick={() => setSelectedCategory(cat.slug)}
+              onClick={() => onChange(cat.slug)}
               className={`flex flex-col items-center gap-2 p-4 rounded-lg border transition ${
-                selectedCategory === cat.slug
+                value === cat.slug
                   ? "bg-blue-600 text-white border-blue-600"
                   : "bg-white border-gray-300 text-gray-700"
               }`}

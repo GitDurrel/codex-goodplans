@@ -11,6 +11,7 @@ import Navbar from "./components/layout/navbar/navbar";
 import Footer from "./components/layout/footer/footer";
 import { HomePage } from "./pages/HomePage/HomePage";
 import { CreateListing } from "./pages/CreateListing";
+import { ListingDetailsPage } from "./features/listings/pages/ListingDetailsPage";
 
 
 function ForbiddenPage() {
@@ -38,6 +39,7 @@ function App() {
         <Route path="/forbidden" element={<ForbiddenPage />} />
         <Route path="/notfound" element={<NotFoundPage />} />
         <Route path="/" element={<HomePage />} />
+        <Route path="/listings/:id" element={<ListingDetailsPage />} />
 
         <Route
           path="/profile"
