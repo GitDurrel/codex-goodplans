@@ -9,14 +9,14 @@ interface GeneralInfoStepProps {
     city: string;
     region: string;
   };
-  onChange: (field: string, value: string) => void;
+  onChange: (partial: Partial<{ title: string; description: string; city: string; region: string }>) => void;
 }
 
 export function GeneralInfoStep({ values, onChange }: GeneralInfoStepProps) {
   function handleInput(
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) {
-    onChange(e.target.name, e.target.value);
+    onChange({ [e.target.name]: e.target.value });
   }
 
   return (
