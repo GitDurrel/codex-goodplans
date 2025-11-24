@@ -1,5 +1,5 @@
 // src/features/listings/apiListings.ts
-import type { Listing } from "./types";
+import type { Listing, ListingDetails, SellerProfile } from "./types";
 import { createListingWithCategory } from "./create/api/apiCreateListing";
 
 /**
@@ -155,6 +155,16 @@ export async function fetchMostViewedListings(): Promise<Listing[]> {
  */
 export async function fetchListingById(id: string): Promise<Listing> {
     return authFetchJson<Listing>(`/listings/${encodeURIComponent(id)}`);
+}
+
+export interface ListingDetailResponse {
+    listing: ListingDetails;
+    seller: SellerProfile | null;
+    isFavorite: boolean;
+}
+
+export async function fetchListingDetails(id: string): Promise<ListingDetailResponse> {
+    return authFetchJson<ListingDetailResponse>(`/listings/${encodeURIComponent(id)}`);
 }
 
 /**
