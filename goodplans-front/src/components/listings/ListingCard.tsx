@@ -1,14 +1,18 @@
 // src/components/listings/ListingCard.tsx
 import { Link } from "react-router-dom";
-import {
-  MapPin,
-  Camera,
-  Heart,
-  BedDouble,
-  Bath,
-  Ruler,
-} from "lucide-react";
+import { MapPin, Camera, BedDouble, Bath, Ruler, Tag, Gauge } from "lucide-react";
+import { useMemo, useState, type JSX } from "react";
 import type { Listing } from "../../features/listings/types";
+import { FavoriteButton } from "./FavoriteButton";
+import {
+  addFavorite,
+  removeFavorite,
+} from "../../features/listings/apiListings";
+import {
+  getCategoryGradient,
+  getCategoryLabel,
+  getTransactionLabel,
+} from "../../features/listings/utils/categoryLabels";
 
 const rentalPeriodLabels: Record<string, string> = {
   day: "jour",
@@ -25,14 +29,47 @@ interface ListingCardProps {
 }
 
 export function ListingCard({ listing }: ListingCardProps) {
-  // tentative de lecture des meta depuis filters (JSON côté Prisma)
   const filters = (listing as any).filters ?? {};
-  const bedrooms =
-    filters.bedrooms ?? filters.rooms ?? filters.chambres ?? null;
-  const bathrooms =
-    filters.bathrooms ?? filters.baths ?? filters.salles_de_bain ?? null;
-  const area =
-    filters.surface ?? filters.area ?? filters.surface_m2 ?? null;
+  const bedrooms = filters.bedrooms ?? filters.rooms ?? null;
+  const bathrooms = filters.bathrooms ?? filters.baths ?? null;
+  const area = filters.surface ?? filters.area ?? null;
+
+  const vehicleBadges = useMemo(() => {
+    if (listing.category !== "vehicle") return [] as { icon: JSX.Element; label: string }[];
+    const items: { icon: JSX.Element; label: string }[] = [];
+    if (filters.brand) items.push({ icon: <Tag className="h-3.5 w-3.5" />, label: String(filters.brand) });
+    if (filters.model) items.push({ icon: <Tag className="h-3.5 w-3.5" />, label: String(filters.model) });
+    if (filters.year) items.push({ icon: <Gauge className="h-3.5 w-3.5" />, label: String(filters.year) });
+    return items;
+  }, [filters.brand, filters.model, filters.year, listing.category]);
+
+  const realEstateBadges = useMemo(() => {
+    if (listing.category !== "real_estate") return [] as { icon: JSX.Element; label: string }[];
+    const items: { icon: JSX.Element; label: string }[] = [];
+    if (filters.rooms) items.push({ icon: <BedDouble className="h-3.5 w-3.5" />, label: `${filters.rooms} pièces` });
+    if (filters.surface) items.push({ icon: <Ruler className="h-3.5 w-3.5" />, label: `${filters.surface} m²` });
+    if (filters.bedrooms) items.push({ icon: <BedDouble className="h-3.5 w-3.5" />, label: `${filters.bedrooms} ch.` });
+    if (filters.bathrooms) items.push({ icon: <Bath className="h-3.5 w-3.5" />, label: `${filters.bathrooms} sdb` });
+    return items;
+  }, [filters.bathrooms, filters.bedrooms, filters.rooms, filters.surface, listing.category]);
+
+  const serviceBadges = useMemo(() => {
+    if (listing.category !== "services") return [] as { icon: JSX.Element; label: string }[];
+    const items: { icon: JSX.Element; label: string }[] = [];
+    if (filters.service_type) items.push({ icon: <Tag className="h-3.5 w-3.5" />, label: String(filters.service_type) });
+    if (filters.experience_level)
+      items.push({ icon: <Gauge className="h-3.5 w-3.5" />, label: String(filters.experience_level) });
+    return items;
+  }, [filters.experience_level, filters.service_type, listing.category]);
+
+  const craftBadges = useMemo(() => {
+    if (listing.category !== "craft") return [] as { icon: JSX.Element; label: string }[];
+    const items: { icon: JSX.Element; label: string }[] = [];
+    if (filters.craft_type) items.push({ icon: <Tag className="h-3.5 w-3.5" />, label: String(filters.craft_type) });
+    if (filters.material) items.push({ icon: <Tag className="h-3.5 w-3.5" />, label: String(filters.material) });
+    if (filters.dimensions) items.push({ icon: <Ruler className="h-3.5 w-3.5" />, label: String(filters.dimensions) });
+    return items;
+  }, [filters.craft_type, filters.dimensions, filters.material, listing.category]);
 
   const imagesCount = Array.isArray(listing.images)
     ? listing.images.length
@@ -42,8 +79,9 @@ export function ListingCard({ listing }: ListingCardProps) {
     listing.images?.[0] || "https://placehold.co/600x400?text=Annonce";
 
   const isSold = listing.status?.toLowerCase() === "sold" || listing.status === "Vendu";
-  const isForRent = listing.transaction_type === "location";
-  const isForSale = listing.transaction_type === "achat";
+  const transactionRaw = listing.transaction_type as string | undefined;
+  const transactionLabel = getTransactionLabel(transactionRaw ?? undefined);
+  const isForRent = ["location", "rent"].includes(transactionRaw ?? "");
 
   const locationLabel = listing.region
     ? `${listing.city}, ${listing.region}`
@@ -54,12 +92,21 @@ export function ListingCard({ listing }: ListingCardProps) {
     ? listing.price
     : `${numericPrice.toLocaleString("fr-MA")} DH`;
 
-  function handleFavoriteClick(e: React.MouseEvent<HTMLButtonElement>) {
-    e.preventDefault();
-    e.stopPropagation();
-    // Ici tu pourras appeler ton API favoris (add/removeFavorite)
-    // pour l'instant on laisse juste un console.log
-    console.log("TODO: toggle favorite for listing", listing.id);
+  const [isFavorite, setIsFavorite] = useState<boolean>((listing as any).isFavorite ?? false);
+
+  async function handleFavoriteClick() {
+    const optimistic = !isFavorite;
+    setIsFavorite(optimistic);
+    try {
+      if (optimistic) {
+        await addFavorite(listing.id);
+      } else {
+        await removeFavorite(listing.id);
+      }
+    } catch (err) {
+      setIsFavorite(!optimistic);
+      console.error("Erreur favoris", err);
+    }
   }
 
   return (
@@ -84,17 +131,11 @@ export function ListingCard({ listing }: ListingCardProps) {
         )}
 
         {/* Bouton favoris */}
-        <button
-          onClick={handleFavoriteClick}
-          className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-[#00BEEA] shadow-sm backdrop-blur hover:bg-white"
-          aria-label="Ajouter aux favoris"
-        >
-          <Heart
-            className={`h-4 w-4 ${
-              (listing as any).isFavorite ? "fill-[#00BEEA]" : "fill-none"
-            }`}
-          />
-        </button>
+        <FavoriteButton
+          isFavorite={isFavorite}
+          onToggle={handleFavoriteClick}
+          className="absolute right-3 top-3"
+        />
       </div>
 
       {/* CONTENU */}
@@ -111,15 +152,19 @@ export function ListingCard({ listing }: ListingCardProps) {
             <span className="rounded-full bg-red-100 px-3 py-1 text-red-700 uppercase tracking-wide">
               Vendu
             </span>
-          ) : isForRent || isForSale ? (
-            <span className="rounded-full bg-gray-100 px-3 py-1 text-gray-700">
-              {isForRent ? "À louer" : "À vendre"}
+          ) : transactionLabel ? (
+            <span className="rounded-full bg-slate-900/90 px-3 py-1 text-white shadow-sm">
+              {transactionLabel}
             </span>
           ) : null}
 
           {listing.category && (
-            <span className="rounded-full bg-[#00BEEA]/10 px-3 py-1 text-[#00BEEA]">
-              {listing.category}
+            <span
+              className={`rounded-full bg-gradient-to-r ${getCategoryGradient(
+                listing.category,
+              )} px-3 py-1 text-white shadow-sm`}
+            >
+              {getCategoryLabel(listing.category)}
             </span>
           )}
         </div>
@@ -129,34 +174,42 @@ export function ListingCard({ listing }: ListingCardProps) {
           {listing.title}
         </h3>
 
-        {/* Ligne d'icônes (chambres, bains, surface) */}
-        {(bedrooms || bathrooms || area) && (
-          <div className="mb-3 flex flex-wrap items-center gap-3 text-[11px] text-gray-600">
-            {bedrooms && (
-              <div className="flex items-center gap-1">
-                <BedDouble className="h-3.5 w-3.5 text-gray-400" />
-                <span>{bedrooms}</span>
-              </div>
-            )}
-            {bathrooms && (
-              <div className="flex items-center gap-1">
-                <Bath className="h-3.5 w-3.5 text-gray-400" />
-                <span>{bathrooms}</span>
-              </div>
-            )}
-            {area && (
-              <div className="flex items-center gap-1">
-                <Ruler className="h-3.5 w-3.5 text-gray-400" />
-                <span>
-                  {area}
-                  {typeof area === "number" || `${area}`.match(/\d/)
-                    ? " m²"
-                    : ""}
+        {/* Ligne d'icônes contextuelles */}
+        <div className="mb-3 flex flex-wrap items-center gap-2 text-[11px] text-gray-700">
+          {(bedrooms || bathrooms || area) && listing.category === "real_estate" && (
+            <>
+              {bedrooms && (
+                <span className="flex items-center gap-1 rounded-full bg-slate-100 px-2 py-1">
+                  <BedDouble className="h-3.5 w-3.5 text-slate-500" />
+                  {bedrooms}
                 </span>
-              </div>
-            )}
-          </div>
-        )}
+              )}
+              {bathrooms && (
+                <span className="flex items-center gap-1 rounded-full bg-slate-100 px-2 py-1">
+                  <Bath className="h-3.5 w-3.5 text-slate-500" />
+                  {bathrooms}
+                </span>
+              )}
+              {area && (
+                <span className="flex items-center gap-1 rounded-full bg-slate-100 px-2 py-1">
+                  <Ruler className="h-3.5 w-3.5 text-slate-500" />
+                  {area}
+                  {typeof area === "number" || `${area}`.match(/\d/) ? " m²" : ""}
+                </span>
+              )}
+            </>
+          )}
+
+          {[...vehicleBadges, ...realEstateBadges, ...serviceBadges, ...craftBadges].map((badge, idx) => (
+            <span
+              key={idx}
+              className="flex items-center gap-1 rounded-full bg-slate-100 px-2 py-1 text-[11px] text-slate-700"
+            >
+              {badge.icon}
+              {badge.label}
+            </span>
+          ))}
+        </div>
 
         {/* Prix */}
         <div className="mt-auto border-t border-[#00BEEA]/20 pt-3">

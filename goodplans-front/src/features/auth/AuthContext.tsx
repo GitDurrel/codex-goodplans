@@ -30,6 +30,7 @@ interface AuthContextType {
     register: (payload: SignUpPayload) => Promise<void>;
     logout: () => Promise<void>;
     markOtpValidated: (res: LoginResponse) => void;
+    updateUser: (partial: Partial<AuthUser>) => void;
 
     hasRole: (role: Role) => boolean;
     hasAnyRole: (roles: Role[]) => boolean;
@@ -139,6 +140,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const hasAnyPermission = (permissions: string[]) =>
         user ? permissions.some((p) => user.permissions.includes(p)) : false;
 
+    function updateUser(partial: Partial<AuthUser>) {
+        setUser((prev) => {
+            if (!prev) return prev;
+            const next = { ...prev, ...partial };
+            if (accessToken && refreshToken) {
+                saveToStorage({ user: next, accessToken, refreshToken });
+            }
+            return next;
+        });
+    }
+
     /*----------------------------- OTP Validation ---------------------------- */
 
     function markOtpValidated(res: LoginResponse) {
@@ -224,6 +236,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         hasPermission,
         hasAnyPermission,
         markOtpValidated,
+        updateUser,
     };
 
     return (
