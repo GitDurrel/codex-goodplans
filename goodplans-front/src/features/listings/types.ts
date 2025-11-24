@@ -4,6 +4,7 @@ export type RentalPeriod = "day" | "week" | "month" | "year";
 export interface Listing {
   id: string;
   title: string;
+  description?: string;
   price: number;
   city: string;
   region?: string;
@@ -16,8 +17,10 @@ export interface Listing {
   status?: string;
   views?: number;
   favorites?: number;
+  messages?: number;
   filters?: Record<string, any>;
   user_id?: string;
+  user?: SellerProfile;
 }
 
 export interface ListingDetails extends Listing {
@@ -63,4 +66,8 @@ export interface SellerProfile {
   is_seller?: boolean;
   seller_approved?: boolean;
   created_at?: string;
+  email?: string;
+  account_type?: string;
+  seller_type?: string;
+  company_name?: string;
 }

@@ -163,10 +163,10 @@ export async function fetchMostViewedListings(): Promise<Listing[]> {
 
 /**
  * Annonces de l'utilisateur connecté.
- * GET /api/listings/me
+ * GET /api/listings/mine
  */
 export async function fetchMyListings(): Promise<Listing[]> {
-  return authFetchJson<Listing[]>("/listings/me", {
+  return authFetchJson<Listing[]>("/listings/mine", {
     method: "GET",
   });
 }

@@ -86,7 +86,7 @@ function mapProfileToForm(profile: UserProfile): ProfileFormState {
 
 export function ProfilePage() {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { user, logout, updateUser } = useAuth();
 
   const [form, setForm] = useState<ProfileFormState>(defaultForm);
   const [ui, setUi] = useState<UiState>({ loading: true, saving: false, deleting: false, error: null, success: null });
@@ -197,6 +197,7 @@ export function ProfilePage() {
     try {
       const { avatar_url, message } = await uploadAvatar(file);
       setForm((prev) => ({ ...prev, avatar_url }));
+      updateUser({ avatar_url });
       setUi((prev) => ({ ...prev, success: message || "Avatar mis à jour", error: null }));
     } catch (error) {
       const message = error instanceof Error ? error.message : "Erreur lors de l'upload de l'avatar";
@@ -242,6 +243,7 @@ export function ProfilePage() {
       const updated = await updateProfile(payload);
       const mapped = mapProfileToForm(updated);
       setForm(mapped);
+      updateUser({ avatar_url: updated.avatar_url ?? form.avatar_url, username: updated.username ?? form.username });
       setProfileEmail(updated.email || profileEmail);
       initialSellerLocked.current = isSellerAccount(updated.account_type, updated.is_seller);
 

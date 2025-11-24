@@ -59,9 +59,8 @@ export function ListingDetailsPage() {
 
       <div className="flex w-full max-w-sm flex-col gap-4">
         <SellerInfoCard
-          seller={data?.seller ?? null}
+          seller={data?.seller ?? listing.user ?? null}
           listingId={listing.id}
-          isAuthenticated={Boolean(data?.seller)}
         />
         <SafetyTips />
       </div>

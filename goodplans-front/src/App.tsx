@@ -14,6 +14,7 @@ import { CreateListing } from "./pages/CreateListing";
 import { ListingDetailsPage } from "./features/listings/pages/ListingDetailsPage";
 import SellerLayout from "./layouts/SellerLayout";
 import SellerOverviewPage from "./pages/seller/SellerOverviewPage";
+import SellerListingsPage from "./pages/seller/SellerListingsPage";
 
 
 function ForbiddenPage() {
@@ -53,10 +54,19 @@ function App() {
         >
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<SellerOverviewPage />} />
+          <Route path="listings" element={<SellerListingsPage />} />
         </Route>
 
         <Route
           path="/profile"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/:id"
           element={
             <ProtectedRoute>
               <ProfilePage />

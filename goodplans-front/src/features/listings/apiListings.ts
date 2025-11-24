@@ -177,9 +177,14 @@ export async function fetchListingDetails(id: string): Promise<ListingDetailResp
         throw new Error("Annonce introuvable");
     }
 
+    const sellerFromPayload: SellerProfile | null =
+        (res && res.seller) ||
+        (maybeListing && (maybeListing as any).user) ||
+        null;
+
     return {
-        listing: { ...maybeListing, filters: maybeListing.filters ?? {} },
-        seller: (res && res.seller) ?? null,
+        listing: { ...maybeListing, filters: maybeListing.filters ?? {}, user: sellerFromPayload ?? undefined },
+        seller: sellerFromPayload,
         isFavorite: Boolean((res && res.isFavorite) ?? false),
     } as ListingDetailResponse;
 }
@@ -247,8 +252,13 @@ export async function toggleFavorite(
  * GET /api/seller/listings
  * Liste des annonces du vendeur connecté
  */
+export interface FetchMyListingsParams {
+    status?: string;
+    category?: string;
+}
+
 export async function fetchMyListings(
-    filters: Partial<{ status: string; is_approved: boolean }>
+    filters: FetchMyListingsParams = {}
 ): Promise<Listing[]> {
     const params = new URLSearchParams();
     Object.entries(filters).forEach(([k, v]) => {
@@ -257,9 +267,8 @@ export async function fetchMyListings(
         }
     });
 
-    const path = params.toString()
-        ? `/listings/me?${params.toString()}`
-        : "/listings/me";
+    const query = params.toString();
+    const path = query ? `/listings/mine?${query}` : "/listings/mine";
 
     return authFetchJson<Listing[]>(path);
 }
@@ -276,6 +285,13 @@ export async function updateListing(
         method: "PATCH",
         body: JSON.stringify(payload),
     });
+}
+
+export async function updateListingStatus(
+    id: string,
+    status: string,
+): Promise<Listing> {
+    return updateListing(id, { status });
 }
 
 /**
