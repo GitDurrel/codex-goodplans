@@ -42,6 +42,8 @@ export interface ListingFormState {
   price: string;
   transaction_type: TransactionType;
   rental_period: RentalPeriod;
+  minimum_rental_period?: string;
+  availability_date?: string;
 
   images: string[];
 
@@ -58,6 +60,8 @@ const INITIAL_FORM: ListingFormState = {
   price: "",
   transaction_type: "",
   rental_period: "",
+  minimum_rental_period: "",
+  availability_date: "",
   images: [],
   filters: {},
   details: {},
@@ -207,6 +211,8 @@ export function CreateListing() {
         price: Number(formData.price),
         transaction_type: formData.transaction_type || null,
         rental_period: formData.rental_period || null,
+        minimum_rental_period: formData.minimum_rental_period || null,
+        availability_date: formData.availability_date || null,
         images: formData.images,
         filters: formData.filters,
         details: formData.details,
@@ -242,8 +248,8 @@ export function CreateListing() {
         return (
           <CategoryStep
             value={formData.category}
-            onChange={(category: ListingCategorySlug) =>
-              updateForm({ category })
+            onChange={(value: string) =>
+              updateForm({ category: value as ListingCategorySlug })
             }
             categories={rootCategories}
             loading={categoriesLoading}
@@ -262,7 +268,6 @@ export function CreateListing() {
             onChange={(partial: Partial<ListingFormState>) =>
               updateForm(partial)
             }
-            category={formData.category}
           />
         );
 
@@ -273,9 +278,11 @@ export function CreateListing() {
               price: formData.price,
               transaction_type: formData.transaction_type,
               rental_period: formData.rental_period,
+              minimum_rental_period: formData.minimum_rental_period,
+              availability_date: formData.availability_date,
             }}
-            onChange={(partial: Partial<ListingFormState>) =>
-              updateForm(partial)
+            onChange={(partial: Record<string, any>) =>
+              updateForm(partial as Partial<ListingFormState>)
             }
             category={formData.category}
           />

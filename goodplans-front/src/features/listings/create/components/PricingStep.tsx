@@ -1,28 +1,19 @@
-import type { Dispatch } from "react";
-import type { SetStateAction } from "react";
 import { Calendar, DollarSign, Clock } from "lucide-react";
 
 interface PricingStepProps {
-  formData: {
+  values: {
     price: string;
     transaction_type: string;
     rental_period: string;
-    minimum_rental_period: string;
-    availability_date: string;
+    minimum_rental_period?: string;
+    availability_date?: string;
   };
-  setFormData: Dispatch<
-    SetStateAction<{
-      price: string;
-      transaction_type: string;
-      rental_period: string;
-      minimum_rental_period: string;
-      availability_date: string;
-    }>
-  >;
+  onChange: (partial: Record<string, any>) => void;
+  category: string;
 }
 
-export function PricingStep({ formData, setFormData }: PricingStepProps) {
-  const isRental = formData.transaction_type === "location";
+export function PricingStep({ values, onChange }: PricingStepProps) {
+  const isRental = values.transaction_type === "location";
 
   return (
     <div className="space-y-6">
@@ -37,10 +28,10 @@ export function PricingStep({ formData, setFormData }: PricingStepProps) {
               key={type}
               type="button"
               onClick={() =>
-                setFormData((p) => ({ ...p, transaction_type: type }))
+                onChange({ transaction_type: type })
               }
               className={`flex-1 px-4 py-3 rounded-lg border text-center font-medium transition ${
-                formData.transaction_type === type
+                values.transaction_type === type
                   ? "bg-blue-600 text-white border-blue-600"
                   : "bg-white text-gray-700 border-gray-300"
               }`}
@@ -63,10 +54,8 @@ export function PricingStep({ formData, setFormData }: PricingStepProps) {
             type="number"
             className="w-full pl-10 px-4 py-3 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Ex: 250000"
-            value={formData.price}
-            onChange={(e) =>
-              setFormData((p) => ({ ...p, price: e.target.value }))
-            }
+            value={values.price}
+            onChange={(e) => onChange({ price: e.target.value })}
           />
         </div>
       </div>
@@ -90,10 +79,10 @@ export function PricingStep({ formData, setFormData }: PricingStepProps) {
                   key={p.id}
                   type="button"
                   onClick={() =>
-                    setFormData((f) => ({ ...f, rental_period: p.id }))
+                    onChange({ rental_period: p.id })
                   }
                   className={`px-4 py-3 rounded-lg border font-medium transition ${
-                    formData.rental_period === p.id
+                    values.rental_period === p.id
                       ? "bg-blue-600 text-white border-blue-600"
                       : "bg-white border-gray-300 text-gray-700"
                   }`}
@@ -116,13 +105,8 @@ export function PricingStep({ formData, setFormData }: PricingStepProps) {
                 type="number"
                 className="w-full pl-10 px-4 py-3 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Ex: 3"
-                value={formData.minimum_rental_period}
-                onChange={(e) =>
-                  setFormData((f) => ({
-                    ...f,
-                    minimum_rental_period: e.target.value,
-                  }))
-                }
+                value={values.minimum_rental_period || ""}
+                onChange={(e) => onChange({ minimum_rental_period: e.target.value })}
               />
             </div>
           </div>
@@ -139,13 +123,8 @@ export function PricingStep({ formData, setFormData }: PricingStepProps) {
               <input
                 type="date"
                 className="w-full pl-10 px-4 py-3 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                value={formData.availability_date}
-                onChange={(e) =>
-                  setFormData((f) => ({
-                    ...f,
-                    availability_date: e.target.value,
-                  }))
-                }
+                value={values.availability_date || ""}
+                onChange={(e) => onChange({ availability_date: e.target.value })}
               />
             </div>
           </div>
