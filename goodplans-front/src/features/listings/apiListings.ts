@@ -1,5 +1,6 @@
 // src/features/listings/apiListings.ts
 import type { Listing } from "./types";
+import { createListingWithCategory } from "./create/api/apiCreateListing";
 
 /**
  * Config de base
@@ -349,3 +350,6 @@ export async function adminToggleFeatured(
         }
     );
 }
+
+// Création d'annonce avec gestion de la catégorie (ré-export simplifié)
+export { createListingWithCategory };

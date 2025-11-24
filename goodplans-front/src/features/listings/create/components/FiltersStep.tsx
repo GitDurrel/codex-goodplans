@@ -1,9 +1,10 @@
 interface FiltersStepProps {
-  filters: any;
-  setFilters: (v: any) => void;
+  filters: Record<string, any>;
+  category: string;
+  onChange: (filters: Record<string, any>) => void;
 }
 
-export function FiltersStep({ filters, setFilters }: FiltersStepProps) {
+export function FiltersStep({ filters, onChange }: FiltersStepProps) {
   return (
     <div className="space-y-6">
       <h3 className="text-xl font-bold">Filtres supplémentaires</h3>
@@ -14,9 +15,7 @@ export function FiltersStep({ filters, setFilters }: FiltersStepProps) {
           <select
             className="input"
             value={filters.condition || ""}
-            onChange={(e) =>
-              setFilters((f: any) => ({ ...f, condition: e.target.value }))
-            }
+            onChange={(e) => onChange({ ...filters, condition: e.target.value })}
           >
             <option value="">Sélectionner</option>
             <option value="new">Neuf</option>
@@ -30,9 +29,7 @@ export function FiltersStep({ filters, setFilters }: FiltersStepProps) {
             className="input"
             placeholder="Rouge / Noir / Beige…"
             value={filters.color || ""}
-            onChange={(e) =>
-              setFilters((f: any) => ({ ...f, color: e.target.value }))
-            }
+            onChange={(e) => onChange({ ...filters, color: e.target.value })}
           />
         </div>
 
@@ -42,9 +39,7 @@ export function FiltersStep({ filters, setFilters }: FiltersStepProps) {
             className="input"
             placeholder="Ex: BMW, Dior, Artisanat Marocain…"
             value={filters.brand || ""}
-            onChange={(e) =>
-              setFilters((f: any) => ({ ...f, brand: e.target.value }))
-            }
+            onChange={(e) => onChange({ ...filters, brand: e.target.value })}
           />
         </div>
       </div>
