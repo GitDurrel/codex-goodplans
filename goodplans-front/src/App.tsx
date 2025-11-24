@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { LoginPage } from "./pages/LoginPage";
 import { ProtectedRoute } from "./features/auth/ProtectedRoute";
@@ -11,6 +11,10 @@ import Navbar from "./components/layout/navbar/navbar";
 import Footer from "./components/layout/footer/footer";
 import { HomePage } from "./pages/HomePage/HomePage";
 import { CreateListing } from "./pages/CreateListing";
+import { ListingDetailsPage } from "./features/listings/pages/ListingDetailsPage";
+import SellerLayout from "./layouts/SellerLayout";
+import SellerOverviewPage from "./pages/seller/SellerOverviewPage";
+import SellerListingsPage from "./pages/seller/SellerListingsPage";
 
 
 function ForbiddenPage() {
@@ -38,9 +42,31 @@ function App() {
         <Route path="/forbidden" element={<ForbiddenPage />} />
         <Route path="/notfound" element={<NotFoundPage />} />
         <Route path="/" element={<HomePage />} />
+        <Route path="/listings/:id" element={<ListingDetailsPage />} />
+
+        <Route
+          path="/seller"
+          element={
+            <ProtectedRoute>
+              <SellerLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Navigate to="dashboard" replace />} />
+          <Route path="dashboard" element={<SellerOverviewPage />} />
+          <Route path="listings" element={<SellerListingsPage />} />
+        </Route>
 
         <Route
           path="/profile"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/:id"
           element={
             <ProtectedRoute>
               <ProfilePage />

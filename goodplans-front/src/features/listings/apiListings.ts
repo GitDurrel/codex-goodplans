@@ -1,5 +1,6 @@
 // src/features/listings/apiListings.ts
-import type { Listing } from "./types";
+import type { Listing, ListingDetails, SellerProfile } from "./types";
+import { createListingWithCategory } from "./create/api/apiCreateListing";
 
 /**
  * Config de base
@@ -156,6 +157,38 @@ export async function fetchListingById(id: string): Promise<Listing> {
     return authFetchJson<Listing>(`/listings/${encodeURIComponent(id)}`);
 }
 
+export interface ListingDetailResponse {
+    listing: ListingDetails;
+    seller: SellerProfile | null;
+    isFavorite: boolean;
+}
+
+export async function fetchListingDetails(id: string): Promise<ListingDetailResponse> {
+    const res = await authFetchJson<any>(`/listings/${encodeURIComponent(id)}`);
+
+    // Compatibilité : certains backends renvoient directement le listing,
+    // d'autres renvoient { listing, seller, isFavorite }
+    const maybeListing =
+        (res && (res.listing as ListingDetails | undefined)) ||
+        (res && (res.data as ListingDetails | undefined)) ||
+        res;
+
+    if (!maybeListing || !maybeListing.id) {
+        throw new Error("Annonce introuvable");
+    }
+
+    const sellerFromPayload: SellerProfile | null =
+        (res && res.seller) ||
+        (maybeListing && (maybeListing as any).user) ||
+        null;
+
+    return {
+        listing: { ...maybeListing, filters: maybeListing.filters ?? {}, user: sellerFromPayload ?? undefined },
+        seller: sellerFromPayload,
+        isFavorite: Boolean((res && res.isFavorite) ?? false),
+    } as ListingDetailResponse;
+}
+
 /**
  * Vérifie si un listing est en favori
  * GET /api/listings/:id/is-favorite
@@ -219,8 +252,13 @@ export async function toggleFavorite(
  * GET /api/seller/listings
  * Liste des annonces du vendeur connecté
  */
+export interface FetchMyListingsParams {
+    status?: string;
+    category?: string;
+}
+
 export async function fetchMyListings(
-    filters: Partial<{ status: string; is_approved: boolean }>
+    filters: FetchMyListingsParams = {}
 ): Promise<Listing[]> {
     const params = new URLSearchParams();
     Object.entries(filters).forEach(([k, v]) => {
@@ -229,9 +267,8 @@ export async function fetchMyListings(
         }
     });
 
-    const path = params.toString()
-        ? `/listings/me?${params.toString()}`
-        : "/listings/me";
+    const query = params.toString();
+    const path = query ? `/listings/mine?${query}` : "/listings/mine";
 
     return authFetchJson<Listing[]>(path);
 }
@@ -248,6 +285,13 @@ export async function updateListing(
         method: "PATCH",
         body: JSON.stringify(payload),
     });
+}
+
+export async function updateListingStatus(
+    id: string,
+    status: string,
+): Promise<Listing> {
+    return updateListing(id, { status });
 }
 
 /**
@@ -349,3 +393,6 @@ export async function adminToggleFeatured(
         }
     );
 }
+
+// Création d'annonce avec gestion de la catégorie (ré-export simplifié)
+export { createListingWithCategory };

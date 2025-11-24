@@ -53,9 +53,13 @@ export function DesktopProfileMenu({
         onClick={onToggle}
         className="flex items-center gap-2 px-3 py-2 rounded-full border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-all"
       >
-        <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-medium">
-          {user.email.charAt(0).toUpperCase()}
-        </div>
+        {user.avatar_url ? (
+          <img src={user.avatar_url} alt={user.username} className="w-8 h-8 rounded-full object-cover" />
+        ) : (
+          <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-medium">
+            {user.email.charAt(0).toUpperCase()}
+          </div>
+        )}
         <span className="font-medium text-sm">{user.email.split("@")[0]}</span>
         {isOpen ? (
           <ChevronUp className="h-4 w-4 text-gray-500" />
@@ -192,9 +196,13 @@ export function MobileMenu({
             {isAuthenticated && user && (
               <div className="p-3 bg-gray-50 rounded-lg mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-lg font-bold">
-                    {user.email.charAt(0).toUpperCase()}
-                  </div>
+                  {user.avatar_url ? (
+                    <img src={user.avatar_url} alt={user.username} className="w-10 h-10 rounded-full object-cover" />
+                  ) : (
+                    <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-lg font-bold">
+                      {user.email.charAt(0).toUpperCase()}
+                    </div>
+                  )}
                   <div>
                     <p className="font-medium text-sm">{user.email.split("@")[0]}</p>
                     <p className="text-xs text-gray-500">{user.email}</p>
