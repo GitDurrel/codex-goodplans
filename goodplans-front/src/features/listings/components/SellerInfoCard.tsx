@@ -66,7 +66,7 @@ export function SellerInfoCard({ seller, listingId, isAuthenticated }: SellerInf
         )}
 
         <Link
-          to={`/profile/${seller.user_id}`}
+          to="/profile"
           className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-200"
         >
           Voir le profil
