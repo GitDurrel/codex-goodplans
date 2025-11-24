@@ -1,12 +1,10 @@
-import type { Dispatch, SetStateAction } from "react";
-
 interface DetailsStepProps {
   category: string;
   details: Record<string, any>;
-  setDetails: Dispatch<SetStateAction<Record<string, any>>>;
+  onChange: (partial: Record<string, any>) => void;
 }
 
-export function SpecificDetailsStep({ category, details, setDetails }: DetailsStepProps) {
+export function SpecificDetailsStep({ category, details, onChange }: DetailsStepProps) {
   if (!category) return <p className="text-gray-500">Sélectionnez une catégorie</p>;
 
   return (
@@ -23,9 +21,7 @@ export function SpecificDetailsStep({ category, details, setDetails }: DetailsSt
               className="input"
               placeholder="Appartement, maison, bureau…"
               value={details.property_type || ""}
-              onChange={(e) =>
-                setDetails((d) => ({ ...d, property_type: e.target.value }))
-              }
+              onChange={(e) => onChange({ ...details, property_type: e.target.value })}
             />
           </div>
 
@@ -36,9 +32,7 @@ export function SpecificDetailsStep({ category, details, setDetails }: DetailsSt
               className="input"
               placeholder="Ex : 120"
               value={details.surface || ""}
-              onChange={(e) =>
-                setDetails((d) => ({ ...d, surface: Number(e.target.value) }))
-              }
+              onChange={(e) => onChange({ ...details, surface: Number(e.target.value) })}
             />
           </div>
 
@@ -48,9 +42,7 @@ export function SpecificDetailsStep({ category, details, setDetails }: DetailsSt
               type="number"
               className="input"
               value={details.rooms || ""}
-              onChange={(e) =>
-                setDetails((d) => ({ ...d, rooms: Number(e.target.value) }))
-              }
+              onChange={(e) => onChange({ ...details, rooms: Number(e.target.value) })}
             />
           </div>
         </div>
@@ -66,9 +58,7 @@ export function SpecificDetailsStep({ category, details, setDetails }: DetailsSt
               className="input"
               placeholder="Toyota, Mercedes…"
               value={details.brand_id || ""}
-              onChange={(e) =>
-                setDetails((d) => ({ ...d, brand_id: e.target.value }))
-              }
+              onChange={(e) => onChange({ ...details, brand_id: e.target.value })}
             />
           </div>
 
@@ -79,9 +69,7 @@ export function SpecificDetailsStep({ category, details, setDetails }: DetailsSt
               className="input"
               placeholder="Model S, Golf 7…"
               value={details.model_id || ""}
-              onChange={(e) =>
-                setDetails((d: Record<string, any>) => ({ ...d, model_id: e.target.value }))
-              }
+              onChange={(e) => onChange({ ...details, model_id: e.target.value })}
             />
           </div>
 
@@ -91,9 +79,7 @@ export function SpecificDetailsStep({ category, details, setDetails }: DetailsSt
               type="number"
               className="input"
               value={details.year || ""}
-              onChange={(e) =>
-                setDetails((d) => ({ ...d, year: Number(e.target.value) }))
-              }
+              onChange={(e) => onChange({ ...details, year: Number(e.target.value) })}
             />
           </div>
 
@@ -103,9 +89,7 @@ export function SpecificDetailsStep({ category, details, setDetails }: DetailsSt
               type="number"
               className="input"
               value={details.mileage || ""}
-              onChange={(e) =>
-                setDetails((d) => ({ ...d, mileage: Number(e.target.value) }))
-              }
+              onChange={(e) => onChange({ ...details, mileage: Number(e.target.value) })}
             />
           </div>
         </div>
@@ -121,9 +105,7 @@ export function SpecificDetailsStep({ category, details, setDetails }: DetailsSt
               className="input"
               placeholder="Plomberie, coiffure…"
               value={details.service_type || ""}
-              onChange={(e) =>
-                setDetails((d) => ({ ...d, service_type: e.target.value }))
-              }
+              onChange={(e) => onChange({ ...details, service_type: e.target.value })}
             />
           </div>
 
@@ -134,9 +116,7 @@ export function SpecificDetailsStep({ category, details, setDetails }: DetailsSt
               className="input"
               placeholder="Débutant / Intermédiaire / Expert"
               value={details.experience_level || ""}
-              onChange={(e) =>
-                setDetails((d) => ({ ...d, experience_level: e.target.value }))
-              }
+              onChange={(e) => onChange({ ...details, experience_level: e.target.value })}
             />
           </div>
         </div>
@@ -152,9 +132,7 @@ export function SpecificDetailsStep({ category, details, setDetails }: DetailsSt
               className="input"
               placeholder="Sculpture, tissage…"
               value={details.craft_type || ""}
-              onChange={(e) =>
-                setDetails((d) => ({ ...d, craft_type: e.target.value }))
-              }
+              onChange={(e) => onChange({ ...details, craft_type: e.target.value })}
             />
           </div>
 
@@ -164,9 +142,7 @@ export function SpecificDetailsStep({ category, details, setDetails }: DetailsSt
               type="text"
               className="input"
               value={details.origin || ""}
-              onChange={(e) =>
-                setDetails((d) => ({ ...d, origin: e.target.value }))
-              }
+              onChange={(e) => onChange({ ...details, origin: e.target.value })}
             />
           </div>
 
@@ -176,9 +152,7 @@ export function SpecificDetailsStep({ category, details, setDetails }: DetailsSt
               type="text"
               className="input"
               value={details.material || ""}
-              onChange={(e) =>
-                setDetails((d) => ({ ...d, material: e.target.value }))
-              }
+              onChange={(e) => onChange({ ...details, material: e.target.value })}
             />
           </div>
         </div>
