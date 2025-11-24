@@ -6,6 +6,7 @@ import { RegisterPage } from "./pages/RegisterPage";
 import { VerifyOtpPage } from "./pages/VerifyOtpPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { MessagesPage } from "./pages/MessagesPage";
+import SettingsPage from "./pages/SettingsPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import Navbar from "./components/layout/navbar/navbar";
 import Footer from "./components/layout/footer/footer";
@@ -15,6 +16,8 @@ import { ListingDetailsPage } from "./features/listings/pages/ListingDetailsPage
 import SellerLayout from "./layouts/SellerLayout";
 import SellerOverviewPage from "./pages/seller/SellerOverviewPage";
 import SellerListingsPage from "./pages/seller/SellerListingsPage";
+import SellerSettingsPage from "./pages/seller/SellerSettingsPage";
+import { ResetPasswordPage } from "./pages/ResetPasswordPage";
 
 
 function ForbiddenPage() {
@@ -39,10 +42,19 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/verify-otp" element={<VerifyOtpPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/forbidden" element={<ForbiddenPage />} />
         <Route path="/notfound" element={<NotFoundPage />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/listings/:id" element={<ListingDetailsPage />} />
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <SettingsPage />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path="/seller"
@@ -55,6 +67,7 @@ function App() {
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<SellerOverviewPage />} />
           <Route path="listings" element={<SellerListingsPage />} />
+          <Route path="settings" element={<SellerSettingsPage />} />
         </Route>
 
         <Route

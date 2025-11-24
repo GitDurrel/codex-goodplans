@@ -52,4 +52,5 @@ export type UpdateProfilePayload = Partial<{
   seller_type: SellerType | null;
   siret: string | null;
   account_type: AccountType | null;
-}>;
+  bio?: string | null;
+}>; 
