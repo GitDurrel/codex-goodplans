@@ -83,6 +83,14 @@ export async function deleteAccount(): Promise<void> {
   return handleResponse<void>(res);
 }
 
+export async function getSellerPublicProfile(sellerId: string) {
+  const res = await fetch(`${API_BASE_URL}/public/sellers/${sellerId}`, {
+    headers: jsonHeaders(),
+  });
+
+  return handleResponse<UserProfile>(res);
+}
+
 export function isSellerAccount(accountType: AccountType | null | undefined, isSellerFlag?: boolean | null) {
   if (!accountType && !isSellerFlag) return false;
   return (

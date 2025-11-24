@@ -41,7 +41,7 @@ export function ListingCategoryDetails({ listing }: ListingCategoryDetailsProps)
   if (details.length === 0) return null;
 
   return (
-    <section className="rounded-2xl bg-white p-6 shadow-sm">
+    <section className="rounded-2xl bg-white p-6 shadow-sm min-h-[220px]">
       <h2 className="mb-4 text-lg font-bold text-slate-900">Détails {getCategoryLabel(listing.category)}</h2>
       <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {details.map((detail, idx) => (

@@ -7,7 +7,7 @@ interface ListingDescriptionProps {
 
 export function ListingDescription({ listing }: ListingDescriptionProps) {
   return (
-    <section className="rounded-2xl bg-white p-6 shadow-sm">
+    <section className="rounded-2xl bg-white p-6 shadow-sm min-h-[220px]">
       <h2 className="mb-4 flex items-center gap-2 text-lg font-bold text-slate-900">
         <span className="rounded-full bg-sky-100 p-2 text-sky-600">
           <MessageSquare className="h-4 w-4" />

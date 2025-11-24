@@ -13,14 +13,34 @@ export function SellerInfoCard({ seller, listingId }: SellerInfoCardProps) {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const initials = useMemo(() => seller?.username?.[0]?.toUpperCase() ?? "?", [seller?.username]);
+  const sellerProfilePath = seller?.user_id ? `/sellers/${seller.user_id}` : undefined;
+  const avatarSrc = useMemo(() => {
+    if (!seller?.avatar_url) return null;
+    const separator = seller.avatar_url.includes("?") ? "&" : "?";
+    return `${seller.avatar_url}${separator}v=${seller.avatar_url.length}`;
+  }, [seller?.avatar_url]);
 
   if (!seller) return null;
 
   return (
     <aside className="rounded-2xl bg-white p-6 shadow-sm">
       <div className="flex items-center gap-4">
-        {seller.avatar_url ? (
-          <img src={seller.avatar_url} alt={seller.username} className="h-14 w-14 rounded-full object-cover ring-2 ring-slate-100" />
+        {sellerProfilePath ? (
+          <Link to={sellerProfilePath} aria-label={`Voir le profil de ${seller.username ?? "vendeur"}`}>
+            {avatarSrc ? (
+              <img
+                src={avatarSrc}
+                alt={seller.username}
+                className="h-14 w-14 rounded-full object-cover ring-2 ring-slate-100"
+              />
+            ) : (
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 text-lg font-bold text-blue-700">
+                {initials}
+              </div>
+            )}
+          </Link>
+        ) : avatarSrc ? (
+          <img src={avatarSrc} alt={seller.username} className="h-14 w-14 rounded-full object-cover ring-2 ring-slate-100" />
         ) : (
           <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 text-lg font-bold text-blue-700">
             {initials}
@@ -75,7 +95,7 @@ export function SellerInfoCard({ seller, listingId }: SellerInfoCardProps) {
         )}
 
         <Link
-          to={`/profile/${seller.user_id}`}
+          to={sellerProfilePath ?? "/profile"}
           className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-200"
         >
           Voir le profil

@@ -18,6 +18,7 @@ import SellerOverviewPage from "./pages/seller/SellerOverviewPage";
 import SellerListingsPage from "./pages/seller/SellerListingsPage";
 import SellerSettingsPage from "./pages/seller/SellerSettingsPage";
 import { ResetPasswordPage } from "./pages/ResetPasswordPage";
+import { SellerPublicProfilePage } from "./pages/SellerPublicProfilePage";
 
 
 function ForbiddenPage() {
@@ -47,6 +48,7 @@ function App() {
         <Route path="/notfound" element={<NotFoundPage />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/listings/:id" element={<ListingDetailsPage />} />
+        <Route path="/sellers/:sellerId" element={<SellerPublicProfilePage />} />
         <Route
           path="/settings"
           element={

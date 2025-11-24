@@ -19,7 +19,7 @@ export function ListingImageGallery({ images, title }: ListingImageGalleryProps)
 
   return (
     <div className="rounded-2xl bg-white p-3 shadow-sm">
-      <div className="relative h-[420px] overflow-hidden rounded-xl bg-slate-100">
+      <div className="relative h-[480px] overflow-hidden rounded-xl bg-slate-100">
         <img
           src={images[active]}
           alt={title}

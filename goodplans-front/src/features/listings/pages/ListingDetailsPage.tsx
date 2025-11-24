@@ -43,10 +43,11 @@ export function ListingDetailsPage() {
   }
 
   return (
-    <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8 lg:flex-row">
-      <div className="flex flex-1 flex-col gap-6">
-        <ListingBreadcrumbs listing={listing} />
-        <ListingHeader
+    <div className="bg-slate-50">
+      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-10 lg:flex-row">
+        <div className="flex flex-1 flex-col gap-6">
+          <ListingBreadcrumbs listing={listing} />
+          <ListingHeader
           listing={listing}
           locationLabel={locationLabel}
           isFavorite={isFavorite}
@@ -57,12 +58,13 @@ export function ListingDetailsPage() {
         <ListingDescription listing={listing} />
       </div>
 
-      <div className="flex w-full max-w-sm flex-col gap-4">
-        <SellerInfoCard
-          seller={data?.seller ?? listing.user ?? null}
-          listingId={listing.id}
-        />
-        <SafetyTips />
+        <div className="flex w-full max-w-sm flex-col gap-4">
+          <SellerInfoCard
+            seller={data?.seller ?? listing.user ?? null}
+            listingId={listing.id}
+          />
+          <SafetyTips />
+        </div>
       </div>
     </div>
   );
