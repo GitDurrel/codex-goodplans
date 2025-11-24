@@ -164,7 +164,24 @@ export interface ListingDetailResponse {
 }
 
 export async function fetchListingDetails(id: string): Promise<ListingDetailResponse> {
-    return authFetchJson<ListingDetailResponse>(`/listings/${encodeURIComponent(id)}`);
+    const res = await authFetchJson<any>(`/listings/${encodeURIComponent(id)}`);
+
+    // Compatibilité : certains backends renvoient directement le listing,
+    // d'autres renvoient { listing, seller, isFavorite }
+    const maybeListing =
+        (res && (res.listing as ListingDetails | undefined)) ||
+        (res && (res.data as ListingDetails | undefined)) ||
+        res;
+
+    if (!maybeListing || !maybeListing.id) {
+        throw new Error("Annonce introuvable");
+    }
+
+    return {
+        listing: { ...maybeListing, filters: maybeListing.filters ?? {} },
+        seller: (res && res.seller) ?? null,
+        isFavorite: Boolean((res && res.isFavorite) ?? false),
+    } as ListingDetailResponse;
 }
 
 /**

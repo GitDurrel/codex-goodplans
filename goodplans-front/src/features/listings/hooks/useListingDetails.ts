@@ -25,7 +25,10 @@ export function useListingDetails(id: string | undefined): UseListingDetailsStat
   const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
-    if (!id) return;
+    if (!id) {
+      setError("Identifiant d'annonce manquant");
+      return;
+    }
     let cancelled = false;
     (async () => {
       setIsLoading(true);
