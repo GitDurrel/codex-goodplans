@@ -63,6 +63,7 @@ function mapBackendUserToAuthUser(raw: BackendUser): AuthUser {
     id: raw.id,
     email: raw.email,
     username: raw.username,
+    avatar_url: raw.avatar_url,
     roles: [role],
     permissions,
     hasOTPValidated: !!raw.email_verified,

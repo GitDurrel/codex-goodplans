@@ -26,9 +26,10 @@ function getAuthHeader() {
 async function authFetchJson<T>(path: string, init: RequestInit = {}): Promise<T> {
   const url = `${API_BASE_URL}${path}`;
 
+  const auth = getAuthHeader();
   const baseHeaders: HeadersInit = {
     "Content-Type": "application/json",
-    ...getAuthHeader(),
+    ...(auth.Authorization ? { Authorization: auth.Authorization } : {}),
   };
 
   const res = await fetch(url, {
@@ -143,7 +144,7 @@ export async function fetchRecentListings(
   });
 
   const qs = params.toString();
-  const path = qs ? `/listings/recent?${qs}` : "/listings/recent`;
+  const path = qs ? `/listings/recent?${qs}` : "/listings/recent";
 
   return authFetchJson<Listing[]>(path, {
     method: "GET",
@@ -162,10 +163,10 @@ export async function fetchMostViewedListings(): Promise<Listing[]> {
 
 /**
  * Annonces de l'utilisateur connecté.
- * GET /api/listings/me
+ * GET /api/listings/mine
  */
 export async function fetchMyListings(): Promise<Listing[]> {
-  return authFetchJson<Listing[]>("/listings/me", {
+  return authFetchJson<Listing[]>("/listings/mine", {
     method: "GET",
   });
 }

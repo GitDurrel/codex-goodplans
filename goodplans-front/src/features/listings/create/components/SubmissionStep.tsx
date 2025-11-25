@@ -9,9 +9,9 @@ interface SubmissionStepProps {
 }
 
 export function SubmissionStep({
-  listing,
-  details,
-  category,
+  listing: _listing,
+  details: _details,
+  category: _category,
   createListing,
   loading,
 }: SubmissionStepProps) {

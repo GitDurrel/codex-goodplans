@@ -14,6 +14,7 @@ export interface AuthUser {
   id: string;
   email: string;
   username: string;
+  avatar_url?: string;
 
   // dérivé de account_type
   roles: Role[];
