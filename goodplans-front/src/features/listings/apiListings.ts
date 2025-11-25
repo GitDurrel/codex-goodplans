@@ -268,7 +268,7 @@ export async function fetchMyListings(
     });
 
     const query = params.toString();
-    const path = query ? `/listings/mine?${query}` : "/listings/mine";
+    const path = query ? `/listings/me?${query}` : "/listings/me";
 
     return authFetchJson<Listing[]>(path);
 }

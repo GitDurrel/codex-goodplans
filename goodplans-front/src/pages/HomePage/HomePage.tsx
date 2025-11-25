@@ -1,5 +1,5 @@
 // src/pages/home/HomePage.tsx
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Building2, Car, Palette, Wrench } from "lucide-react";
 
@@ -8,10 +8,7 @@ import { FiltersDrawer } from "../../components/home/FiltersDrawer";
 import { SponsoredCarousel } from "../../components/home/SponsoredCarousel";
 import { ListingsGrid } from "../../components/listings/ListingsGrid";
 
-import {
-  fetchRecentListings,
-  fetchMostViewedListings,
-} from "../../features/listings/apiListings";
+import { fetchListings, fetchMostViewedListings } from "../../features/listings/apiListings";
 import { useCategories } from "../../features/categories/apiCategorie";
 
 import type { CarouselItem, Category, Filters, Listing } from "./types";
@@ -67,8 +64,12 @@ export function HomePage() {
 
   /** ---------------------- état filtres & recherche ---------------------- */
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
+  const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [showFilters, setShowFilters] = useState(false);
+  const [listings, setListings] = useState<Listing[]>([]);
+  const [loadingListings, setLoadingListings] = useState(false);
+  const [listingsError, setListingsError] = useState<string | null>(null);
 
   /** ---------------------------- catégories (API) ---------------------------- */
   const {
@@ -103,35 +104,6 @@ export function HomePage() {
         icon: iconMap[category.slug || ""] || Building2,
       }));
   }, [categories]);
-
-  /** ------------------------ annonces récentes (API) ------------------------ */
-  const [recentListings, setRecentListings] = useState<Listing[]>([]);
-  const [loadingRecent, setLoadingRecent] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    const loadRecent = async () => {
-      try {
-        setLoadingRecent(true);
-        const data = await fetchRecentListings();
-        if (!cancelled) {
-          setRecentListings(data);
-        }
-      } catch (error) {
-        console.error("Erreur lors du chargement des annonces récentes", error);
-        if (!cancelled) setRecentListings([]);
-      } finally {
-        if (!cancelled) setLoadingRecent(false);
-      }
-    };
-
-    void loadRecent();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   /** -------------------- annonces les plus consultées (API) ------------------ */
   const [mostViewedListings, setMostViewedListings] = useState<Listing[]>([]);
@@ -175,26 +147,41 @@ export function HomePage() {
   /** ----------------------------- gestion recherche -------------------------- */
 
   const handleSearch = () => {
-    const searchParams = new URLSearchParams();
-    if (searchQuery) searchParams.append("q", searchQuery);
-    if (filters.category) searchParams.append("category", filters.category);
-    if (filters.subcategory)
-      searchParams.append("subcategory", filters.subcategory);
-    if (filters.city) searchParams.append("city", filters.city);
-    if (filters.region) searchParams.append("region", filters.region);
-    if (filters.minPrice) searchParams.append("minPrice", filters.minPrice);
-    if (filters.maxPrice) searchParams.append("maxPrice", filters.maxPrice);
-    if (filters.transaction_type)
-      searchParams.append("transaction_type", filters.transaction_type);
-
-    navigate(`/search?${searchParams.toString()}`);
+    setSearchQuery(searchInput.trim());
   };
+
+  const loadListings = useCallback(async () => {
+    setLoadingListings(true);
+    setListingsError(null);
+
+    try {
+      const response = await fetchListings({
+        ...filters,
+        transaction_type: filters.transaction_type || undefined,
+        minPrice: filters.minPrice ? Number(filters.minPrice) : undefined,
+        maxPrice: filters.maxPrice ? Number(filters.maxPrice) : undefined,
+        q: searchQuery || undefined,
+      });
+      setListings(response);
+    } catch (error) {
+      console.error("Erreur lors du chargement des annonces", error);
+      setListingsError("Impossible de charger les annonces pour le moment.");
+      setListings([]);
+    } finally {
+      setLoadingListings(false);
+    }
+  }, [filters, searchQuery]);
+
+  useEffect(() => {
+    void loadListings();
+  }, [loadListings]);
 
   const handleViewMore = () => {
     const params = new URLSearchParams();
     Object.entries(filters).forEach(([key, value]) => {
       if (value) params.append(key, value as string);
     });
+    if (searchQuery) params.append("q", searchQuery);
     navigate(`/listings?${params.toString()}`);
   };
 
@@ -212,8 +199,8 @@ export function HomePage() {
           title="Le bon moment, le bon objet, le bon échange, tout commence ici"
           subtitle="Un seul site, des milliers de bons plans… sans intermédiaire, sans frais cachés."
           heroImage={HERO_IMAGE}
-          searchQuery={searchQuery}
-          onSearchQueryChange={setSearchQuery}
+          searchQuery={searchInput}
+          onSearchQueryChange={setSearchInput}
           onSubmitSearch={handleSearch}
           onOpenFilters={() => setShowFilters(true)}
           selectedCategory={filters.category}
@@ -231,10 +218,12 @@ export function HomePage() {
               ? `Annonces ${selectedCategoryLabel}`
               : "Annonces récentes"
           }
-          listings={recentListings}
-          loading={loadingRecent}
+          listings={listings}
+          loading={loadingListings}
           onSeeMore={handleViewMore}
-          emptyMessage="Aucune annonce ne correspond aux filtres."
+          emptyMessage={
+            listingsError ?? "Aucune annonce ne correspond aux filtres."
+          }
         />
 
         {/* Carrousel sponsorisé */}
