@@ -1,61 +1,47 @@
-// src/pages/MessagesPage.tsx
-import { useConversations } from "../features/messages/messagesApi";
+// src/features/messages/MessagesPage.tsx
+import { useLocation, useNavigate } from "react-router-dom";
+import { ChevronLeft } from "lucide-react";
+
+import { ConversationsList } from "../features/messages/components/ConversationsList";
+import { ChatWindow } from "../features/messages/components/ChatWindow";
+import { useMessagesWebSocket } from "../features/messages/hooks/useMessagesWebSocket";
 
 export function MessagesPage() {
-  const { data: conversations, loading, error } = useConversations();
+  useMessagesWebSocket(); // juste pour ouvrir la connexion
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  if (loading) {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <p className="text-gray-500">Chargement des messages...</p>
-      </div>
-    );
-  }
-
-  if (error || !conversations) {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <p className="text-red-500">
-          Impossible de charger les conversations.
-        </p>
-      </div>
-    );
-  }
+  const from = (location.state as any)?.from ?? "/";
 
   return (
-    <div className="min-h-[60vh] flex justify-center py-10 px-4">
-      <div className="w-full max-w-3xl bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8">
-        <h1 className="text-2xl font-bold mb-6 text-gray-900">Messages</h1>
+    <div className="flex h-[calc(100vh-64px)] w-full flex-col bg-slate-50 px-2 py-4 lg:px-6">
+      {/* Barre de retour */}
+      <div className="mb-3 flex items-center">
+        <button
+          type="button"
+          onClick={() => navigate(from)}
+          className="inline-flex items-center rounded-full bg-white px-3 py-1 text-sm text-slate-700 shadow-sm hover:bg-slate-100"
+        >
+          <ChevronLeft className="mr-1 h-4 w-4" />
+        </button>
+      </div>
 
-        {conversations.length === 0 ? (
-          <p className="text-gray-500 text-sm">
-            Aucune conversation pour le moment.
-          </p>
-        ) : (
-          <ul className="divide-y divide-gray-100">
-            {conversations.map((conv) => (
-              <li key={conv.userId} className="py-4">
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="font-medium text-gray-900">
-                      {conv.username}
-                    </p>
-                    <p className="text-sm text-gray-600 line-clamp-1">
-                      {conv.lastMessage}
-                    </p>
-                  </div>
-                  <div className="text-right text-xs text-gray-500">
-                    {conv.unreadCount > 0 && (
-                      <span className="inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-red-100 text-red-600 font-semibold">
-                        {conv.unreadCount} non lu(s)
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
+      {/* Contenu messagerie */}
+      <div className="flex flex-1 min-h-0 gap-4">
+        {/* Colonne gauche */}
+        <div className="w-full lg:w-1/3">
+          <ConversationsList />
+        </div>
+
+        {/* Colonne droite (desktop) */}
+        <div className="hidden flex-1 min-h-0 rounded-2xl bg-white shadow-sm lg:block">
+          <ChatWindow />
+        </div>
+
+        {/* Mobile : chat plein écran */}
+        <div className="block w-full min-h-0 rounded-2xl bg-white shadow-sm lg:hidden">
+          <ChatWindow />
+        </div>
       </div>
     </div>
   );

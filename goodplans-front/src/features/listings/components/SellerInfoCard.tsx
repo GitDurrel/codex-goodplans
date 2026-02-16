@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import type { SellerProfile } from "../types";
 import { useMemo } from "react";
 import { useAuth } from "../../auth/AuthContext";
+import { useLanguage } from "../../../lib/language/LanguageContext";
 
 interface SellerInfoCardProps {
   seller: SellerProfile | null;
@@ -10,6 +11,7 @@ interface SellerInfoCardProps {
 }
 
 export function SellerInfoCard({ seller, listingId }: SellerInfoCardProps) {
+  const { t, lang } = useLanguage();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const initials = useMemo(() => seller?.username?.[0]?.toUpperCase() ?? "?", [seller?.username]);
@@ -26,7 +28,7 @@ export function SellerInfoCard({ seller, listingId }: SellerInfoCardProps) {
     <aside className="rounded-2xl bg-white p-6 shadow-sm">
       <div className="flex items-center gap-4">
         {sellerProfilePath ? (
-          <Link to={sellerProfilePath} aria-label={`Voir le profil de ${seller.username ?? "vendeur"}`}>
+          <Link to={sellerProfilePath} aria-label={`${t("listing.seller.ariaProfile")} ${seller.username ?? t("listing.seller.defaultName")}`}>
             {avatarSrc ? (
               <img
                 src={avatarSrc}
@@ -59,7 +61,11 @@ export function SellerInfoCard({ seller, listingId }: SellerInfoCardProps) {
           {seller.created_at && (
             <p className="flex items-center gap-2 text-xs text-slate-500">
               <Calendar className="h-3.5 w-3.5" />
-              Membre depuis {new Date(seller.created_at).toLocaleDateString("fr-FR")}
+              {t("listing.seller.memberSince")}{" "}
+              {new Date(seller.created_at).toLocaleDateString(
+                lang === "fr" ? "fr-FR" : "en-GB"
+              )}
+
             </p>
           )}
         </div>
@@ -68,11 +74,11 @@ export function SellerInfoCard({ seller, listingId }: SellerInfoCardProps) {
       <div className="mt-4 grid grid-cols-1 gap-2">
         {isAuthenticated ? (
           <Link
-            to={`/chat/${seller.user_id}?listingId=${listingId}`}
+            to={`/messages?listingId=${listingId}`}
             className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-700"
           >
             <MessageSquare className="h-4 w-4" />
-            Contacter le vendeur
+            {t("listing.seller.contactSeller")}
           </Link>
         ) : (
           <button
@@ -80,7 +86,7 @@ export function SellerInfoCard({ seller, listingId }: SellerInfoCardProps) {
             className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-700"
           >
             <Lock className="h-4 w-4" />
-            Connectez-vous pour discuter
+            {t("listing.seller.loginToChat")}
           </button>
         )}
 
@@ -98,7 +104,7 @@ export function SellerInfoCard({ seller, listingId }: SellerInfoCardProps) {
           to={sellerProfilePath ?? "/profile"}
           className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-200"
         >
-          Voir le profil
+          {t("listing.seller.viewProfile")}
         </Link>
       </div>
     </aside>

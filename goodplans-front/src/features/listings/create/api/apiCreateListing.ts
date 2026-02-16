@@ -2,7 +2,8 @@
 
 import type { Listing } from "../../types";
 
-const API_BASE_URL = "http://localhost:3000/api";
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL ?? "http://localhost:3000/api";
 const AUTH_STORAGE_KEY = "gp_auth";
 
 /* -------------------------------------------------------------------------- */
@@ -59,23 +60,23 @@ async function authFetchJson<T>(path: string, init: RequestInit = {}): Promise<T
 /* -------------------------------------------------------------------------- */
 
 export interface CreateListingPayload {
-  // catégorie racine : "immobilier" | "vehicules" | "services" | "artisanat"
+  // catégorie racine : "real_estate" | "vehicle" | "service" | "craft"
   category: string;
 
-  // table listings
   title: string;
   description: string;
   city: string;
   region: string;
   price: number;
-  transaction_type: string | null;
-  rental_period: string | null; // "day" | "week" | "month" | "year" | null
+  transaction_type: string | null; // "sale" | "rent" | null
+  rental_period: string | null;    // "day" | "week" | "month" | "year" | null
   images: string[];
   filters: Record<string, any>;
 
-  // données spécifiques à la catégorie (real_estate_listings, vehicle_listings, etc.)
+  // Détails spécifiques envoyés aux DTOs spécialisés
   details: Record<string, any>;
 }
+
 
 export interface ListingsQuery {
   page?: number;
@@ -226,8 +227,107 @@ export async function isFavorite(
 export async function createListingWithCategory(
   payload: CreateListingPayload
 ): Promise<Listing> {
-  return authFetchJson<Listing>("/listings", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
+  const { category, details, ...base } = payload;
+
+  const baseBody = {
+    title: base.title,
+    description: base.description,
+    price: base.price,
+    city: base.city,
+    region: base.region,
+    transaction_type: base.transaction_type, // "sale" | "rent" | null
+    images: base.images ?? [],
+  };
+
+  switch (category) {
+    case "real_estate": {
+      const body = {
+        ...baseBody,
+        property_type: details.property_type,
+        surface: details.surface,
+        rooms: details.rooms ?? null,
+        bedrooms: details.bedrooms ?? null,
+        bathrooms: details.bathrooms ?? null,
+        furnished: details.furnished ?? false,
+        garden: details.garden ?? false,
+        pool: details.pool ?? false,
+        garage: details.garage ?? false,
+        rental_start_date: details.rental_start_date ?? null,
+        rental_end_date: details.rental_end_date ?? null,
+        rental_duration: details.rental_duration ?? null,
+        rental_period: base.rental_period,
+      };
+
+      return authFetchJson<Listing>("/real-estate/listings", {
+        method: "POST",
+        body: JSON.stringify(body),
+      });
+    }
+
+    case "vehicle": {
+      const body = {
+        ...baseBody,
+        brand_id: details.brand_id,
+        model_id: details.model_id,
+        year: details.year,
+        mileage: details.mileage,
+
+      };
+
+      return authFetchJson<Listing>("/vehicle/listings", {
+        method: "POST",
+        body: JSON.stringify(body),
+      });
+    }
+
+
+    case "service": {
+      const body = {
+        ...baseBody,
+        service_type: details.service_type,               // slug sous-catégorie
+        experience_level: details.experience_level ?? null,
+        home_service: details.home_service ?? false,
+        rental_start_date: details.rental_start_date ?? null,
+        rental_end_date: details.rental_end_date ?? null,
+        rental_duration: details.rental_duration ?? null,
+        rental_period: base.rental_period,
+      };
+
+      return authFetchJson<Listing>("/services/listings", {
+        method: "POST",
+        body: JSON.stringify(body),
+      });
+    }
+
+    case "craft": {
+      const body = {
+        ...baseBody,
+        craft_type: details.craft_type,                   // slug sous-catégorie
+        origin: details.origin ?? null,
+        material: details.material ?? null,
+        handmade: details.handmade ?? false,
+        authentic: details.authentic ?? false,
+        vintage: details.vintage ?? false,
+        dimensions: details.dimensions ?? null,
+      };
+
+      return authFetchJson<Listing>("/crafts/listings", {
+        method: "POST",
+        body: JSON.stringify(body),
+      });
+    }
+
+    default: {
+      const genericBody = {
+        ...baseBody,
+        category,
+        filters: base.filters ?? {},
+      };
+
+      return authFetchJson<Listing>("/listings", {
+        method: "POST",
+        body: JSON.stringify(genericBody),
+      });
+    }
+  }
 }

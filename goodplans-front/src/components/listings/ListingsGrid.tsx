@@ -1,11 +1,22 @@
+// src/components/listings/ListingsGrid.tsx
 import { ArrowRight, Search } from "lucide-react";
 import type { Listing } from "../../features/listings/types";
-import { ListingCard } from "./ListingCard"; 
+import { ListingCard } from "./ListingCard";
+
 interface ListingsGridProps {
   title: string;
   listings: Listing[];
   loading: boolean;
+
+  /** clic CTA (Voir plus / Voir tout) */
   onSeeMore?: () => void;
+
+  /** label CTA (ex: "Voir plus" ou "Voir tout") */
+  seeMoreLabel?: string;
+
+  /** cacher le CTA (ex: quand on affiche déjà tout) */
+  hideSeeMore?: boolean;
+
   emptyMessage?: string;
 }
 
@@ -14,30 +25,37 @@ export function ListingsGrid({
   listings,
   loading,
   onSeeMore,
+  seeMoreLabel = "Voir plus",
+  hideSeeMore = false,
   emptyMessage = "Aucune annonce trouvée",
 }: ListingsGridProps) {
   return (
     <section className="mb-12">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold flex items-center after:content-[''] after:ml-4 after:h-px after:w-12 after:bg-blue-200">
+      <div className="mb-6 flex items-center justify-between gap-3">
+        <h2 className="text-xl sm:text-2xl font-bold flex items-center after:content-[''] after:ml-4 after:h-px after:w-12 after:bg-blue-200">
           {title}
         </h2>
-        {onSeeMore && (
+
+        {!hideSeeMore && onSeeMore && (
           <button
+            type="button"
             onClick={onSeeMore}
-            className="text-blue-600 hover:text-blue-700 flex items-center gap-1 text-base font-medium transition-colors"
+            className="text-blue-600 hover:text-blue-700 flex items-center gap-1 text-sm sm:text-base font-medium transition-colors"
           >
-            Voir plus <ArrowRight className="h-4 w-4" />
+            {seeMoreLabel} <ArrowRight className="h-4 w-4" />
           </button>
         )}
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
           {[...Array(8)].map((_, i) => (
-            <div key={i} className="bg-white rounded-xl shadow-sm overflow-hidden animate-pulse">
+            <div
+              key={i}
+              className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden animate-pulse h-full flex flex-col"
+            >
               <div className="aspect-[4/3] bg-gray-200" />
-              <div className="p-4 space-y-3">
+              <div className="p-4 space-y-3 flex-1">
                 <div className="h-4 bg-gray-200 rounded-full w-3/4" />
                 <div className="h-4 bg-gray-200 rounded-full w-1/2" />
                 <div className="h-5 bg-gray-200 rounded-full w-1/3" />
@@ -46,7 +64,7 @@ export function ListingsGrid({
           ))}
         </div>
       ) : listings.length > 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
           {listings.map((listing) => (
             <ListingCard key={listing.id} listing={listing} />
           ))}
@@ -59,7 +77,9 @@ export function ListingsGrid({
             </div>
           </div>
           <h3 className="text-xl font-medium mb-2">{emptyMessage}</h3>
-          <p className="text-gray-500">Essayez d'ajuster vos filtres ou votre recherche.</p>
+          <p className="text-gray-500">
+            Essayez d&apos;ajuster vos filtres ou votre recherche.
+          </p>
         </div>
       )}
     </section>

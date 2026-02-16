@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../features/auth/AuthContext";
-import { apiForgotPassword } from "../features/auth/authApi";
+import { apiForgotPassword} from "../features/auth/authApi";
 import Logo from "../components/Logo";
 import toast from "react-hot-toast";
+import { useLanguage } from "../lib/language/LanguageContext";
 
 export function LoginPage() {
+  const { t } = useLanguage();
   const { login, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
@@ -18,6 +20,7 @@ export function LoginPage() {
 
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
+  const { loginWithGoogle } = useAuth();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -29,7 +32,7 @@ export function LoginPage() {
       await login(email, password); // toasts + navigate dans le contexte
       // pas besoin de toast ici, déjà géré dans AuthContext
     } catch (err: any) {
-      const msg = err.message || "Connexion impossible";
+      const msg = err.message || t("login.impConnection");
       setError(msg);
       // le toast d'erreur est déjà déclenché dans AuthContext.login
     } finally {
@@ -42,7 +45,7 @@ export function LoginPage() {
     setInfo(null);
 
     if (!email) {
-      const msg = "Merci de renseigner votre email d’abord.";
+      const msg = t("login.notEmailMsg");
       setError(msg);
       toast.error(msg);
       return;
@@ -51,12 +54,15 @@ export function LoginPage() {
     setForgotLoading(true);
     try {
       await apiForgotPassword(email);
-      const msg = "Un email de réinitialisation a été envoyé.";
+      const msg = t("login.resetPasswordmsg");
       setInfo(msg);
       toast.success(msg);
+
+      // Étape 2 : on va sur la page de vérification du code
+      navigate(`/reset-verify?email=${encodeURIComponent(email)}`);
     } catch (err: any) {
       const msg =
-        err.message || "Impossible d’envoyer l’email de réinitialisation.";
+        err.message || t("login.resetPasswordErr");
       setError(msg);
       toast.error(msg);
     } finally {
@@ -65,19 +71,18 @@ export function LoginPage() {
   }
 
   function handleGoogleLogin() {
-    // adapte l’URL à ton backend (route d’init OAuth, pas le callback)
-    window.location.href = "http://localhost:3000/api/auth/google";
+    loginWithGoogle();
   }
 
   return (
     <div className="min-h-screen bg-slate-30 flex flex-col">
-      <header className="pt-10 flex justify-center">
-        <Logo />
+      <header className="pt-5 flex justify-center">
+        <Logo className="mx-auto my-10 scale-110 md:scale-125" />
       </header>
-      <main className="flex-1 flex items-center justify-center">
+      <main className="flex-1 flex items-center justify-center mb-10">
         <div className="w-full max-w-md bg-white rounded-2xl shadow-lg px-8 py-10">
           <h1 className="text-3xl font-bold text-slate-900 text-center mb-8">
-            Se connecter
+            {t("login.title")}
           </h1>
 
           {error && (
@@ -112,7 +117,7 @@ export function LoginPage() {
             {/* Mot de passe */}
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">
-                Mot de passe
+                {t("login.inputPassword")}
               </label>
               <div className="relative">
                 <input
@@ -175,7 +180,7 @@ export function LoginPage() {
                   disabled={forgotLoading || loading}
                   className="text-sm text-blue-600 hover:text-blue-800 font-medium"
                 >
-                  {forgotLoading ? "Envoi..." : "Mot de passe oublié ?"}
+                  {forgotLoading ? t("login.forgotLoading") : t("login.forgotPassword")}
                 </button>
               </div>
             </div>
@@ -189,10 +194,10 @@ export function LoginPage() {
               {loading || authLoading ? (
                 <>
                   <span className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  Connexion en cours...
+                  {t("login.loading")}
                 </>
               ) : (
-                "Se connecter"
+                t("login.title")
               )}
             </button>
           </form>
@@ -227,7 +232,7 @@ export function LoginPage() {
                     fill="#EA4335"
                   />
                 </svg>
-                <span>Se connecter avec Google</span>
+                <span>{t("login.titleGoogle")}</span>
               </button>
             </div>
           </div>
@@ -239,7 +244,7 @@ export function LoginPage() {
               onClick={() => navigate("/register")}
               className="text-sm text-blue-600 hover:text-blue-800 font-semibold"
             >
-              Pas encore de compte ?
+              {t("login.registerRedirect")}
             </button>
           </div>
         </div>

@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { authFetchJson } from "../../utils/authFetchJson";
+import { authFetchJson } from "../../apiListings";
 
 export function useCreateListing() {
   const [loading, setLoading] = useState(false);

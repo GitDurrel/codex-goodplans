@@ -1,6 +1,9 @@
+// src/features/categories/apiCategorie.ts
+
 import { useFetch } from "../../hooks/useFetch";
 
-const API_BASE_URL = "http://localhost:3000/api";
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL ?? "http://localhost:3000/api";
 const AUTH_STORAGE_KEY = "gp_auth";
 const CATEGORIES_BASE_PATH = "/categories";
 
@@ -15,10 +18,27 @@ export interface Category {
   updatedAt?: string;
 }
 
+// type pour les sous-catégories
+export interface Subcategory {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  active: boolean;
+  category_id: string;
+  vehicle_type?: string | null;
+  created_at?: string;
+  updated_at?: string;
+}
+
 export interface CategoryPayload {
   name: string;
   slug?: string;
   icon?: string;
+}
+
+export interface CategoryWithSubcategories extends Category {
+  subcategories: Subcategory[];
 }
 
 /* ---------- Helpers internes pour les mutations (POST/PATCH/DELETE) ---------- */
@@ -85,6 +105,13 @@ export function useCategories(options?: { skip?: boolean }) {
   });
 }
 
+// GET /api/subcategories
+export function useSubcategories(options?: { skip?: boolean }) {
+  return useFetch<Subcategory[]>("/subcategories", {
+    skip: options?.skip,
+  });
+}
+
 // GET /api/categories/:id
 export function useCategory(id?: string, options?: { skip?: boolean }) {
   return useFetch<Category | null>(
@@ -123,4 +150,18 @@ export async function deleteCategory(id: string): Promise<void> {
   await authJsonFetch<void>(`${CATEGORIES_BASE_PATH}/${id}`, {
     method: "DELETE",
   });
+}
+
+/* ---------- Tree catégories + sous-catégories ---------- */
+
+/**
+ * GET /api/categories/tree
+ * Renvoie les catégories avec leurs sous-catégories actives
+ */
+export async function fetchCategoriesTree(): Promise<CategoryWithSubcategories[]> {
+  const res = await fetch(`${API_BASE_URL}/categories/tree`);
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+  return (await res.json()) as CategoryWithSubcategories[];
 }

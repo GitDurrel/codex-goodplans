@@ -1,6 +1,6 @@
 import type { ReactElement } from "react";
 import { Link } from "react-router-dom";
-import { ListChecks, Eye, MessageSquare, DollarSign } from "lucide-react";
+import { ListChecks, Eye, MessageSquare, Hourglass } from "lucide-react";
 
 export interface OverviewStats {
   activeListings: number;
@@ -26,16 +26,17 @@ const cardsConfig = [
     link: "/seller/analytics",
     title: "Vues totales",
   },
-  {
-    key: "unreadMessages",
-    icon: <MessageSquare className="h-5 w-5 sm:h-6 sm:w-6" />,
-    link: "/seller/chatList",
-    title: "Messages non lus",
-  },
+{
+  key: "unreadMessages",
+  icon: <MessageSquare className="h-5 w-5 sm:h-6 sm:w-6" />,
+  link: "/messages", 
+  title: "Messages non lus",
+},
+
   {
     key: "pendingOffers",
-    icon: <DollarSign className="h-5 w-5 sm:h-6 sm:w-6" />,
-    link: "/seller/sales",
+    icon: <Hourglass className="h-5 w-5 sm:h-6 sm:w-6" />,
+    link: "",
     title: "Offres en attente",
   },
 ] satisfies Array<{ key: keyof OverviewStats; icon: ReactElement; link: string; title: string }>;

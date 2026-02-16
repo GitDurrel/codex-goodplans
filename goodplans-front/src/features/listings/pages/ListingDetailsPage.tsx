@@ -9,6 +9,7 @@ import { SafetyTips } from "../components/SafetyTips";
 import { useListingDetails } from "../hooks/useListingDetails";
 import { ListingBreadcrumbs } from "../components/ListingBreadcrumbs";
 import { AlertTriangle, ArrowLeft } from "lucide-react";
+import { FeatureListingButton } from "../../../components/FeatureListingButton";
 
 export function ListingDetailsPage() {
   const { id } = useParams();
@@ -47,18 +48,20 @@ export function ListingDetailsPage() {
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-10 lg:flex-row">
         <div className="flex flex-1 flex-col gap-6">
           <ListingBreadcrumbs listing={listing} />
-          <ListingHeader
-          listing={listing}
-          locationLabel={locationLabel}
-          isFavorite={isFavorite}
-          onToggleFavorite={toggleFavorite}
-        />
-        <ListingImageGallery images={listing.images ?? []} title={listing.title} />
-        <ListingCategoryDetails listing={listing} />
-        <ListingDescription listing={listing} />
-      </div>
+          <ListingImageGallery images={listing.images ?? []} title={listing.title} />
+          <ListingDescription listing={listing} />
+          <ListingCategoryDetails listing={listing} />
+        </div>
 
-        <div className="flex w-full max-w-sm flex-col gap-4">
+        <div className="flex w-full max-w-sm flex-col gap-4 mt-16">
+          <ListingHeader
+            listing={listing}
+            locationLabel={locationLabel}
+            isFavorite={isFavorite}
+            onToggleFavorite={toggleFavorite}
+          />
+          {/* Bouton de mise en avant pour le vendeur */}
+          <FeatureListingButton listing={listing} />
           <SellerInfoCard
             seller={data?.seller ?? listing.user ?? null}
             listingId={listing.id}

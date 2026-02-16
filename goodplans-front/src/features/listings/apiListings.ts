@@ -1,11 +1,12 @@
 // src/features/listings/apiListings.ts
-import type { Listing, ListingDetails, SellerProfile } from "./types";
+import type { Listing, ListingDetails, SellerProfile, UserFavorite } from "./types";
 import { createListingWithCategory } from "./create/api/apiCreateListing";
 
 /**
  * Config de base
  */
-const API_BASE_URL = "http://localhost:3000/api";
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL ?? "http://localhost:3000/api";
 const AUTH_STORAGE_KEY = "gp_auth";
 
 type Json = Record<string, any>;
@@ -27,10 +28,12 @@ function getAuthHeader() {
     }
 }
 
+
+
 /**
  * Helper générique pour faire un fetch JSON avec Bearer
  */
-async function authFetchJson<T>(
+export async function authFetchJson<T>(
     path: string,
     options: RequestInit = {}
 ): Promise<T> {
@@ -78,6 +81,27 @@ async function authFetchJson<T>(
     return (await res.json()) as T;
 }
 
+
+function buildSearchParams(filters?: Record<string, any>): string {
+  if (!filters) return "";
+  const params = new URLSearchParams();
+
+  Object.entries(filters).forEach(([key, value]) => {
+    if (
+      value === undefined ||
+      value === null ||
+      value === "" ||
+      Number.isNaN(value)
+    ) {
+      return;
+    }
+    params.append(key, String(value));
+  });
+
+  const qs = params.toString();
+  return qs ? `?${qs}` : "";
+}
+
 /**
  * Type de filtres publics (basé sur ton QueryListingDto)
  */
@@ -99,8 +123,15 @@ export interface CreateListingPayload extends Json {
     // champs de CreateListingDto + spécifiques (vehicle, real_estate, service, craft)
 }
 
-export interface UpdateListingPayload extends Json {
-    // champs de UpdateListingDto
+export interface UpdateListingPayload {
+    title?: string;
+    description?: string;
+    price?: number;
+    category?: string;
+    status?: string;
+    city?: string;
+    region?: string;
+    images?: string[];
 }
 
 export interface ApproveListingPayload {
@@ -132,6 +163,40 @@ export async function fetchListings(
 
     return authFetchJson<Listing[]>(path);
 }
+
+/**
+ * GET /api/listings/public
+ * Liste publique avec filtres (is_approved=true)
+ */
+export async function fetchPublicListings(
+  filters: ListingFilters = {},
+  options?: { limit?: number; offset?: number }
+): Promise<Listing[]> {
+  const params = new URLSearchParams();
+
+  // filtres existants
+  Object.entries(filters).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") {
+      params.append(key, String(value));
+    }
+  });
+
+  // ✅ pagination
+  if (options?.limit !== undefined) {
+    params.append("limit", String(options.limit));
+  }
+
+  if (options?.offset !== undefined) {
+    params.append("offset", String(options.offset));
+  }
+
+  const query = params.toString();
+  const path = query ? `/listings/public?${query}` : "/listings/public";
+
+  return authFetchJson<Listing[]>(path);
+}
+
+
 
 /**
  * GET /api/listings/recent
@@ -244,6 +309,27 @@ export async function toggleFavorite(
     }
 }
 
+/**
+ * GET /api/listings/me/favorites
+ * Liste des annonces en favoris de l'utilisateur connecté
+ */
+export async function fetchMyFavorites(): Promise<UserFavorite[]> {
+    return authFetchJson<UserFavorite[]>("/listings/me/favorites");
+}
+
+/** 
+ * GET /api/public/sellers/:sellerId/listings
+ * Liste des annonces d’un vendeur
+ */
+export async function fetchSellerPublicListings(
+    sellerId: string
+): Promise<Listing[]> {
+    return authFetchJson<Listing[]>(
+        `/listings/sellers/${encodeURIComponent(sellerId)}`
+    );
+}
+
+
 /* -------------------------------------------------------------------------- */
 /*                          *** ROUTES VENDEUR (SELLER) ***                   */
 /* -------------------------------------------------------------------------- */
@@ -268,20 +354,20 @@ export async function fetchMyListings(
     });
 
     const query = params.toString();
-    const path = query ? `/listings/mine?${query}` : "/listings/mine";
+    const path = query ? `/listings/me?${query}` : "/listings/me";
 
     return authFetchJson<Listing[]>(path);
 }
 
 /**
  * PATCH /api/listings/:id
- * Mise à jour d’une annonce (vendeur)
+ * Met à jour les infos de base d'une annonce (table listings)
  */
-export async function updateListing(
+export async function updateListingBase(
     id: string,
     payload: UpdateListingPayload
 ): Promise<Listing> {
-    return authFetchJson<Listing>(`/listings/${encodeURIComponent(id)}`, {
+    return authFetchJson<Listing>(`/listings/${id}`, {
         method: "PATCH",
         body: JSON.stringify(payload),
     });
@@ -291,7 +377,7 @@ export async function updateListingStatus(
     id: string,
     status: string,
 ): Promise<Listing> {
-    return updateListing(id, { status });
+    return updateListingBase(id, { status });
 }
 
 /**
@@ -303,6 +389,22 @@ export async function deleteListing(id: string): Promise<void> {
         method: "DELETE",
     });
 }
+
+// --- UPDATE / DELETE de l'annonce de base ------------------------
+
+export interface UpdateListingPayload {
+    title?: string;
+    description?: string;
+    price?: number;
+    category?: string;
+    status?: string;
+    city?: string;
+    region?: string;
+    images?: string[];
+}
+
+
+
 
 /* -------------------------------------------------------------------------- */
 /*                           *** ROUTES ADMIN ***                             */
@@ -394,5 +496,230 @@ export async function adminToggleFeatured(
     );
 }
 
+export interface UploadListingImagesResponse {
+    urls: string[];
+    message: string;
+}
+
+export async function uploadListingImages(
+    files: File[]
+): Promise<UploadListingImagesResponse> {
+    const url = `${API_BASE_URL}/uploads/listings-images`;
+
+    const auth = getAuthHeader();
+    const formData = new FormData();
+    files.forEach((file) => formData.append("files", file));
+
+    const res = await fetch(url, {
+        method: "POST",
+        headers: {
+            ...(auth.Authorization ? { Authorization: auth.Authorization } : {}),
+        },
+        body: formData,
+    });
+
+    if (!res.ok) {
+        const text = await res.text().catch(() => "");
+        console.error("Upload images failed", res.status, text);
+        throw new Error(text || `HTTP ${res.status}`);
+    }
+
+    return (await res.json()) as UploadListingImagesResponse;
+}
+
 // Création d'annonce avec gestion de la catégorie (ré-export simplifié)
 export { createListingWithCategory };
+
+/* -------------------------------------------------------------------------- */
+/*                           UPDATE PAR TYPE D'ANNONCE                        */
+/* -------------------------------------------------------------------------- */
+
+export interface UpdateRealEstateListingPayload {
+    // champs génériques
+    title?: string;
+    description?: string;
+    price?: number;
+    city?: string;
+    region?: string;
+    transaction_type?: string | null;
+    images?: string[];
+    subcategory?: string | null;
+    rental_start_date?: string | null;
+    rental_end_date?: string | null;
+    rental_duration?: number | null;
+    rental_period?: string | null;
+
+    // spécifiques immo
+    property_type?: string | null;
+    surface?: number | null;
+    rooms?: number | null;
+    bedrooms?: number | null;
+    bathrooms?: number | null;
+    furnished?: boolean;
+    garden?: boolean;
+    pool?: boolean;
+    garage?: boolean;
+}
+
+export async function updateRealEstateListing(
+    id: string,
+    payload: UpdateRealEstateListingPayload,
+): Promise<Listing> {
+    return authFetchJson<Listing>(`/real-estate/listings/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify(payload),
+    });
+}
+
+export interface UpdateVehicleListingPayload {
+    // génériques
+    title?: string;
+    description?: string;
+    price?: number;
+    city?: string;
+    region?: string;
+    transaction_type?: string | null;
+    images?: string[];
+
+    // spécifiques véhicule
+    brand_id?: string | null;
+    model_id?: string | null;
+    year?: number | null;
+    mileage?: number | null;
+}
+
+export async function updateVehicleListing(
+    id: string,
+    payload: UpdateVehicleListingPayload,
+): Promise<Listing> {
+    return authFetchJson<Listing>(`/vehicle/listings/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify(payload),
+    });
+}
+
+export interface UpdateServiceListingPayload {
+    // génériques
+    title?: string;
+    description?: string;
+    price?: number;
+    city?: string;
+    region?: string;
+    transaction_type?: string | null;
+    images?: string[];
+    subcategory?: string | null;
+    rental_start_date?: string | null;
+    rental_end_date?: string | null;
+    rental_duration?: number | null;
+    rental_period?: string | null;
+
+    // spécifiques service
+    service_type?: string | null;
+    experience_level?: string | null;
+    home_service?: boolean;
+}
+
+export async function updateServiceListing(
+    id: string,
+    payload: UpdateServiceListingPayload,
+): Promise<Listing> {
+    return authFetchJson<Listing>(`/services/listings/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify(payload),
+    });
+}
+
+export interface UpdateCraftListingPayload {
+    // génériques
+    title?: string;
+    description?: string;
+    price?: number;
+    city?: string;
+    region?: string;
+    transaction_type?: string | null;
+    images?: string[];
+    subcategory?: string | null;
+
+    // spécifiques artisanat
+    craft_type?: string | null;
+    origin?: string | null;
+    material?: string | null;
+    handmade?: boolean;
+    authentic?: boolean;
+    vintage?: boolean;
+    dimensions?: string | null;
+}
+
+export async function updateCraftListing(
+    id: string,
+    payload: UpdateCraftListingPayload,
+): Promise<Listing> {
+    return authFetchJson<Listing>(`/crafts/listings/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify(payload),
+    });
+}
+
+
+// --- META FILTRES (localisation) ------------------------------------
+
+export type LocationRow = { id: string; name: string; region: string };
+
+export async function fetchLocationsMeta(): Promise<LocationRow[]> {
+  return authFetchJson<LocationRow[]>("/listings/filters/meta-locations");
+}
+
+
+
+export type CategoryWithSubcategories = {
+    id: string;
+    name: string;
+    slug: string;
+    subcategories: { id: string; name: string; slug: string }[];
+};
+
+export async function fetchCategoriesTree(): Promise<CategoryWithSubcategories[]> {
+    return authFetchJson<CategoryWithSubcategories[]>("/categories/tree");
+}
+
+/* --------------- Endpoints par catégorie --------------- */
+
+/* ---------------------- Routes par catégorie ---------------------- */
+/**
+ * Routes côté backend :
+ * - /real-estate/listings
+ * - /vehicle/listings
+ * - /service/listings
+ * - /craft/listings
+ *
+ * ⚠️ Ces routes ne veulent PAS du paramètre "category" en query.
+ */
+type CategorySlugApi = "real_estate" | "vehicle" | "service" | "craft";
+
+function getCategoryListingsPath(category: CategorySlugApi): string {
+  switch (category) {
+    case "real_estate":
+      return "/real-estate/listings";
+    case "vehicle":
+      return "/vehicle/listings";
+    case "service":
+      return "/services/listings";
+    case "craft":
+      return "/crafts/listings";
+    default:
+      return "/listings/public";
+  }
+}
+
+export async function fetchCategoryListings(
+  category: CategorySlugApi,
+  filters: Record<string, any> = {}
+): Promise<Listing[]> {
+  // ⚠️ on enlève "category" si jamais il est passé dans filters
+  const { category: _ignored, ...safeFilters } = filters;
+
+  const qs = buildSearchParams(safeFilters);
+  const path = getCategoryListingsPath(category);
+
+  return authFetchJson<Listing[]>(`${path}${qs}`);
+}

@@ -10,8 +10,9 @@ export type SocialLink = {
 
 export type SimpleLink = {
     to: string;
-    label: string;
+    labelKey: string;
 };
+
 
 /* -------------------------------------------------------------------------- */
 /*                                   Liens                                    */
@@ -51,21 +52,23 @@ export const SOCIAL_LINKS: SocialLink[] = [
 ];
 
 export const QUICK_LINKS: SimpleLink[] = [
-    { to: "/create-listing", label: "Déposer une annonce" },
-    { to: "/safety", label: "Sécurité" },
-    { to: "/faq", label: "FAQ" },
-    { to: "/contact", label: "Contact" },
+    { to: "/create-listing", labelKey: "footer.links.createListing" },
+    { to: "/safety", labelKey: "footer.links.safety" },
+    { to: "/faq", labelKey: "footer.links.faq" },
+    { to: "/contact", labelKey: "footer.links.contact" },
+    { to: "/support", labelKey: "footer.links.support" },
 ];
 
+
 export const CATEGORY_LINKS: SimpleLink[] = [
-    { to: "/category/immobilier", label: "Immobilier" },
-    { to: "/category/vehicules", label: "Véhicules" },
-    { to: "/category/services", label: "Services" },
-    { to: "/category/artisanat", label: "Artisanat" },
+    { to: "/category/immobilier", labelKey: "footer.links.realEstate" },
+    { to: "/category/vehicules", labelKey: "footer.links.vehicles" },
+    { to: "/category/services", labelKey: "footer.links.services" },
+    { to: "/category/artisanat", labelKey: "footer.links.craft" },
 ];
 
 export const LEGAL_LINKS: SimpleLink[] = [
-    { to: "/privacy", label: "Politique de confidentialité" },
-    { to: "/terms", label: "Conditions d'utilisation" },
-    { to: "/legal", label: "Mentions légales" },
+    { to: "/privacy", labelKey: "footer.links.privacy" },
+    { to: "/terms", labelKey: "footer.links.terms" },
+    { to: "/legal", labelKey: "footer.links.legal" },
 ];

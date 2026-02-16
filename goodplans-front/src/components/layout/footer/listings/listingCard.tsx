@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { MapPin } from "lucide-react";
 import type { Listing } from "../../../../features/listings/types";
+import { getCityName } from "../../../../features/listings/types";
 
 const rentalPeriodLabels: Record<string, string> = {
   day: "jour",
@@ -14,10 +15,13 @@ interface ListingCardProps {
 }
 
 export function ListingCard({ listing }: ListingCardProps) {
+  // Utiliser le helper pour obtenir le nom de la ville
+  const cityName = getCityName(listing.city);
+
   return (
     <Link
       to={`/listings/${listing.id}`}
-      className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 hover:-translate-y-1 flex flex-col h-full border border-gray-100"
+      className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 hover:-translate-y-1 flex flex-col h-full border border-gray-50"
     >
       <div className="aspect-[4/3] relative overflow-hidden">
         <img
@@ -32,11 +36,10 @@ export function ListingCard({ listing }: ListingCardProps) {
           </span>
         ) : listing.transaction_type ? (
           <span
-            className={`absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-medium ${
-              listing.transaction_type === "location"
+            className={`absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-medium ${listing.transaction_type === "location"
                 ? "bg-blue-600 text-white"
                 : "bg-emerald-600 text-white"
-            }`}
+              }`}
           >
             {listing.transaction_type === "location" ? "À louer" : "À vendre"}
           </span>
@@ -53,7 +56,7 @@ export function ListingCard({ listing }: ListingCardProps) {
             {listing.title}
           </h3>
           <p className="text-sm text-gray-500 mt-1 flex items-center mb-2">
-            <MapPin className="mr-1 h-4 w-4" /> {listing.city}
+            <MapPin className="mr-1 h-4 w-4" /> {cityName}
           </p>
         </div>
         <div className="pt-2 border-t border-gray-100 mt-auto">

@@ -35,14 +35,21 @@
 }
 
 /* Masquer la scrollbar tout en gardant la fonctionnalité */
-.scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+/* Scrollbars plus fines partout */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-.scrollbar-hide::-webkit-scrollbar {
-  display: none; /* Chrome, Safari and Opera */
+::-webkit-scrollbar-thumb {
+  background-color: #d1d5db; /* slate-300 */
+  border-radius: 9999px;
 }
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
 
 body {
   overflow-x: hidden !important;

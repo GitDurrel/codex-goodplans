@@ -3,6 +3,7 @@
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, ArrowRight } from "lucide-react";
 import type { SocialLink, SimpleLink } from "./footer.config";
+import { useLanguage } from "../../../lib/language/LanguageContext";
 
 /* -------------------------------------------------------------------------- */
 /*                             Réseaux Sociaux                                */
@@ -41,6 +42,9 @@ export function LinkList({
   title: string;
   links: SimpleLink[];
 }) {
+  
+  const { t } = useLanguage();
+
   return (
     <div>
       <h3 className="font-bold text-gray-900 mb-5 text-lg">{title}</h3>
@@ -52,7 +56,7 @@ export function LinkList({
               className="text-gray-600 group-hover:text-blue-600 flex items-center transition"
             >
               <ArrowRight className="h-4 w-4 mr-2 opacity-0 group-hover:opacity-100 transition" />
-              {link.label}
+              {t(link.labelKey)}
             </Link>
           </li>
         ))}
@@ -84,7 +88,7 @@ export function ContactBlock() {
             <Phone className="h-4 w-4" />
           </div>
           <a href="tel:+212706003020" className="text-gray-600 group-hover:text-blue-600">
-            +212 7 06 00 30 20
+            +212 6 09 49 76 21
           </a>
         </li>
 

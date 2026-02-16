@@ -7,6 +7,8 @@ import Logo from "../components/Logo";
 import { apiVerifyAccountOtp } from "../features/auth/authApi";
 import { useAuth } from "../features/auth/AuthContext";
 import type { LoginResponse } from "../features/auth/type";
+import { useLanguage } from "../lib/language/LanguageContext";
+
 
 function maskEmail(email: string): string {
   const [localPart, domainPart] = email.split("@");
@@ -25,6 +27,9 @@ function maskEmail(email: string): string {
 }
 
 export function VerifyOtpPage() {
+
+  const { t } = useLanguage();
+
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { markOtpValidated } = useAuth();
@@ -70,14 +75,14 @@ export function VerifyOtpPage() {
     const code = codeArray.join("");
 
     if (!email) {
-      const msg = "Email manquant. Merci de revenir depuis le lien d’inscription.";
+      const msg = t("verifyOtp.toast.notEmail");
       setError(msg);
       toast.error(msg);
       return;
     }
 
     if (code.length !== 6) {
-      const msg = "Merci de saisir les 6 chiffres du code OTP.";
+      const msg = t("verifyOtp.toast.invalidOtp");
       setError(msg);
       toast.error(msg);
       return;
@@ -91,7 +96,7 @@ export function VerifyOtpPage() {
       // On met à jour le contexte (user + tokens + hasOTPValidated = true)
       markOtpValidated(res);
 
-      toast.success("Votre compte a été vérifié avec succès 🎉");
+      toast.success(t("verifyOtp.toast.success"));
 
       // Redirection vers la home
       navigate("/", { replace: true });
@@ -99,7 +104,7 @@ export function VerifyOtpPage() {
       const msg =
         err?.message && !String(err.message).startsWith("HTTP")
           ? err.message
-          : "Code invalide ou expiré. Merci de réessayer.";
+          : t("verifyOtp.toast.error");
       setError(msg);
       toast.error(msg);
     } finally {
@@ -115,16 +120,16 @@ export function VerifyOtpPage() {
         </div>
         <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8">
           <h1 className="text-xl font-semibold text-slate-900 mb-4">
-            Lien invalide
+            {t("verifyOtp.invalidEmail.title")}
           </h1>
           <p className="text-sm text-slate-600 mb-6">
-            L’email est manquant. Merci de recommencer votre inscription.
+            {t("verifyOtp.invalidEmail.subtitle")}
           </p>
           <button
             onClick={() => navigate("/register")}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg text-sm"
           >
-            Retour à l’inscription
+            {t("verifyOtp.invalidEmail.redirectRegister")}
           </button>
         </div>
       </div>
@@ -142,13 +147,13 @@ export function VerifyOtpPage() {
       <main className="flex-1 flex items-center justify-center px-4">
         <div className="w-full max-w-md bg-white rounded-2xl shadow-lg px-8 py-10">
           <h1 className="text-2xl font-bold text-slate-900 text-center mb-3">
-            Vérification de votre compte
+            {t("verifyOtp.title")}
           </h1>
           <p className="text-sm text-slate-600 text-center mb-6">
             Un code à 6 chiffres a été envoyé à{" "}
             <span className="font-semibold">{masked}</span>.
             <br />
-            Merci de le saisir ci-dessous pour activer votre compte.
+            {t("verifyOtp.subtitle")}
           </p>
 
           {error && (
@@ -185,12 +190,12 @@ export function VerifyOtpPage() {
               {submitting && (
                 <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
               )}
-              {submitting ? "Vérification en cours..." : "Valider le code"}
+              {submitting ? t("verifyOtp.sending") : t("verifyOtp.submitButton")}
             </button>
           </form>
 
           <p className="mt-6 text-xs text-slate-500 text-center">
-            Si vous ne trouvez pas l’email, pensez à vérifier vos spams.
+            {t("verifyOtp.info")}
           </p>
         </div>
       </main>

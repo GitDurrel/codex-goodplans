@@ -1,6 +1,7 @@
 import type { UpdateProfilePayload, UserPreferences, UserProfile } from "../features/user/types";
 
-const API_BASE_URL = "/api";
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL ?? "http://localhost:3000/api";
 const AUTH_STORAGE_KEY = "gp_auth";
 
 /**

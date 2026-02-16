@@ -142,7 +142,7 @@ export default function SellerListingsPage() {
   };
 
   const handleEditListing = (listingId: string) => {
-    navigate(`/edit-listing/${listingId}`);
+    navigate(`/seller/edit-listing/${listingId}`);
   };
 
   const getStatusBadge = (status?: string) => {

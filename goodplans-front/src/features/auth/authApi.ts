@@ -6,8 +6,14 @@ import type {
   AccountType,
 } from "./type";
 import { ROLES, ROLE_PERMISSIONS, type Role } from "../../constants";
+import { supabase } from "../../lib/supabase";
 
-const API_BASE = "http://localhost:3000/api/auth";
+// const API_BASE = import.meta.env.VITE_API_URL
+//   ? `${import.meta.env.VITE_API_URL}/auth`
+//   : "http://localhost:3000/api/auth";
+
+const API_BASE = `${import.meta.env.VITE_API_URL || 'https://goodplans-back.up.railway.app/api'}/auth`;
+const STORAGE_KEY = "gp_auth";
 
 /* -------------------------------------------------------------------------- */
 /*                              Types backend                                 */
@@ -21,12 +27,15 @@ const ACCOUNT_TYPE_ROLE_MAP: Record<AccountType, Role> = {
   super_admin: ROLES.SUPER_ADMIN,
 };
 
+
 type BackendUser = {
   id: string;
+  user_id: string;
   email: string;
   username: string;
   account_type: AccountType;
   email_verified: boolean;
+  admin?: { role: "admin" | "super_admin" } | null;
   phone?: string;
   whatsapp?: string;
   avatar_url?: string;
@@ -34,6 +43,7 @@ type BackendUser = {
   seller_approved?: boolean;
   online?: boolean;
 };
+
 
 type BackendTokens = {
   accessToken?: string;
@@ -55,12 +65,20 @@ type BackendLoginResponse = {
 
 function mapBackendUserToAuthUser(raw: BackendUser): AuthUser {
   const accountType = raw.account_type ?? "buyer";
-  const role = ACCOUNT_TYPE_ROLE_MAP[accountType] ?? ROLES.BUYER;
+
+  // rôle par défaut via account_type
+  let role: Role = ACCOUNT_TYPE_ROLE_MAP[accountType] ?? ROLES.BUYER;
+
+  // ✅ override si admin présent (info vient maintenant du back)
+  if (raw.admin?.role === "super_admin") role = ROLES.SUPER_ADMIN;
+  else if (raw.admin?.role === "admin") role = ROLES.ADMIN;
 
   const permissions = Array.from(new Set(ROLE_PERMISSIONS[role] ?? []));
 
   return {
     id: raw.id,
+    user_id: raw.user_id,
+    userId: raw.user_id,
     email: raw.email,
     username: raw.username,
     avatar_url: raw.avatar_url,
@@ -68,8 +86,9 @@ function mapBackendUserToAuthUser(raw: BackendUser): AuthUser {
     permissions,
     hasOTPValidated: !!raw.email_verified,
     accountType,
-  };
+  } as any;
 }
+
 
 function extractTokens(raw: BackendLoginResponse): {
   accessToken: string;
@@ -97,6 +116,50 @@ function extractTokens(raw: BackendLoginResponse): {
 }
 
 /**
+ * Parse les erreurs HTTP pour avoir un message lisible
+ */
+async function parseError(res: Response, fallback: string) {
+  let msg = fallback;
+
+  // Si le body a déjà été lu ailleurs, on ne tente plus rien
+  if (res.bodyUsed) {
+    return res.statusText || msg;
+  }
+
+  let text = "";
+
+  try {
+    text = await res.text();
+  } catch (e) {
+    console.error("parseError: unable to read response body", e);
+    return res.statusText || msg;
+  }
+
+  if (!text) {
+    return res.statusText || msg;
+  }
+
+  try {
+    const data = JSON.parse(text);
+
+    if (typeof data?.message === "string") {
+      msg = data.message;
+    } else if (Array.isArray(data?.message)) {
+      msg = data.message.join("\n");
+    } else if (typeof data?.error === "string") {
+      msg = data.error;
+    }
+  } catch {
+    // ce n’est pas du JSON : on renvoie le texte brut
+    msg = text;
+  }
+
+  return msg;
+}
+
+
+
+/**
  * Transforme une réponse HTTP de login / verify-otp en LoginResponse
  * ou lève une erreur avec message lisible
  */
@@ -108,19 +171,7 @@ async function parseAuthResponse(
 
   if (!res.ok) {
     console.error(`${context} error brut :`, res.status, text);
-
-    let msg = `HTTP ${res.status}`;
-    try {
-      const data = JSON.parse(text);
-      if (typeof data?.message === "string") {
-        msg = data.message;
-      } else if (Array.isArray(data?.message)) {
-        msg = data.message.join("\n");
-      }
-    } catch {
-      // ignore parse error
-    }
-
+    const msg = await parseError(res, `HTTP ${res.status}`);
     throw new Error(msg);
   }
 
@@ -135,6 +186,23 @@ async function parseAuthResponse(
   return { user, accessToken, refreshToken };
 }
 
+/**
+ * Récupère le Bearer token depuis localStorage pour les routes protégées
+ */
+function getAuthHeaderFromStorage(): Record<string, string> {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return {} as Record<string, string>;
+    const parsed = JSON.parse(raw) as { accessToken?: string };
+    if (!parsed.accessToken) return {} as Record<string, string>;
+    return {
+      Authorization: `Bearer ${parsed.accessToken}`,
+    };
+  } catch {
+    return {} as Record<string, string>;
+  }
+}
+
 /* -------------------------------------------------------------------------- */
 /*                                   API                                      */
 /* -------------------------------------------------------------------------- */
@@ -142,7 +210,10 @@ async function parseAuthResponse(
 /**
  * Connexion classique email + password
  */
-export async function apiLogin(email: string, password: string): Promise<LoginResponse> {
+export async function apiLogin(
+  email: string,
+  password: string
+): Promise<LoginResponse> {
   const res = await fetch(`${API_BASE}/login`, {
     method: "POST",
     credentials: "include",
@@ -150,18 +221,12 @@ export async function apiLogin(email: string, password: string): Promise<LoginRe
     body: JSON.stringify({ email, password }),
   });
 
-  const text = await res.text();
-
   if (!res.ok) {
-    let msg = `HTTP ${res.status}`;
-    try {
-      const data = JSON.parse(text);
-      if (typeof data?.message === "string") msg = data.message;
-      else if (Array.isArray(data?.message)) msg = data.message.join("\n");
-    } catch { }
+    const msg = await parseError(res, `HTTP ${res.status}`);
     throw new Error(msg);
   }
 
+  const text = await res.text(); // ici seulement
   const raw = JSON.parse(text) as BackendLoginResponse;
   const user = mapBackendUserToAuthUser(raw.user);
   const { accessToken, refreshToken } = extractTokens(raw);
@@ -169,11 +234,9 @@ export async function apiLogin(email: string, password: string): Promise<LoginRe
   return { user, accessToken, refreshToken };
 }
 
+
 /**
  * Inscription utilisateur
- * 🔹 IMPORTANT : le backend NE renvoie PAS user + tokens ici,
- * il crée le compte + génère l'OTP + envoie l'email.
- * On ne fait donc que vérifier le succès et remonter le message éventuel.
  */
 export async function apiRegister(payload: SignUpPayload): Promise<void> {
   console.log("REGISTER payload envoyé :", payload);
@@ -189,23 +252,10 @@ export async function apiRegister(payload: SignUpPayload): Promise<void> {
 
   if (!res.ok) {
     console.error("REGISTER error brut :", res.status, text);
-
-    let msg = `HTTP ${res.status}`;
-    try {
-      const data = JSON.parse(text);
-      if (typeof data?.message === "string") {
-        msg = data.message;
-      } else if (Array.isArray(data?.message)) {
-        msg = data.message.join("\n");
-      }
-    } catch {
-      // ignore JSON parse error
-    }
-
+    const msg = await parseError(res, `HTTP ${res.status}`);
     throw new Error(msg);
   }
 
-  // succès : le backend a probablement renvoyé { message: "...", ... }
   if (text) {
     try {
       const data = JSON.parse(text);
@@ -218,7 +268,6 @@ export async function apiRegister(payload: SignUpPayload): Promise<void> {
 
 /**
  * Vérification OTP pour la validation du compte (email)
- * 🔹 Ici, le backend renvoie bien user + tokens (cf. Swagger + screenshot)
  */
 export async function apiVerifyAccountOtp(
   email: string,
@@ -244,17 +293,17 @@ export async function apiLogout(): Promise<void> {
   });
 
   if (!res.ok) {
-    throw new Error(`HTTP ${res.status}`);
+    const msg = await parseError(res, `HTTP ${res.status}`);
+    throw new Error(msg);
   }
 }
 
 /**
  * Rafraîchir l’access token à partir du refreshToken
  */
-export async function apiRefresh(refreshToken: string): Promise<{
-  accessToken: string;
-  refreshToken: string;
-}> {
+export async function apiRefresh(
+  refreshToken: string
+): Promise<{ accessToken: string; refreshToken: string }> {
   const res = await fetch(`${API_BASE}/refresh`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -262,7 +311,8 @@ export async function apiRefresh(refreshToken: string): Promise<{
   });
 
   if (!res.ok) {
-    throw new Error(`HTTP ${res.status}`);
+    const msg = await parseError(res, `HTTP ${res.status}`);
+    throw new Error(msg);
   }
 
   return res.json();
@@ -279,7 +329,8 @@ export async function apiForgotPassword(email: string) {
   });
 
   if (!res.ok) {
-    throw new Error(`HTTP ${res.status}`);
+    const msg = await parseError(res, `HTTP ${res.status}`);
+    throw new Error(msg);
   }
 
   return res.json();
@@ -296,28 +347,140 @@ export async function apiVerifyResetCode(email: string, code: string) {
   });
 
   if (!res.ok) {
-    throw new Error(`HTTP ${res.status}`);
+    const msg = await parseError(res, `HTTP ${res.status}`);
+    throw new Error(msg);
   }
 
   return res.json();
 }
 
 /**
- * Réinitialiser le mot de passe
+ * Réinitialiser le mot de passe (flux "mot de passe oublié")
+ * Backend attend: { email, newPassword } (pas de "code" dans ResetPasswordDto)
  */
 export async function apiResetPassword(
   email: string,
-  code: string,
+  _code: string, // on garde pour compat avec le front, mais on ne l'envoie pas
   newPassword: string
 ) {
   const res = await fetch(`${API_BASE}/reset-password`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, code, newPassword }),
+    body: JSON.stringify({ email, newPassword }),
   });
 
   if (!res.ok) {
-    throw new Error(`HTTP ${res.status}`);
+    const msg = await parseError(res, `HTTP ${res.status}`);
+    throw new Error(msg);
+  }
+
+  return res.json();
+}
+
+
+/**
+ * Changer le mot de passe (flux "Sécurité" dans les settings, user connecté)
+ * ➜ utilise JwtAuthGuard côté backend => Bearer token requis
+ */
+export async function changePassword(
+  oldPassword: string,
+  newPassword: string
+): Promise<{ message: string }> {
+  const authHeader = getAuthHeaderFromStorage();
+
+  const res = await fetch(`${API_BASE}/change-password`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeader,
+    },
+    body: JSON.stringify({ oldPassword, newPassword }),
+  });
+
+  if (!res.ok) {
+    const msg = await parseError(res, `HTTP ${res.status}`);
+    throw new Error(msg);
+  }
+
+  return res.json();
+}
+
+/**
+ * Récupérer le profil utilisateur connecté (via cookies)
+ */
+export async function apiGetMe(): Promise<LoginResponse> {
+  const backendUrl =
+    import.meta.env.VITE_API_URL || "https://goodplans-back.up.railway.app/api";
+
+  // 🔐 ajoute le Bearer token si dispo (important, car ton /auth/me utilise JwtAuthGuard)
+  const authHeader = getAuthHeaderFromStorage();
+
+  const res = await fetch(`${backendUrl}/auth/me`, {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      ...authHeader,
+    },
+  });
+
+  if (!res.ok) {
+    const msg = await parseError(res, `HTTP ${res.status}`);
+    throw new Error(msg);
+  }
+
+  const raw = (await res.json()) as BackendLoginResponse;
+
+  // ⚠️ /auth/me renvoie { user, tokens } dans ton back
+  const user = mapBackendUserToAuthUser(raw.user);
+  const { accessToken, refreshToken } = extractTokens(raw);
+
+  return { user, accessToken, refreshToken };
+}
+
+/**
+ * Connexion Google OAuth
+ * Redirige simplement vers le backend qui gère tout via Supabase
+ */
+export function apiGoogleLogin(): void {
+  const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+  const googleInitUrl = `${backendUrl}/auth/google`;
+
+  console.log('🔄 Redirection vers Google OAuth via backend...');
+  console.log('📍 URL:', googleInitUrl);
+
+  // Redirection directe vers le backend
+  window.location.href = googleInitUrl;
+}
+
+
+export async function apiGoogleLoginWeb() {
+  const redirectTo = `${window.location.origin}/auth/callback`;
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: { redirectTo },
+  });
+
+  if (error) throw new Error(error.message);
+
+  // Supabase te donne une URL Google à ouvrir
+  if (data?.url) window.location.href = data.url;
+}
+
+export async function apiOAuthFinalize(providerUserId: string, email: string) {
+  const base = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+
+  const res = await fetch(`${base}/auth/oauth-finalize`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ providerUserId, email }),
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(text || `HTTP ${res.status}`);
   }
 
   return res.json();

@@ -8,7 +8,7 @@ import {
 } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { apiLogin, apiLogout, apiRefresh, apiRegister } from "./authApi";
+import { apiLogin, apiLogout, apiRefresh, apiRegister, apiGetMe } from "./authApi";
 import type { AuthUser, LoginResponse, Role, SignUpPayload } from "./type";
 
 const STORAGE_KEY = "gp_auth";
@@ -27,6 +27,9 @@ interface AuthContextType {
     isAuthenticated: boolean;
 
     login: (email: string, password: string) => Promise<void>;
+    loginWithGoogle: () => void;
+    completeLogin: (res: LoginResponse, redirectTo?: string) => void;
+
     register: (payload: SignUpPayload) => Promise<void>;
     logout: () => Promise<void>;
     markOtpValidated: (res: LoginResponse) => void;
@@ -39,6 +42,7 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
 
 /* ------------------------- helpers localStorage ------------------------- */
 
@@ -100,6 +104,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 setAccessToken(newAuth.accessToken);
                 setRefreshToken(newAuth.refreshToken);
                 saveToStorage(newAuth);
+                try {
+                    const me = await apiGetMe();
+                    setUser(me.user);
+                    setAccessToken(me.accessToken);
+                    setRefreshToken(me.refreshToken);
+                    saveToStorage({
+                        user: me.user,
+                        accessToken: me.accessToken,
+                        refreshToken: me.refreshToken,
+                    });
+                } catch (e) {
+                    console.warn("apiGetMe failed on init:", e);
+                }
+
             } catch {
                 clearStorage();
                 setUser(null);
@@ -112,6 +130,60 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         void init();
     }, []);
+
+
+    /**
+     * Détecter le retour du callback Google OAuth
+     */
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const authParam = params.get('auth');
+        const errorParam = params.get('error');
+        const errorDetails = params.get('details');
+
+        // ✅ Succès Google OAuth
+        if (authParam === 'success') {
+            console.log('✅ Authentification Google réussie');
+
+            const handleGoogleSuccess = async () => {
+                try {
+                    toast.success('Connexion avec Google réussie ! 🎉');
+
+                    // Nettoyer l'URL
+                    window.history.replaceState({}, '', '/dashboard');
+
+                    // Recharger les données depuis localStorage
+                    // (le backend peut avoir mis à jour via les cookies)
+                    const stored = loadFromStorage();
+                    if (stored) {
+                        setUser(stored.user);
+                        setAccessToken(stored.accessToken);
+                        setRefreshToken(stored.refreshToken);
+                    }
+
+                    // Rediriger vers le dashboard
+                    navigate('/dashboard', { replace: true });
+
+                } catch (err) {
+                    console.error('Erreur finalisation Google OAuth:', err);
+                    toast.error('Erreur lors de la connexion');
+                    navigate('/login', { replace: true });
+                }
+            };
+
+            handleGoogleSuccess();
+        }
+
+        // ❌ Erreur Google OAuth
+        if (errorParam) {
+            console.error('❌ Erreur Google OAuth:', errorParam, errorDetails);
+            const message = errorDetails || errorParam;
+            toast.error(`Erreur: ${message}`);
+
+            // Nettoyer l'URL
+            window.history.replaceState({}, '', '/login');
+        }
+    }, [navigate]);
 
     const isAuthenticated = !!user;
 
@@ -161,10 +233,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     /* --------------------------------- API -------------------------------- */
 
     async function login(email: string, password: string) {
-        setLoading(true);
         try {
             const res = await apiLogin(email, password);
+
+            // 1) stocker tokens tout de suite (nécessaire pour Bearer dans /auth/me)
             setAuthFromResponse(res);
+
+            // 2) re-fetch /auth/me pour récupérer admin (si le user est dans table admins)
+            try {
+                const me = await apiGetMe();
+                setAuthFromResponse(me);
+            } catch (e) {
+                console.warn("apiGetMe failed after login:", e);
+                // on garde res (login normal)
+            }
 
             toast.success("Connexion réussie ✅");
 
@@ -178,17 +260,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                     : "Connexion impossible. Vérifie tes identifiants.";
             toast.error(msg);
             throw new Error(msg);
-        } finally {
-            setLoading(false);
         }
     }
 
+
     async function register(payload: SignUpPayload) {
-        setLoading(true);
         try {
             await apiRegister(payload);
 
-            toast.success("Compte créé. Un code OTP vous a été envoyé par email.");
+            toast.success(
+                "Compte créé. Un code OTP vous a été envoyé par email."
+            );
 
             navigate(
                 `/verify-otp?email=${encodeURIComponent(payload.email)}`,
@@ -202,10 +284,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                     : "Inscription impossible pour le moment.";
             toast.error(msg, { duration: 8000 });
             throw new Error(msg);
-        } finally {
-            setLoading(false);
         }
     }
+
 
     async function logout() {
         try {
@@ -222,13 +303,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
     }
 
+    /**
+    * Connexion Google OAuth
+    * Redirige vers le backend qui gère tout
+    */
+    async function loginWithGoogle() {
+        try {
+            const { apiGoogleLoginWeb } = await import("./authApi");
+            await apiGoogleLoginWeb();
+        } catch (err: any) {
+            console.error("LOGIN GOOGLE ERROR:", err);
+            toast.error(err?.message || "Impossible de se connecter avec Google");
+            throw err;
+        }
+    }
+
+
     const value: AuthContextType = {
         user,
         accessToken,
         refreshToken,
         loading,
         isAuthenticated,
+        completeLogin,
         login,
+        loginWithGoogle,
         register,
         logout,
         hasRole,
@@ -244,6 +343,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             {!loading && children}
         </AuthContext.Provider>
     );
+
+    function completeLogin(res: LoginResponse, redirectTo = "/") {
+        setAuthFromResponse(res);
+        navigate(redirectTo, { replace: true });
+    }
+
 }
 
 /* ---------------------------- hook useAuth ----------------------------- */

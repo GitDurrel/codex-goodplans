@@ -4,7 +4,9 @@ export type RentalPeriod = "day" | "week" | "month" | "year";
 export interface Listing {
   id: string;
   title: string;
+  title_en?: string;
   description?: string;
+  description_en?: string;
   price: number;
   city: string;
   region?: string;
@@ -22,6 +24,8 @@ export interface Listing {
   user_id?: string;
   user?: SellerProfile;
 }
+
+
 
 export interface ListingDetails extends Listing {
   description?: string;
@@ -70,4 +74,10 @@ export interface SellerProfile {
   account_type?: string;
   seller_type?: string;
   company_name?: string;
+}
+
+export interface UserFavorite {
+  favoriteId: string;
+  listingId: string;
+  listing: Listing;
 }

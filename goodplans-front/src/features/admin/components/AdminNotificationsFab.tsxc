@@ -1,0 +1,154 @@
+// src/components/admin/AdminNotificationsFab.tsx
+import { useEffect, useState } from "react";
+import { Bell, X } from "lucide-react";
+import { apiRequest } from "../../lib/apiRequest";
+import { useAuth } from "../../features/auth/AuthContext";
+
+type AdminNotification = {
+  id: number;
+  message: string;
+  created_at: string;
+  is_read: boolean;
+};
+
+export default function AdminNotificationsFab() {
+  const { hasRole } = useAuth();
+  const isAdmin = hasRole("ADMIN") || hasRole("SUPER_ADMIN");
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [notifications, setNotifications] = useState<AdminNotification[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  // Si ce n’est pas un admin, on ne montre carrément pas la cloche admin
+  if (!isAdmin) return null;
+
+  async function fetchNotifications() {
+    try {
+      setLoading(true);
+      // adapte l’URL à ton backend
+      const data = await apiRequest<AdminNotification[]>(
+        "GET",
+        "/admin/notifications"
+      );
+      setNotifications(data);
+    } catch (e) {
+      console.error("Erreur chargement notifications admin", e);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
+  async function markAllAsRead() {
+    try {
+      await apiRequest("PATCH", "/admin/notifications/mark-all-read");
+      setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })));
+    } catch (e) {
+      console.error("Erreur mark-all-read", e);
+    }
+  }
+
+  async function markOneAsRead(id: number) {
+    try {
+      await apiRequest("PATCH", `/admin/notifications/${id}/read`);
+      setNotifications((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, is_read: true } : n))
+      );
+    } catch (e) {
+      console.error("Erreur mark-one-read", e);
+    }
+  }
+
+  const unreadCount = notifications.filter((n) => !n.is_read).length;
+
+  return (
+    <div className="fixed bottom-6 left-6 z-50">
+      {/* Bouton cloche */}
+      <button
+        onClick={() => setIsOpen((v) => !v)}
+        className="relative p-3 rounded-full bg-white shadow-lg border border-gray-200 hover:bg-gray-50"
+      >
+        <Bell className="h-5 w-5 text-gray-700" />
+        {unreadCount > 0 && (
+          <span className="absolute -top-1 -right-1 inline-flex items-center justify-center px-1.5 py-0.5 text-[11px] font-bold leading-none text-white bg-red-500 rounded-full">
+            {unreadCount}
+          </span>
+        )}
+      </button>
+
+      {/* Panel flottant au-dessus de la cloche */}
+      {isOpen && (
+        <div className="absolute bottom-14 left-0 w-80 bg-white rounded-lg shadow-xl border border-gray-200">
+          <div className="flex items-center justify-between px-4 py-3 border-b">
+            <h3 className="font-semibold text-gray-900 text-sm">
+              Notifications
+            </h3>
+            <div className="flex items-center gap-3">
+              {unreadCount > 0 && (
+                <button
+                  onClick={markAllAsRead}
+                  className="text-xs text-blue-600 hover:text-blue-700"
+                >
+                  Tout marquer comme lu
+                </button>
+              )}
+              <button
+                onClick={() => setIsOpen(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+
+          <div className="max-h-96 overflow-y-auto">
+            {loading ? (
+              <div className="p-4 text-sm text-gray-500">
+                Chargement des notifications...
+              </div>
+            ) : notifications.length === 0 ? (
+              <div className="p-4 text-sm text-gray-500">
+                Aucune notification
+              </div>
+            ) : (
+              notifications.map((n) => (
+                <div
+                  key={n.id}
+                  className={`px-4 py-3 border-b text-sm ${
+                    !n.is_read ? "bg-blue-50" : "bg-white"
+                  }`}
+                >
+                  <div className="flex justify-between items-start gap-2">
+                    <div>
+                      <p className="text-gray-900">{n.message}</p>
+                      <p className="mt-1 text-xs text-gray-500">
+                        {new Date(n.created_at).toLocaleString("fr-FR", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </p>
+                    </div>
+                    {!n.is_read && (
+                      <button
+                        onClick={() => markOneAsRead(n.id)}
+                        className="text-[11px] text-blue-600 hover:text-blue-700"
+                      >
+                        Marquer lu
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

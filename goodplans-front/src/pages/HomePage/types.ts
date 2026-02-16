@@ -34,7 +34,9 @@ export interface Category {
 }
 
 export interface CarouselItem {
-  image: string;
+  id: string;
+  image_desktop: string; 
+  image_mobile: string; 
   title: string;
   description: string;
   sponsoredText?: string;

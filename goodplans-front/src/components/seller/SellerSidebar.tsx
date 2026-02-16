@@ -8,6 +8,7 @@ import {
   HelpCircle,
   LogOut,
   PlusCircle,
+  Star,
 } from "lucide-react";
 
 export default function SellerSidebar() {
@@ -36,8 +37,13 @@ export default function SellerSidebar() {
       icon: <ListChecks className="h-5 w-5" />,
     },
     {
+      name : "Mes mises en avant",
+      path : "/seller/featured-orders",
+      icon : <Star className="h-5 w-5" />,
+    },
+    {
       name: "Messages",
-      path: "/seller/chatList",
+      path: "/messages",
       icon: <MessageSquare className="h-5 w-5" />,
     },
     {
