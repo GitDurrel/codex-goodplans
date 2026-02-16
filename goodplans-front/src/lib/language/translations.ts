@@ -1181,15 +1181,6 @@ export const translations = {
                 missingFields: "Certains champs obligatoires sont manquants.",
             },
 
-            images: {
-                maxReached: "Vous avez déjà atteint le maximum de 10 images.",
-                uploadSuccess: "Images ajoutées avec succès.",
-                uploadError:
-                    "Erreur lors de l’upload des images. Veuillez réessayer.",
-                noUrlReturned:
-                    "Aucune URL d’image retournée par le serveur.",
-            },
-
             success: {
                 created: "Votre annonce a été créée avec succès !",
             },
@@ -1291,6 +1282,89 @@ export const translations = {
                     dimensions: "Dimensions (optionnel)",
                     dimensionsPlaceholder: "Ex : 120x60x75 cm",
                 },
+            },
+
+            filters: {
+                title: "Filtres supplémentaires",
+                condition: "État",
+                select: "Sélectionner",
+                new: "Neuf",
+                used: "Occasion",
+                color: "Couleur",
+                colorPlaceholder: "Rouge / Noir / Beige…",
+                brandType: "Marque / Type",
+                brandTypePlaceholder: "Ex: BMW, Dior, Artisanat Marocain…",
+            },
+
+            pricing: {
+                title: "Tarification",
+                transactionType: "Type de transaction",
+                forSale: "À vendre",
+                forRent: "À louer",
+                rentalPrice: "Prix de location",
+                price: "Prix",
+                rentalPricePlaceholder: "Ex : 5000 (par période)",
+                pricePlaceholder: "Ex : 250000",
+                priceError: "Le prix est obligatoire et doit être supérieur à 0.",
+                rentalPeriod: "Période de location",
+                rentalPeriodError: "La période de location est obligatoire.",
+                tipsTitle: "Conseils de tarification",
+                tipsDescription: "Comparez les annonces similaires et renseignez un prix réaliste pour obtenir plus de contacts.",
+                noteTitle: "Bon à savoir",
+                noteDescription: "Un prix clair et compétitif augmente vos chances d'être contacté rapidement.",
+            },
+
+            submission: {
+                title: "Finalisation",
+                subtitle: "Vérifiez vos informations avant de publier l’annonce.",
+                summaryTitle: "Résumé de l’annonce",
+                category: "Catégorie",
+                transactionType: "Type de transaction",
+                location: "Localisation",
+                imagesCount: "image",
+                requiredFields: "Champs obligatoires",
+                requiredFieldsOk: "Tous les champs essentiels semblent remplis.",
+                requiredFieldsMissing: "Certains champs obligatoires sont manquants (titre, description, prix, localisation, type de transaction, etc.).",
+                imagesAdded: "image(s) ajoutée(s).",
+                noImages: "Aucune image ajoutée. Ajoutez au moins une photo pour attirer plus de visiteurs.",
+                publish: "Publier mon annonce",
+                publishing: "Publication en cours...",
+                moderationNotice: "En publiant, vous acceptez que votre annonce puisse être modérée avant mise en ligne.",
+                rentalByDay: "Par jour",
+                rentalByWeek: "Par semaine",
+                rentalByMonth: "Par mois",
+                rentalByYear: "Par an",
+            },
+
+            navigation: {
+                back: "Retour",
+                next: "Suivant",
+                publish: "Publier l'annonce",
+                uploading: "Téléchargement",
+                step: "Étape",
+            },
+
+            images: {
+                maxReached: "Vous avez déjà atteint le maximum de 10 images.",
+                uploadSuccess: "Images ajoutées avec succès.",
+                uploadError:
+                    "Erreur lors de l’upload des images. Veuillez réessayer.",
+                noUrlReturned:
+                    "Aucune URL d’image retournée par le serveur.",
+                helper: "Ajoutez au moins une photo pour mettre votre annonce en avant.",
+                uploading: "Upload en cours...",
+                addOne: "Ajouter une photo",
+                required: "Au moins une image est requise.",
+                emptyTitle: "Aucune image pour le moment",
+                emptyDescription: "Cliquez pour sélectionner des images depuis votre appareil (max 10).",
+                imageAlt: "Image",
+                delete: "Supprimer",
+                add: "Ajouter",
+                tipsTitle: "Conseils pour de bonnes photos :",
+                tip1: "Utilisez une bonne lumière (lumière du jour si possible).",
+                tip2: "Photographiez votre bien sous plusieurs angles.",
+                tip3: "Évitez les arrière-plans trop chargés.",
+                tip4: "La première image est la plus importante : choisissez la meilleure.",
             },
 
             categoryStep: {
@@ -2500,15 +2574,6 @@ export const translations = {
                 missingFields: "Some required fields are missing.",
             },
 
-            images: {
-                maxReached: "You have already reached the maximum of 10 images.",
-                uploadSuccess: "Images successfully uploaded.",
-                uploadError:
-                    "Error uploading images. Please try again.",
-                noUrlReturned:
-                    "No image URL returned by the server.",
-            },
-
             success: {
                 created: "Your listing has been successfully created!",
             },
@@ -2610,6 +2675,89 @@ export const translations = {
                     dimensions: "Dimensions (optional)",
                     dimensionsPlaceholder: "Ex: 120x60x75 cm",
                 },
+            },
+
+            filters: {
+                title: "Additional filters",
+                condition: "Condition",
+                select: "Select",
+                new: "New",
+                used: "Used",
+                color: "Color",
+                colorPlaceholder: "Red / Black / Beige…",
+                brandType: "Brand / Type",
+                brandTypePlaceholder: "Ex: BMW, Dior, Moroccan craft…",
+            },
+
+            pricing: {
+                title: "Pricing",
+                transactionType: "Transaction type",
+                forSale: "For sale",
+                forRent: "For rent",
+                rentalPrice: "Rental price",
+                price: "Price",
+                rentalPricePlaceholder: "Ex: 5000 (per period)",
+                pricePlaceholder: "Ex: 250000",
+                priceError: "Price is required and must be greater than 0.",
+                rentalPeriod: "Rental period",
+                rentalPeriodError: "Rental period is required.",
+                tipsTitle: "Pricing tips",
+                tipsDescription: "Compare similar listings and set a realistic price to get more contacts.",
+                noteTitle: "Good to know",
+                noteDescription: "A clear and competitive price improves your chances of being contacted quickly.",
+            },
+
+            submission: {
+                title: "Final review",
+                subtitle: "Review your information before publishing your listing.",
+                summaryTitle: "Listing summary",
+                category: "Category",
+                transactionType: "Transaction type",
+                location: "Location",
+                imagesCount: "image",
+                requiredFields: "Required fields",
+                requiredFieldsOk: "All essential fields appear to be completed.",
+                requiredFieldsMissing: "Some required fields are missing (title, description, price, location, transaction type, etc.).",
+                imagesAdded: "image(s) added.",
+                noImages: "No image added yet. Add at least one photo to attract more visitors.",
+                publish: "Publish my listing",
+                publishing: "Publishing...",
+                moderationNotice: "By publishing, you accept that your listing may be moderated before going live.",
+                rentalByDay: "Per day",
+                rentalByWeek: "Per week",
+                rentalByMonth: "Per month",
+                rentalByYear: "Per year",
+            },
+
+            navigation: {
+                back: "Back",
+                next: "Next",
+                publish: "Publish listing",
+                uploading: "Uploading",
+                step: "Step",
+            },
+
+            images: {
+                maxReached: "You have already reached the maximum of 10 images.",
+                uploadSuccess: "Images successfully uploaded.",
+                uploadError:
+                    "Error uploading images. Please try again.",
+                noUrlReturned:
+                    "No image URL returned by the server.",
+                helper: "Add at least one photo to make your listing stand out.",
+                uploading: "Uploading...",
+                addOne: "Add a photo",
+                required: "At least one image is required.",
+                emptyTitle: "No image yet",
+                emptyDescription: "Click to select images from your device (max 10).",
+                imageAlt: "Image",
+                delete: "Delete",
+                add: "Add",
+                tipsTitle: "Tips for great photos:",
+                tip1: "Use good lighting (daylight if possible).",
+                tip2: "Take photos from multiple angles.",
+                tip3: "Avoid cluttered backgrounds.",
+                tip4: "The first image matters most: choose your best one.",
             },
 
             categoryStep: {
