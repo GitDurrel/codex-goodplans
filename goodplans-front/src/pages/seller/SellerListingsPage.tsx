@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Eye, Edit, Trash2, PauseCircle, PlayCircle, Filter, Search, AlertCircle, ChevronDown, ArrowUpDown } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "../../features/auth/AuthContext";
+import { useLanguage } from "../../lib/language/LanguageContext";
 import {
   deleteListing,
   fetchMyListings,
@@ -17,6 +18,7 @@ type StatusFilter = ListingStatusApi | "all";
 
 export default function SellerListingsPage() {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [listings, setListings] = useState<Listing[]>([]);
   const [filteredListings, setFilteredListings] = useState<Listing[]>([]);
@@ -52,7 +54,7 @@ export default function SellerListingsPage() {
         setFilteredListings(validated);
       } catch (err) {
         console.error(err);
-        toast.error("Erreur lors du chargement de vos annonces");
+        toast.error(t("seller.listings.errors.loadFailed"));
       } finally {
         setIsLoading(false);
       }
@@ -119,10 +121,10 @@ export default function SellerListingsPage() {
       await deleteListing(listingToDelete.id);
       setListings((prev) => prev.filter((l) => l.id !== listingToDelete.id));
       setFilteredListings((prev) => prev.filter((l) => l.id !== listingToDelete.id));
-      toast.success("Annonce supprimée");
+      toast.success(t("seller.listings.success.deleted"));
     } catch (error) {
       console.error("Erreur lors de la suppression de l'annonce:", error);
-      toast.error("Impossible de supprimer l'annonce");
+      toast.error(t("seller.listings.errors.deleteFailed"));
     } finally {
       setShowDeleteModal(false);
       setListingToDelete(null);
@@ -134,10 +136,10 @@ export default function SellerListingsPage() {
       const updated = await updateListingStatus(listingId, mapUiStatusToApi(newStatus));
       const normalizedStatus = mapApiStatusToUi(updated.status);
       setListings((prev) => prev.map((l) => (l.id === listingId ? { ...l, status: normalizedStatus } : l)));
-      toast.success("Statut mis à jour");
+      toast.success(t("seller.listings.success.statusUpdated"));
     } catch (error) {
       console.error("Error updating listing status:", error);
-      toast.error("Erreur lors de la mise à jour du statut");
+      toast.error(t("seller.listings.errors.statusUpdateFailed"));
     }
   };
 
@@ -149,15 +151,15 @@ export default function SellerListingsPage() {
     const normalized = mapApiStatusToUi(status);
     switch (normalized) {
       case "En attente":
-        return <span className="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">En attente</span>;
+        return <span className="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">{t("seller.listings.status.pending")}</span>;
       case "Publié":
-        return <span className="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">Publié</span>;
+        return <span className="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">{t("seller.listings.status.published")}</span>;
       case "Suspendu":
-        return <span className="px-2 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-800">Suspendu</span>;
+        return <span className="px-2 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-800">{t("seller.listings.status.suspended")}</span>;
       case "Vendu":
-        return <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">Vendu</span>;
+        return <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">{t("seller.listings.status.sold")}</span>;
       case "Rejeté":
-        return <span className="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">Rejeté</span>;
+        return <span className="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">{t("seller.listings.status.rejected")}</span>;
       default:
         return <span className="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">Inconnu</span>;
     }
@@ -182,7 +184,7 @@ export default function SellerListingsPage() {
             <input
               type="text"
               className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-md text-sm placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
-              placeholder="Rechercher..."
+              placeholder={t("seller.listings.filters.searchPlaceholder")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -198,11 +200,11 @@ export default function SellerListingsPage() {
               onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
             >
               <option value="all">Tous les statuts</option>
-              <option value="Publié">Publié</option>
-              <option value="En attente">En attente</option>
-              <option value="Suspendu">Suspendu</option>
-              <option value="Vendu">Vendu</option>
-              <option value="Rejeté">Rejeté</option>
+              <option value="Publié">{t("seller.listings.status.published")}</option>
+              <option value="En attente">{t("seller.listings.status.pending")}</option>
+              <option value="Suspendu">{t("seller.listings.status.suspended")}</option>
+              <option value="Vendu">{t("seller.listings.status.sold")}</option>
+              <option value="Rejeté">{t("seller.listings.status.rejected")}</option>
             </select>
             <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
               <ChevronDown className="h-5 w-5 text-gray-400" />
@@ -218,11 +220,11 @@ export default function SellerListingsPage() {
               value={sortOption}
               onChange={(e) => setSortOption(e.target.value)}
             >
-              <option value="newest">Plus récentes</option>
-              <option value="oldest">Plus anciennes</option>
-              <option value="price_high">Prix décroissant</option>
-              <option value="price_low">Prix croissant</option>
-              <option value="views">Plus vues</option>
+              <option value="newest">{t("seller.listings.filters.newest")}</option>
+              <option value="oldest">{t("seller.listings.filters.oldest")}</option>
+              <option value="price_high">{t("seller.listings.filters.priceHigh")}</option>
+              <option value="price_low">{t("seller.listings.filters.priceLow")}</option>
+              <option value="views">{t("seller.listings.filters.views")}</option>
             </select>
             <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
               <ChevronDown className="h-5 w-5 text-gray-400" />
@@ -295,13 +297,13 @@ export default function SellerListingsPage() {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Annonce</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prix</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vues</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t("seller.listings.table.listing")}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t("seller.listings.table.price")}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t("seller.listings.table.status")}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t("seller.listings.table.views")}</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Messages</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t("seller.listings.table.date")}</th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{t("seller.listings.table.actions")}</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -378,7 +380,7 @@ export default function SellerListingsPage() {
                           setShowDeleteModal(true);
                         }}
                         className="text-red-400 hover:text-red-500"
-                        title="Supprimer"
+                        title={t("seller.listings.actions.delete")}
                       >
                         <Trash2 className="h-5 w-5" />
                       </button>
@@ -490,9 +492,9 @@ export default function SellerListingsPage() {
                   <AlertCircle className="h-6 w-6 text-red-600" />
                 </div>
                 <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                  <h3 className="text-lg leading-6 font-medium text-gray-900">Supprimer cette annonce ?</h3>
+                  <h3 className="text-lg leading-6 font-medium text-gray-900">{t("seller.listings.deleteModal.title")}</h3>
                   <div className="mt-2">
-                    <p className="text-sm text-gray-500">Cette action est irréversible.</p>
+                    <p className="text-sm text-gray-500">{t("seller.listings.deleteModal.description")}</p>
                   </div>
                 </div>
               </div>
@@ -502,7 +504,7 @@ export default function SellerListingsPage() {
                   className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
                   onClick={handleDeleteListing}
                 >
-                  Supprimer
+                  {t("seller.listings.actions.delete")}
                 </button>
                 <button
                   type="button"
@@ -512,7 +514,7 @@ export default function SellerListingsPage() {
                     setListingToDelete(null);
                   }}
                 >
-                  Annuler
+                  {t("seller.listings.actions.cancel")}
                 </button>
               </div>
             </div>

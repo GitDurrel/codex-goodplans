@@ -1181,15 +1181,6 @@ export const translations = {
                 missingFields: "Certains champs obligatoires sont manquants.",
             },
 
-            images: {
-                maxReached: "Vous avez déjà atteint le maximum de 10 images.",
-                uploadSuccess: "Images ajoutées avec succès.",
-                uploadError:
-                    "Erreur lors de l’upload des images. Veuillez réessayer.",
-                noUrlReturned:
-                    "Aucune URL d’image retournée par le serveur.",
-            },
-
             success: {
                 created: "Votre annonce a été créée avec succès !",
             },
@@ -1293,6 +1284,89 @@ export const translations = {
                 },
             },
 
+            filters: {
+                title: "Filtres supplémentaires",
+                condition: "État",
+                select: "Sélectionner",
+                new: "Neuf",
+                used: "Occasion",
+                color: "Couleur",
+                colorPlaceholder: "Rouge / Noir / Beige…",
+                brandType: "Marque / Type",
+                brandTypePlaceholder: "Ex: BMW, Dior, Artisanat Marocain…",
+            },
+
+            pricing: {
+                title: "Tarification",
+                transactionType: "Type de transaction",
+                forSale: "À vendre",
+                forRent: "À louer",
+                rentalPrice: "Prix de location",
+                price: "Prix",
+                rentalPricePlaceholder: "Ex : 5000 (par période)",
+                pricePlaceholder: "Ex : 250000",
+                priceError: "Le prix est obligatoire et doit être supérieur à 0.",
+                rentalPeriod: "Période de location",
+                rentalPeriodError: "La période de location est obligatoire.",
+                tipsTitle: "Conseils de tarification",
+                tipsDescription: "Comparez les annonces similaires et renseignez un prix réaliste pour obtenir plus de contacts.",
+                noteTitle: "Bon à savoir",
+                noteDescription: "Un prix clair et compétitif augmente vos chances d'être contacté rapidement.",
+            },
+
+            submission: {
+                title: "Finalisation",
+                subtitle: "Vérifiez vos informations avant de publier l’annonce.",
+                summaryTitle: "Résumé de l’annonce",
+                category: "Catégorie",
+                transactionType: "Type de transaction",
+                location: "Localisation",
+                imagesCount: "image",
+                requiredFields: "Champs obligatoires",
+                requiredFieldsOk: "Tous les champs essentiels semblent remplis.",
+                requiredFieldsMissing: "Certains champs obligatoires sont manquants (titre, description, prix, localisation, type de transaction, etc.).",
+                imagesAdded: "image(s) ajoutée(s).",
+                noImages: "Aucune image ajoutée. Ajoutez au moins une photo pour attirer plus de visiteurs.",
+                publish: "Publier mon annonce",
+                publishing: "Publication en cours...",
+                moderationNotice: "En publiant, vous acceptez que votre annonce puisse être modérée avant mise en ligne.",
+                rentalByDay: "Par jour",
+                rentalByWeek: "Par semaine",
+                rentalByMonth: "Par mois",
+                rentalByYear: "Par an",
+            },
+
+            navigation: {
+                back: "Retour",
+                next: "Suivant",
+                publish: "Publier l'annonce",
+                uploading: "Téléchargement",
+                step: "Étape",
+            },
+
+            images: {
+                maxReached: "Vous avez déjà atteint le maximum de 10 images.",
+                uploadSuccess: "Images ajoutées avec succès.",
+                uploadError:
+                    "Erreur lors de l’upload des images. Veuillez réessayer.",
+                noUrlReturned:
+                    "Aucune URL d’image retournée par le serveur.",
+                helper: "Ajoutez au moins une photo pour mettre votre annonce en avant.",
+                uploading: "Upload en cours...",
+                addOne: "Ajouter une photo",
+                required: "Au moins une image est requise.",
+                emptyTitle: "Aucune image pour le moment",
+                emptyDescription: "Cliquez pour sélectionner des images depuis votre appareil (max 10).",
+                imageAlt: "Image",
+                delete: "Supprimer",
+                add: "Ajouter",
+                tipsTitle: "Conseils pour de bonnes photos :",
+                tip1: "Utilisez une bonne lumière (lumière du jour si possible).",
+                tip2: "Photographiez votre bien sous plusieurs angles.",
+                tip3: "Évitez les arrière-plans trop chargés.",
+                tip4: "La première image est la plus importante : choisissez la meilleure.",
+            },
+
             categoryStep: {
                 loading: "Chargement des catégories…",
                 error: "Impossible de charger les catégories. Vérifiez l’API /categories.",
@@ -1312,6 +1386,139 @@ export const translations = {
         },
 
     },
+
+
+        authCallback: {
+            loading: {
+                title: "Connexion en cours…",
+                finalizing: "Finalisation Google OAuth…",
+                redirecting: "Redirection…",
+            },
+            success: {
+                googleLogin: "Connexion Google réussie 🎉",
+            },
+            errors: {
+                sessionNotFound: "Session Google introuvable. Réessaie.",
+                missingTokens: "Tokens manquants dans la réponse OAuth finalize.",
+                googleLoginFailed: "Connexion Google échouée",
+            },
+        },
+
+        seller: {
+            overview: {
+                totalViews: "vues cumulées",
+                published: "publiées",
+            },
+            help: {
+                title: "Questions fréquentes",
+                faq: {
+                    createListing: {
+                        question: "Comment créer une annonce ?",
+                        answer: "Pour créer une annonce, cliquez sur le bouton \"Déposer une annonce\" dans la barre de navigation ou dans votre tableau de bord vendeur. Suivez ensuite les étapes pour ajouter les détails, les photos et le prix de votre article.",
+                    },
+                    replyMessages: {
+                        question: "Comment répondre aux messages des acheteurs ?",
+                        answer: "Vous pouvez accéder à tous vos messages dans la section \"Messages\" de votre tableau de bord vendeur. Cliquez sur une conversation pour voir les messages et y répondre.",
+                    },
+                    payments: {
+                        question: "Comment sont gérés les paiements ?",
+                        answer: "Les paiements sont sécurisés via notre système. Lorsqu’un acheteur effectue un achat, le montant est mis en attente jusqu’à la confirmation de la réception de l’article. Vous recevez ensuite le paiement sur votre compte associé.",
+                    },
+                    fees: {
+                        question: "Quels sont les frais pour les vendeurs ?",
+                        answer: "Goodplans prélève une commission de 5% sur chaque vente réussie. Il n’y a pas de frais pour publier une annonce ou communiquer avec les acheteurs.",
+                    },
+                    promote: {
+                        question: "Comment promouvoir mes annonces ?",
+                        answer: "Ajoutez des photos de qualité, des descriptions détaillées et répondez rapidement aux messages. Des options de promotion premium seront bientôt disponibles.",
+                    },
+                },
+                contact: {
+                    title: "Besoin d’aide ?",
+                    description: "Notre équipe support est là pour vous aider en cas de question sur vos annonces, vos ventes ou votre compte vendeur.",
+                    emailTitle: "Par e-mail",
+                    emailDelay: "Réponse sous 24 à 48h (jours ouvrables).",
+                    phoneTitle: "Par téléphone",
+                    phoneHours: "Du lundi au vendredi, 9h – 18h.",
+                    chatTitle: "Chat en ligne",
+                    chatDescription: "Discutez avec un conseiller quand le chat est disponible.",
+                    openChat: "Ouvrir le chat",
+                },
+            },
+            featuredOrders: {
+                title: "Mes mises en avant",
+                subtitle: "Suis les annonces boostées et leurs dates de fin.",
+                empty: "Aucune mise en avant pour le moment.",
+                day: "jour",
+                from: "Du",
+                to: "au",
+                table: {
+                    listing: "Annonce",
+                    plan: "Plan",
+                    period: "Période",
+                    status: "Statut",
+                    actions: "Actions",
+                },
+                actions: {
+                    refresh: "Actualiser",
+                    viewListing: "Voir l’annonce",
+                },
+                status: {
+                    active: "Active",
+                    pending: "En attente",
+                    cancelled: "Annulée",
+                    expired: "Expirée",
+                },
+                errors: {
+                    loadFailed: "Erreur lors du chargement des mises en avant",
+                },
+            },
+            listings: {
+                title: "Mes annonces",
+                subtitle: "Gérez vos annonces et suivez leurs performances.",
+                empty: "Aucune annonce trouvée.",
+                filters: {
+                    searchPlaceholder: "Rechercher...",
+                    newest: "Plus récentes",
+                    oldest: "Plus anciennes",
+                    priceHigh: "Prix décroissant",
+                    priceLow: "Prix croissant",
+                    views: "Plus vues",
+                },
+                table: {
+                    listing: "Annonce",
+                    price: "Prix",
+                    status: "Statut",
+                    views: "Vues",
+                    date: "Date",
+                    actions: "Actions",
+                },
+                status: {
+                    pending: "En attente",
+                    published: "Publié",
+                    suspended: "Suspendu",
+                    sold: "Vendu",
+                    rejected: "Rejeté",
+                },
+                actions: {
+                    delete: "Supprimer",
+                    cancel: "Annuler",
+                },
+                deleteModal: {
+                    title: "Supprimer cette annonce ?",
+                    description: "Cette action est irréversible.",
+                },
+                errors: {
+                    loadFailed: "Erreur lors du chargement de vos annonces",
+                    deleteFailed: "Impossible de supprimer l'annonce",
+                    statusUpdateFailed: "Erreur lors de la mise à jour du statut",
+                },
+                success: {
+                    deleted: "Annonce supprimée",
+                    statusUpdated: "Statut mis à jour",
+                },
+            },
+        },
 
     en: {
         // ******************************** Register ****************************************
@@ -2500,15 +2707,6 @@ export const translations = {
                 missingFields: "Some required fields are missing.",
             },
 
-            images: {
-                maxReached: "You have already reached the maximum of 10 images.",
-                uploadSuccess: "Images successfully uploaded.",
-                uploadError:
-                    "Error uploading images. Please try again.",
-                noUrlReturned:
-                    "No image URL returned by the server.",
-            },
-
             success: {
                 created: "Your listing has been successfully created!",
             },
@@ -2612,6 +2810,89 @@ export const translations = {
                 },
             },
 
+            filters: {
+                title: "Additional filters",
+                condition: "Condition",
+                select: "Select",
+                new: "New",
+                used: "Used",
+                color: "Color",
+                colorPlaceholder: "Red / Black / Beige…",
+                brandType: "Brand / Type",
+                brandTypePlaceholder: "Ex: BMW, Dior, Moroccan craft…",
+            },
+
+            pricing: {
+                title: "Pricing",
+                transactionType: "Transaction type",
+                forSale: "For sale",
+                forRent: "For rent",
+                rentalPrice: "Rental price",
+                price: "Price",
+                rentalPricePlaceholder: "Ex: 5000 (per period)",
+                pricePlaceholder: "Ex: 250000",
+                priceError: "Price is required and must be greater than 0.",
+                rentalPeriod: "Rental period",
+                rentalPeriodError: "Rental period is required.",
+                tipsTitle: "Pricing tips",
+                tipsDescription: "Compare similar listings and set a realistic price to get more contacts.",
+                noteTitle: "Good to know",
+                noteDescription: "A clear and competitive price improves your chances of being contacted quickly.",
+            },
+
+            submission: {
+                title: "Final review",
+                subtitle: "Review your information before publishing your listing.",
+                summaryTitle: "Listing summary",
+                category: "Category",
+                transactionType: "Transaction type",
+                location: "Location",
+                imagesCount: "image",
+                requiredFields: "Required fields",
+                requiredFieldsOk: "All essential fields appear to be completed.",
+                requiredFieldsMissing: "Some required fields are missing (title, description, price, location, transaction type, etc.).",
+                imagesAdded: "image(s) added.",
+                noImages: "No image added yet. Add at least one photo to attract more visitors.",
+                publish: "Publish my listing",
+                publishing: "Publishing...",
+                moderationNotice: "By publishing, you accept that your listing may be moderated before going live.",
+                rentalByDay: "Per day",
+                rentalByWeek: "Per week",
+                rentalByMonth: "Per month",
+                rentalByYear: "Per year",
+            },
+
+            navigation: {
+                back: "Back",
+                next: "Next",
+                publish: "Publish listing",
+                uploading: "Uploading",
+                step: "Step",
+            },
+
+            images: {
+                maxReached: "You have already reached the maximum of 10 images.",
+                uploadSuccess: "Images successfully uploaded.",
+                uploadError:
+                    "Error uploading images. Please try again.",
+                noUrlReturned:
+                    "No image URL returned by the server.",
+                helper: "Add at least one photo to make your listing stand out.",
+                uploading: "Uploading...",
+                addOne: "Add a photo",
+                required: "At least one image is required.",
+                emptyTitle: "No image yet",
+                emptyDescription: "Click to select images from your device (max 10).",
+                imageAlt: "Image",
+                delete: "Delete",
+                add: "Add",
+                tipsTitle: "Tips for great photos:",
+                tip1: "Use good lighting (daylight if possible).",
+                tip2: "Take photos from multiple angles.",
+                tip3: "Avoid cluttered backgrounds.",
+                tip4: "The first image matters most: choose your best one.",
+            },
+
             categoryStep: {
                 loading: "Loading categories…",
                 error:
@@ -2632,7 +2913,139 @@ export const translations = {
 
 
 
-        }
+        },
+
+        authCallback: {
+            loading: {
+                title: "Signing you in…",
+                finalizing: "Finalizing Google OAuth…",
+                redirecting: "Redirecting…",
+            },
+            success: {
+                googleLogin: "Google login successful 🎉",
+            },
+            errors: {
+                sessionNotFound: "Google session not found. Please try again.",
+                missingTokens: "Missing tokens in OAuth finalize response.",
+                googleLoginFailed: "Google login failed",
+            },
+        },
+
+        seller: {
+            overview: {
+                totalViews: "total views",
+                published: "published",
+            },
+            help: {
+                title: "Frequently asked questions",
+                faq: {
+                    createListing: {
+                        question: "How do I create a listing?",
+                        answer: "To create a listing, click the \"Post a listing\" button in the navigation bar or in your seller dashboard. Then follow the steps to add details, photos, and price.",
+                    },
+                    replyMessages: {
+                        question: "How do I reply to buyer messages?",
+                        answer: "You can access all your messages in the \"Messages\" section of your seller dashboard. Click a conversation to view and reply.",
+                    },
+                    payments: {
+                        question: "How are payments handled?",
+                        answer: "Payments are secured through our system. When a buyer makes a purchase, the amount is held until delivery is confirmed. You then receive the payment on your linked account.",
+                    },
+                    fees: {
+                        question: "What are the seller fees?",
+                        answer: "Goodplans charges a 5% commission on each successful sale. There are no fees to post a listing or communicate with buyers.",
+                    },
+                    promote: {
+                        question: "How can I promote my listings?",
+                        answer: "Add high-quality photos, detailed descriptions, and reply quickly to messages. Premium promotion options will be available soon.",
+                    },
+                },
+                contact: {
+                    title: "Need help?",
+                    description: "Our support team is here to help with questions about your listings, sales, or seller account.",
+                    emailTitle: "By email",
+                    emailDelay: "Reply within 24 to 48 hours (business days).",
+                    phoneTitle: "By phone",
+                    phoneHours: "Monday to Friday, 9am – 6pm.",
+                    chatTitle: "Live chat",
+                    chatDescription: "Chat with an advisor when live chat is available.",
+                    openChat: "Open chat",
+                },
+            },
+            featuredOrders: {
+                title: "My featured orders",
+                subtitle: "Track boosted listings and their end dates.",
+                empty: "No featured order yet.",
+                day: "day",
+                from: "From",
+                to: "to",
+                table: {
+                    listing: "Listing",
+                    plan: "Plan",
+                    period: "Period",
+                    status: "Status",
+                    actions: "Actions",
+                },
+                actions: {
+                    refresh: "Refresh",
+                    viewListing: "View listing",
+                },
+                status: {
+                    active: "Active",
+                    pending: "Pending",
+                    cancelled: "Cancelled",
+                    expired: "Expired",
+                },
+                errors: {
+                    loadFailed: "Failed to load featured orders",
+                },
+            },
+            listings: {
+                title: "My listings",
+                subtitle: "Manage your listings and monitor their performance.",
+                empty: "No listing found.",
+                filters: {
+                    searchPlaceholder: "Search...",
+                    newest: "Newest first",
+                    oldest: "Oldest first",
+                    priceHigh: "Price: high to low",
+                    priceLow: "Price: low to high",
+                    views: "Most viewed",
+                },
+                table: {
+                    listing: "Listing",
+                    price: "Price",
+                    status: "Status",
+                    views: "Views",
+                    date: "Date",
+                    actions: "Actions",
+                },
+                status: {
+                    pending: "Pending",
+                    published: "Published",
+                    suspended: "Suspended",
+                    sold: "Sold",
+                    rejected: "Rejected",
+                },
+                actions: {
+                    delete: "Delete",
+                    cancel: "Cancel",
+                },
+                deleteModal: {
+                    title: "Delete this listing?",
+                    description: "This action cannot be undone.",
+                },
+                errors: {
+                    loadFailed: "Failed to load your listings",
+                    deleteFailed: "Unable to delete listing",
+                    statusUpdateFailed: "Failed to update status",
+                },
+                success: {
+                    deleted: "Listing deleted",
+                    statusUpdated: "Status updated",
+                },
+            },
+        },
 
     },
 

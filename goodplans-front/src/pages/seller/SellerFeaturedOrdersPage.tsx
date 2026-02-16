@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Loader2, Star, ArrowRight } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { Link } from "react-router-dom";
+import { useLanguage } from "../../lib/language/LanguageContext";
 import {
   fetchMyFeaturedOrders,
   type FeaturedOrder,
@@ -23,22 +24,23 @@ function statusBadgeClasses(status: FeaturedOrder["status"]) {
   }
 }
 
-function statusLabel(status: FeaturedOrder["status"]) {
+function statusLabel(status: FeaturedOrder["status"], t: (path: string) => string) {
   switch (status) {
     case "ACTIVE":
-      return "Active";
+      return t("seller.featuredOrders.status.active");
     case "PENDING":
-      return "En attente";
+      return t("seller.featuredOrders.status.pending");
     case "CANCELLED":
-      return "Annulée";
+      return t("seller.featuredOrders.status.cancelled");
     case "EXPIRED":
-      return "Expirée";
+      return t("seller.featuredOrders.status.expired");
     default:
       return status;
   }
 }
 
 export default function SellerFeaturedOrdersPage() {
+  const { t } = useLanguage();
   const [orders, setOrders] = useState<FeaturedOrder[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -49,7 +51,7 @@ export default function SellerFeaturedOrdersPage() {
       setOrders(data || []);
     } catch (e: any) {
       console.error(e);
-      toast.error(e?.message || "Erreur lors du chargement des mises en avant");
+      toast.error(e?.message || t("seller.featuredOrders.errors.loadFailed"));
     } finally {
       setLoading(false);
     }
@@ -72,23 +74,23 @@ export default function SellerFeaturedOrdersPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
-            Mes mises en avant
+            {t("seller.featuredOrders.title")}
           </h1>
           <p className="mt-1 text-sm text-gray-500">
-            Suis les annonces boostées et leurs dates de fin.
+            {t("seller.featuredOrders.subtitle")}
           </p>
         </div>
         <button
           onClick={load}
           className="rounded-md bg-gray-100 px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
         >
-          Actualiser
+          {t("seller.featuredOrders.actions.refresh")}
         </button>
       </div>
 
       {orders.length === 0 ? (
         <div className="rounded-lg bg-white p-6 text-center text-gray-500 shadow-sm">
-          Aucune mise en avant pour le moment.
+          {t("seller.featuredOrders.empty")}
         </div>
       ) : (
         <div className="overflow-hidden rounded-lg bg-white shadow-sm">
@@ -97,19 +99,19 @@ export default function SellerFeaturedOrdersPage() {
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                    Annonce
+                    {t("seller.featuredOrders.table.listing")}
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                    Plan
+                    {t("seller.featuredOrders.table.plan")}
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                    Période
+                    {t("seller.featuredOrders.table.period")}
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                    Statut
+                    {t("seller.featuredOrders.table.status")}
                   </th>
                   <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
-                    Actions
+                    {t("seller.featuredOrders.table.actions")}
                   </th>
                 </tr>
               </thead>
@@ -132,7 +134,7 @@ export default function SellerFeaturedOrdersPage() {
                     <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-700">
                       <div className="font-medium">{order.plan.name}</div>
                       <div className="text-xs text-gray-500">
-                        {order.plan.duration_days} jour
+                        {order.plan.duration_days} {t("seller.featuredOrders.day")}
                         {order.plan.duration_days > 1 ? "s" : ""} ·{" "}
                         {order.plan.price.toLocaleString("fr-FR", {
                           minimumFractionDigits: 2,
@@ -143,13 +145,13 @@ export default function SellerFeaturedOrdersPage() {
                     </td>
                     <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-700">
                       <div>
-                        Du{" "}
+                        {t("seller.featuredOrders.from")} {" "}
                         {new Date(order.started_at).toLocaleDateString(
                           "fr-FR"
                         )}
                       </div>
                       <div className="text-xs text-gray-500">
-                        au{" "}
+                        {t("seller.featuredOrders.to")} {" "}
                         {new Date(order.ends_at).toLocaleDateString("fr-FR")}
                       </div>
                     </td>
@@ -159,7 +161,7 @@ export default function SellerFeaturedOrdersPage() {
                           order.status
                         )}`}
                       >
-                        {statusLabel(order.status)}
+                        {statusLabel(order.status, t)}
                       </span>
                     </td>
                     <td className="whitespace-nowrap px-4 py-4 text-right text-sm">
@@ -167,7 +169,7 @@ export default function SellerFeaturedOrdersPage() {
                         to={`/listings/${order.listing_id}`}
                         className="inline-flex items-center gap-1 text-primary hover:text-primary-dark"
                       >
-                        Voir l’annonce
+                        {t("seller.featuredOrders.actions.viewListing")}
                         <ArrowRight className="h-4 w-4" />
                       </Link>
                     </td>
