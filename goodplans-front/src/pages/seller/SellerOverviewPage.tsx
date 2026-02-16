@@ -6,9 +6,11 @@ import { OverviewFiltersBar } from "../../components/seller/OverviewFiltersBar";
 import { useSellerOverview } from "../../hooks/useSellerOverview";
 import { getCategoryLabel } from "../../features/listings/utils/categoryLabels";
 import { useUnreadCount } from "../../features/messages/apiMessage"; // ✅ ajout
+import { useLanguage } from "../../lib/language/LanguageContext";
 
 export default function SellerOverviewPage() {
   const { data, isLoading, error, filters, setFilters } = useSellerOverview();
+  const { t, lang } = useLanguage();
 
   // messages non lus (même API que la navbar)
   const { data: unreadData } = useUnreadCount(false);
@@ -28,12 +30,12 @@ export default function SellerOverviewPage() {
   const derivedActivities = useMemo(() => {
     if (!data) return [];
 
-    const today = new Date().toLocaleDateString("fr-FR");
+    const today = new Date().toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US");
     const base = [
       {
         id: "views",
         type: "view",
-        message: `${data.engagement.totalViews} vues cumulées`,
+        message: `${data.engagement.totalViews} ${t("seller.overview.totalViews")}`,
         time: today,
       },
     ];
@@ -44,12 +46,12 @@ export default function SellerOverviewPage() {
         id: `cat-${cat.category}-${index}`,
         type: "message",
         message: `${getCategoryLabel(cat.category)} • ${cat.approved ?? cat.total
-          } publiées`,
+          } ${t("seller.overview.published")}`,
         time: today,
       }));
 
     return [...base, ...categoryActivities];
-  }, [data]);
+  }, [data, lang, t]);
 
   return (
     <div className="h-[calc(100vh-64px)] bg-slate-50 py-6">

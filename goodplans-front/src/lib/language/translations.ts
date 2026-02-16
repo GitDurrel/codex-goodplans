@@ -1387,6 +1387,139 @@ export const translations = {
 
     },
 
+
+        authCallback: {
+            loading: {
+                title: "Connexion en cours…",
+                finalizing: "Finalisation Google OAuth…",
+                redirecting: "Redirection…",
+            },
+            success: {
+                googleLogin: "Connexion Google réussie 🎉",
+            },
+            errors: {
+                sessionNotFound: "Session Google introuvable. Réessaie.",
+                missingTokens: "Tokens manquants dans la réponse OAuth finalize.",
+                googleLoginFailed: "Connexion Google échouée",
+            },
+        },
+
+        seller: {
+            overview: {
+                totalViews: "vues cumulées",
+                published: "publiées",
+            },
+            help: {
+                title: "Questions fréquentes",
+                faq: {
+                    createListing: {
+                        question: "Comment créer une annonce ?",
+                        answer: "Pour créer une annonce, cliquez sur le bouton \"Déposer une annonce\" dans la barre de navigation ou dans votre tableau de bord vendeur. Suivez ensuite les étapes pour ajouter les détails, les photos et le prix de votre article.",
+                    },
+                    replyMessages: {
+                        question: "Comment répondre aux messages des acheteurs ?",
+                        answer: "Vous pouvez accéder à tous vos messages dans la section \"Messages\" de votre tableau de bord vendeur. Cliquez sur une conversation pour voir les messages et y répondre.",
+                    },
+                    payments: {
+                        question: "Comment sont gérés les paiements ?",
+                        answer: "Les paiements sont sécurisés via notre système. Lorsqu’un acheteur effectue un achat, le montant est mis en attente jusqu’à la confirmation de la réception de l’article. Vous recevez ensuite le paiement sur votre compte associé.",
+                    },
+                    fees: {
+                        question: "Quels sont les frais pour les vendeurs ?",
+                        answer: "Goodplans prélève une commission de 5% sur chaque vente réussie. Il n’y a pas de frais pour publier une annonce ou communiquer avec les acheteurs.",
+                    },
+                    promote: {
+                        question: "Comment promouvoir mes annonces ?",
+                        answer: "Ajoutez des photos de qualité, des descriptions détaillées et répondez rapidement aux messages. Des options de promotion premium seront bientôt disponibles.",
+                    },
+                },
+                contact: {
+                    title: "Besoin d’aide ?",
+                    description: "Notre équipe support est là pour vous aider en cas de question sur vos annonces, vos ventes ou votre compte vendeur.",
+                    emailTitle: "Par e-mail",
+                    emailDelay: "Réponse sous 24 à 48h (jours ouvrables).",
+                    phoneTitle: "Par téléphone",
+                    phoneHours: "Du lundi au vendredi, 9h – 18h.",
+                    chatTitle: "Chat en ligne",
+                    chatDescription: "Discutez avec un conseiller quand le chat est disponible.",
+                    openChat: "Ouvrir le chat",
+                },
+            },
+            featuredOrders: {
+                title: "Mes mises en avant",
+                subtitle: "Suis les annonces boostées et leurs dates de fin.",
+                empty: "Aucune mise en avant pour le moment.",
+                day: "jour",
+                from: "Du",
+                to: "au",
+                table: {
+                    listing: "Annonce",
+                    plan: "Plan",
+                    period: "Période",
+                    status: "Statut",
+                    actions: "Actions",
+                },
+                actions: {
+                    refresh: "Actualiser",
+                    viewListing: "Voir l’annonce",
+                },
+                status: {
+                    active: "Active",
+                    pending: "En attente",
+                    cancelled: "Annulée",
+                    expired: "Expirée",
+                },
+                errors: {
+                    loadFailed: "Erreur lors du chargement des mises en avant",
+                },
+            },
+            listings: {
+                title: "Mes annonces",
+                subtitle: "Gérez vos annonces et suivez leurs performances.",
+                empty: "Aucune annonce trouvée.",
+                filters: {
+                    searchPlaceholder: "Rechercher...",
+                    newest: "Plus récentes",
+                    oldest: "Plus anciennes",
+                    priceHigh: "Prix décroissant",
+                    priceLow: "Prix croissant",
+                    views: "Plus vues",
+                },
+                table: {
+                    listing: "Annonce",
+                    price: "Prix",
+                    status: "Statut",
+                    views: "Vues",
+                    date: "Date",
+                    actions: "Actions",
+                },
+                status: {
+                    pending: "En attente",
+                    published: "Publié",
+                    suspended: "Suspendu",
+                    sold: "Vendu",
+                    rejected: "Rejeté",
+                },
+                actions: {
+                    delete: "Supprimer",
+                    cancel: "Annuler",
+                },
+                deleteModal: {
+                    title: "Supprimer cette annonce ?",
+                    description: "Cette action est irréversible.",
+                },
+                errors: {
+                    loadFailed: "Erreur lors du chargement de vos annonces",
+                    deleteFailed: "Impossible de supprimer l'annonce",
+                    statusUpdateFailed: "Erreur lors de la mise à jour du statut",
+                },
+                success: {
+                    deleted: "Annonce supprimée",
+                    statusUpdated: "Statut mis à jour",
+                },
+            },
+        },
+
     en: {
         // ******************************** Register ****************************************
         register: {
@@ -2780,7 +2913,139 @@ export const translations = {
 
 
 
-        }
+        },
+
+        authCallback: {
+            loading: {
+                title: "Signing you in…",
+                finalizing: "Finalizing Google OAuth…",
+                redirecting: "Redirecting…",
+            },
+            success: {
+                googleLogin: "Google login successful 🎉",
+            },
+            errors: {
+                sessionNotFound: "Google session not found. Please try again.",
+                missingTokens: "Missing tokens in OAuth finalize response.",
+                googleLoginFailed: "Google login failed",
+            },
+        },
+
+        seller: {
+            overview: {
+                totalViews: "total views",
+                published: "published",
+            },
+            help: {
+                title: "Frequently asked questions",
+                faq: {
+                    createListing: {
+                        question: "How do I create a listing?",
+                        answer: "To create a listing, click the \"Post a listing\" button in the navigation bar or in your seller dashboard. Then follow the steps to add details, photos, and price.",
+                    },
+                    replyMessages: {
+                        question: "How do I reply to buyer messages?",
+                        answer: "You can access all your messages in the \"Messages\" section of your seller dashboard. Click a conversation to view and reply.",
+                    },
+                    payments: {
+                        question: "How are payments handled?",
+                        answer: "Payments are secured through our system. When a buyer makes a purchase, the amount is held until delivery is confirmed. You then receive the payment on your linked account.",
+                    },
+                    fees: {
+                        question: "What are the seller fees?",
+                        answer: "Goodplans charges a 5% commission on each successful sale. There are no fees to post a listing or communicate with buyers.",
+                    },
+                    promote: {
+                        question: "How can I promote my listings?",
+                        answer: "Add high-quality photos, detailed descriptions, and reply quickly to messages. Premium promotion options will be available soon.",
+                    },
+                },
+                contact: {
+                    title: "Need help?",
+                    description: "Our support team is here to help with questions about your listings, sales, or seller account.",
+                    emailTitle: "By email",
+                    emailDelay: "Reply within 24 to 48 hours (business days).",
+                    phoneTitle: "By phone",
+                    phoneHours: "Monday to Friday, 9am – 6pm.",
+                    chatTitle: "Live chat",
+                    chatDescription: "Chat with an advisor when live chat is available.",
+                    openChat: "Open chat",
+                },
+            },
+            featuredOrders: {
+                title: "My featured orders",
+                subtitle: "Track boosted listings and their end dates.",
+                empty: "No featured order yet.",
+                day: "day",
+                from: "From",
+                to: "to",
+                table: {
+                    listing: "Listing",
+                    plan: "Plan",
+                    period: "Period",
+                    status: "Status",
+                    actions: "Actions",
+                },
+                actions: {
+                    refresh: "Refresh",
+                    viewListing: "View listing",
+                },
+                status: {
+                    active: "Active",
+                    pending: "Pending",
+                    cancelled: "Cancelled",
+                    expired: "Expired",
+                },
+                errors: {
+                    loadFailed: "Failed to load featured orders",
+                },
+            },
+            listings: {
+                title: "My listings",
+                subtitle: "Manage your listings and monitor their performance.",
+                empty: "No listing found.",
+                filters: {
+                    searchPlaceholder: "Search...",
+                    newest: "Newest first",
+                    oldest: "Oldest first",
+                    priceHigh: "Price: high to low",
+                    priceLow: "Price: low to high",
+                    views: "Most viewed",
+                },
+                table: {
+                    listing: "Listing",
+                    price: "Price",
+                    status: "Status",
+                    views: "Views",
+                    date: "Date",
+                    actions: "Actions",
+                },
+                status: {
+                    pending: "Pending",
+                    published: "Published",
+                    suspended: "Suspended",
+                    sold: "Sold",
+                    rejected: "Rejected",
+                },
+                actions: {
+                    delete: "Delete",
+                    cancel: "Cancel",
+                },
+                deleteModal: {
+                    title: "Delete this listing?",
+                    description: "This action cannot be undone.",
+                },
+                errors: {
+                    loadFailed: "Failed to load your listings",
+                    deleteFailed: "Unable to delete listing",
+                    statusUpdateFailed: "Failed to update status",
+                },
+                success: {
+                    deleted: "Listing deleted",
+                    statusUpdated: "Status updated",
+                },
+            },
+        },
 
     },
 

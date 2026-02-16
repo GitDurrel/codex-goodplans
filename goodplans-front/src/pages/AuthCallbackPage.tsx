@@ -5,10 +5,12 @@ import Logo from "../components/Logo";
 import { supabase } from "../lib/supabase";
 import { apiOAuthFinalize } from "../features/auth/authApi";
 import { useAuth } from "../features/auth/AuthContext";
+import { useLanguage } from "../lib/language/LanguageContext";
 
 export default function AuthCallbackPage() {
   const navigate = useNavigate();
   const { completeLogin } = useAuth();
+  const { t } = useLanguage();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -24,7 +26,7 @@ export default function AuthCallbackPage() {
         const user = session?.user;
 
         if (!user?.id || !user?.email) {
-          throw new Error("Session Google introuvable. Réessaie.");
+          throw new Error(t("authCallback.errors.sessionNotFound"));
         }
 
         // 2) Finaliser côté backend (comme le mobile)
@@ -39,16 +41,16 @@ export default function AuthCallbackPage() {
         };
 
         if (!loginRes.accessToken || !loginRes.refreshToken) {
-          throw new Error("Tokens manquants dans la réponse OAuth finalize.");
+          throw new Error(t("authCallback.errors.missingTokens"));
         }
 
         if (cancelled) return;
 
-        toast.success("Connexion Google réussie 🎉");
+        toast.success(t("authCallback.success.googleLogin"));
         completeLogin(loginRes as any, "/"); // ou "/dashboard" si tu veux direct
       } catch (e: any) {
         console.error("OAuth callback error:", e);
-        toast.error(e?.message || "Connexion Google échouée");
+        toast.error(e?.message || t("authCallback.errors.googleLoginFailed"));
         navigate("/login", { replace: true });
       } finally {
         if (!cancelled) setLoading(false);
@@ -72,10 +74,12 @@ export default function AuthCallbackPage() {
           <span className="h-6 w-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
         </div>
         <h1 className="text-xl font-bold text-slate-900 mb-2">
-          Connexion en cours…
+          {t("authCallback.loading.title")}
         </h1>
         <p className="text-sm text-slate-600">
-          {loading ? "Finalisation Google OAuth…" : "Redirection…"}
+          {loading
+            ? t("authCallback.loading.finalizing")
+            : t("authCallback.loading.redirecting")}
         </p>
       </div>
     </div>
