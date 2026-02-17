@@ -1580,6 +1580,7 @@ export const translations = {
                 },
             },
         },
+
         common: {
             loading: "Chargement...",
             confirm: "Confirmer",
@@ -1640,6 +1641,7 @@ export const translations = {
             featuredPlans: {},
             promoBanners: {},
         },
+
 
     en: {
         // ******************************** Register ****************************************
