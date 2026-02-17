@@ -29,13 +29,13 @@ function getStatusBadgeClasses(status: FeaturedOrderStatus) {
 function getStatusLabel(status: FeaturedOrderStatus, t: (path: string) => string) {
   switch (status) {
     case "ACTIVE":
-      return "Active";
+      return t("admin.featuredOrders.status.active");
     case "PENDING":
       return t("admin.common.status.pending");
     case "EXPIRED":
-      return "Expirée";
+      return t("admin.featuredOrders.status.expired");
     case "CANCELLED":
-      return "Annulée";
+      return t("admin.featuredOrders.status.cancelled");
     default:
       return status;
   }
@@ -62,8 +62,8 @@ const AdminFeaturedOrdersPage = () => {
       setOrders(data || []);
     } catch (err: any) {
       console.error("Error fetching featured orders:", err);
-      setError(err?.message || "Erreur lors du chargement des mises en avant");
-      toast.error("Impossible de charger les mises en avant");
+      setError(err?.message || t("admin.featuredOrders.errors.loadRaw"));
+      toast.error(t("admin.featuredOrders.errors.loadFailed"));
     } finally {
       setLoading(false);
     }
@@ -72,7 +72,7 @@ const AdminFeaturedOrdersPage = () => {
   const handleCancel = async (orderId: string) => {
     if (
       !window.confirm(
-        "Annuler cette mise en avant ? L'annonce ne sera plus prioritaire dans les résultats."
+        t("admin.featuredOrders.confirm.cancel")
       )
     ) {
       return;
@@ -87,10 +87,10 @@ const AdminFeaturedOrdersPage = () => {
             : order
         )
       );
-      toast.success("Mise en avant annulée avec succès");
+      toast.success(t("admin.featuredOrders.success.cancelled"));
     } catch (err: any) {
       console.error("Error cancelling featured order:", err);
-      toast.error(err?.message || "Erreur lors de l'annulation");
+      toast.error(err?.message || t("admin.featuredOrders.errors.cancelFailed"));
     }
   };
 
@@ -114,7 +114,7 @@ const AdminFeaturedOrdersPage = () => {
           to="/admin/featured/plans"
           className="rounded-md border border-primary/30 px-3 py-2 text-sm text-primary hover:bg-primary/5"
         >
-          Gérer les packs
+          {t("admin.featuredOrders.actions.managePlans")}
         </Link>
 
         <select
@@ -126,18 +126,18 @@ const AdminFeaturedOrdersPage = () => {
           }
           className="rounded-md border-gray-300 text-sm shadow-sm focus:border-primary focus:ring-primary"
         >
-          <option value="all">Tous les statuts</option>
-          <option value="ACTIVE">Actives</option>
-          <option value="PENDING">En attente</option>
-          <option value="EXPIRED">Expirées</option>
-          <option value="CANCELLED">Annulées</option>
+          <option value="all">{t("admin.common.filters.allStatuses")}</option>
+          <option value="ACTIVE">{t("admin.featuredOrders.status.active")}</option>
+          <option value="PENDING">{t("admin.common.status.pending")}</option>
+          <option value="EXPIRED">{t("admin.featuredOrders.status.expiredPlural")}</option>
+          <option value="CANCELLED">{t("admin.featuredOrders.status.cancelledPlural")}</option>
         </select>
 
         <button
           onClick={fetchOrders}
           className="rounded-md bg-primary px-4 py-2 text-sm text-white hover:bg-primary-dark transition-colors"
         >
-          Actualiser
+          {t("admin.common.actions.refresh")}
         </button>
       </div>
 
@@ -149,7 +149,7 @@ const AdminFeaturedOrdersPage = () => {
             onClick={fetchOrders}
             className="ml-4 text-sm underline"
           >
-            Réessayer
+            {t("common.retry")}
           </button>
         </div>
       )}
@@ -158,7 +158,7 @@ const AdminFeaturedOrdersPage = () => {
       <div className="overflow-hidden rounded-lg bg-white shadow-sm">
         {orders.length === 0 ? (
           <div className="p-6 text-center text-gray-500">
-            Aucune mise en avant trouvée.
+            {t("admin.featuredOrders.empty")}
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -166,32 +166,32 @@ const AdminFeaturedOrdersPage = () => {
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                    Annonce
+                    {t("admin.featuredOrders.table.listing")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                    Vendeur
+                    {t("admin.reports.table.seller")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                    Plan
+                    {t("admin.featuredOrders.table.plan")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                    Période
+                    {t("admin.featuredOrders.table.period")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                    Statut
+                    {t("admin.featuredOrders.table.status")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                    Créée le
+                    {t("admin.featuredPlans.table.createdAt")}
                   </th>
                   <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
-                    Actions
+                    {t("common.actions")}
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
                 {orders.map((order) => (
                   <tr key={order.id} className="hover:bg-gray-50">
-                    {/* Annonce */}
+                    {/* {t("admin.featuredOrders.table.listing")} */}
                     <td className="whitespace-nowrap px-6 py-4">
                       <div className="flex items-center gap-2">
                         <Star className="h-5 w-5 text-yellow-400" />
@@ -215,7 +215,7 @@ const AdminFeaturedOrdersPage = () => {
                       </div>
                     </td>
 
-                    {/* Plan */}
+                    {/* {t("admin.featuredOrders.table.plan")} */}
                     <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-700">
                       <div className="font-medium">{order.plan?.name}</div>
                       <div className="text-xs text-gray-500">
@@ -229,7 +229,7 @@ const AdminFeaturedOrdersPage = () => {
                       </div>
                     </td>
 
-                    {/* Période */}
+                    {/* {t("admin.featuredOrders.table.period")} */}
                     <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-700">
                       <div>
                         Du{" "}
@@ -257,7 +257,7 @@ const AdminFeaturedOrdersPage = () => {
                       {new Date(order.created_at).toLocaleDateString("fr-FR")}
                     </td>
 
-                    {/* Actions */}
+                    {/* {t("common.actions")} */}
                     <td className="whitespace-nowrap px-6 py-4 text-right text-sm">
                       <div className="flex justify-end gap-3">
                         <Link
@@ -273,7 +273,7 @@ const AdminFeaturedOrdersPage = () => {
                             className="inline-flex items-center gap-1 text-red-600 hover:text-red-800"
                           >
                             <XCircle className="h-4 w-4" />
-                            Annuler
+                            {t("common.cancel")}
                           </button>
                         )}
                       </div>

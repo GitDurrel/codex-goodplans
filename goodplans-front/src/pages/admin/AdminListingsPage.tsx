@@ -472,7 +472,7 @@ export default function AdminListingsPage() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
         <StatCard label="Total annonces" value={stats.total} icon={Tag} />
         <StatCard label={t("admin.common.status.pending")} value={stats.pending} icon={AlertCircle} />
-        <StatCard label="Publiées" value={stats.published} icon={Check} />
+        <StatCard label={t("admin.listings.stats.published")} value={stats.published} icon={Check} />
         <StatCard label="Suspendues" value={stats.suspended} icon={Pause} />
       </div>
 
@@ -622,7 +622,7 @@ export default function AdminListingsPage() {
                       {l.price?.toLocaleString("fr-FR")} MAD
                     </div>
                     <div className="text-xs text-slate-500">
-                      {l.transaction_type || "Non spécifié"}
+                      {l.transaction_type || t("admin.listings.table.notSpecified")}
                     </div>
                   </Td>
 

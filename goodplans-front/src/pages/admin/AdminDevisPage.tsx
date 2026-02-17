@@ -34,7 +34,7 @@ const Devis = () => {
     } catch (err: any) {
       console.error("Error fetching devis requests:", err);
       setError(
-        err?.message || "Erreur lors du chargement des demandes de devis"
+        err?.message || t("admin.devis.errors.loadRaw")
       );
       toast.error(t("admin.devis.errors.loadFailed"));
     } finally {
@@ -146,7 +146,7 @@ const Devis = () => {
     <div className="space-y-6">
       {/* Header + filtres */}
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Demandes de devis</h1>
+        <h1 className="text-2xl font-bold">{t("admin.devis.title")}</h1>
         <div className="flex items-center gap-4">
           <select
             value={statusFilter}
@@ -156,8 +156,8 @@ const Devis = () => {
             <option value="all">Tous les statuts</option>
             <option value="pending">En attente</option>
             <option value="read">Lus</option>
-            <option value="replied">Répondus</option>
-            <option value="archived">Archivés</option>
+            <option value="replied">{t("admin.devis.status.repliedPlural")}</option>
+            <option value="archived">{t("admin.devis.status.archivedPlural")}</option>
           </select>
           <button
             onClick={fetchDevisRequests}
@@ -175,7 +175,7 @@ const Devis = () => {
             onClick={fetchDevisRequests}
             className="ml-4 text-sm underline"
           >
-            Réessayer
+            {t("common.retry")}
           </button>
         </div>
       )}
@@ -186,7 +186,7 @@ const Devis = () => {
         </div>
       ) : filteredRequests.length === 0 ? (
         <div className="bg-white rounded-lg shadow-sm p-6 text-center text-gray-500">
-          Aucune demande trouvée
+          {t("admin.devis.empty")}
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -239,10 +239,10 @@ const Devis = () => {
                   <div className="flex justify-between items-start">
                     <div>
                       <h3 className="text-lg font-medium text-gray-900">
-                        Détails de la demande
+                        {t("admin.devis.details.title")}
                       </h3>
                       <div className="mt-2 text-sm text-gray-500">
-                        Reçue le{" "}
+                        {t("admin.devis.details.receivedAt")}{" "}
                         {new Date(
                           selectedRequest.created_at
                         ).toLocaleDateString("fr-FR")}
@@ -261,8 +261,8 @@ const Devis = () => {
                       >
                         <option value="pending">En attente</option>
                         <option value="read">Lu</option>
-                        <option value="replied">Répondu</option>
-                        <option value="archived">Archivé</option>
+                        <option value="replied">{t("admin.common.status.replied")}</option>
+                        <option value="archived">{t("admin.common.status.archived")}</option>
                       </select>
                     </div>
                   </div>
@@ -295,7 +295,7 @@ const Devis = () => {
                       </div>
                       <div>
                         <dt className="text-sm font-medium text-gray-500">
-                          Durée souhaitée
+                          {t("admin.devis.details.duration")}
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900">
                           {selectedRequest.duration}
@@ -324,7 +324,7 @@ const Devis = () => {
                             )}
                             {selectedRequest.ad_space.searchPage && (
                               <span className="px-2 py-1 text-xs rounded-full bg-pink-100 text-pink-800">
-                                Bannière page de recherche
+                                {t("admin.devis.details.searchBanner")}
                               </span>
                             )}
                           </div>
@@ -390,7 +390,7 @@ const Devis = () => {
                       className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                     >
                       <Mail className="h-4 w-4 mr-2" />
-                      Répondre par email
+                      {t("admin.common.actions.replyByEmail")}
                     </a>
 
                     {/* Bouton pour créer un encart depuis ce devis */}
@@ -404,14 +404,14 @@ const Devis = () => {
                       className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-primary bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                     >
                       <Megaphone className="h-4 w-4 mr-2" />
-                      Créer un encart depuis ce devis
+                      {t("admin.devis.actions.createBanner")}
                     </button>
                   </div>
                 </div>
               </div>
             ) : (
               <div className="bg-white rounded-lg shadow-sm p-6 text-center text-gray-500">
-                Sélectionnez une demande pour voir les détails
+                {t("admin.devis.details.selectPrompt")}
               </div>
             )}
           </div>

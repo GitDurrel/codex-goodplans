@@ -138,7 +138,7 @@ export default function AdminReportsPage() {
         err?.message ||
           "Erreur lors du chargement des données de reporting."
       );
-      toast.error("Impossible de charger les données de reporting");
+      toast.error(t("admin.reports.errors.loadFailed"));
     } finally {
       setLoading(false);
     }
@@ -455,19 +455,19 @@ export default function AdminReportsPage() {
             !error &&
             activeTab === "timeline" &&
             timeline.length === 0 && (
-              <EmptyState message="Aucune donnée pour cette période." />
+              <EmptyState message={t("admin.reports.empty.period")} />
             )}
           {!loading &&
             !error &&
             activeTab === "category" &&
             byCategory.length === 0 && (
-              <EmptyState message="Aucune catégorie trouvée pour ces filtres." />
+              <EmptyState message={t("admin.reports.empty.category")} />
             )}
           {!loading &&
             !error &&
             activeTab === "seller" &&
             bySeller.length === 0 && (
-              <EmptyState message="Aucun vendeur trouvé pour ces filtres." />
+              <EmptyState message={t("admin.reports.empty.seller")} />
             )}
         </div>
       </div>

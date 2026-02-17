@@ -73,8 +73,8 @@ const AdminFeaturedPlansPage = () => {
       setPlans(data || []);
     } catch (err: any) {
       console.error("Error fetching featured plans:", err);
-      setError(err?.message || "Erreur lors du chargement des packs");
-      toast.error("Impossible de charger les packs de mise en avant");
+      setError(err?.message || t("admin.featuredPlans.errors.loadRaw"));
+      toast.error(t("admin.featuredPlans.errors.loadFailed"));
     } finally {
       setLoading(false);
     }
@@ -108,7 +108,7 @@ const AdminFeaturedPlansPage = () => {
     e.preventDefault();
 
     if (form.duration_days === "" || form.price === "") {
-      toast.error("Durée et prix sont obligatoires");
+      toast.error(t("admin.featuredPlans.errors.requiredFields"));
       return;
     }
 
@@ -125,7 +125,7 @@ const AdminFeaturedPlansPage = () => {
         });
 
         setPlans((prev) => [created, ...prev]);
-        toast.success("Plan créé avec succès");
+        toast.success(t("admin.featuredPlans.success.created"));
       } else if (mode === "edit" && form.id) {
         const updated = await apiAdminUpdateFeaturedPlan(form.id, {
           name: form.name.trim(),
@@ -138,13 +138,13 @@ const AdminFeaturedPlansPage = () => {
         setPlans((prev) =>
           prev.map((p) => (p.id === updated.id ? updated : p))
         );
-        toast.success("Plan mis à jour avec succès");
+        toast.success(t("admin.featuredPlans.success.updated"));
       }
 
       setIsModalOpen(false);
     } catch (err: any) {
       console.error("Error saving plan:", err);
-      toast.error(err?.message || "Erreur lors de l'enregistrement du plan");
+      toast.error(err?.message || t("admin.featuredPlans.errors.saveFailed"));
     } finally {
       setSaving(false);
     }
@@ -153,7 +153,7 @@ const AdminFeaturedPlansPage = () => {
   const handleDelete = async (plan: AdminFeaturedPlan) => {
     if (
       !window.confirm(
-        "Désactiver ce plan ? Il ne sera plus proposé aux vendeurs."
+        t("admin.featuredPlans.confirm.disable")
       )
     ) {
       return;
@@ -164,10 +164,10 @@ const AdminFeaturedPlansPage = () => {
       setPlans((prev) =>
         prev.map((p) => (p.id === updated.id ? updated : p))
       );
-      toast.success("Plan désactivé avec succès");
+      toast.success(t("admin.featuredPlans.success.disabled"));
     } catch (err: any) {
       console.error("Error deleting plan:", err);
-      toast.error(err?.message || "Erreur lors de la désactivation du plan");
+      toast.error(err?.message || t("admin.featuredPlans.errors.disableFailed"));
     }
   };
 
@@ -184,7 +184,7 @@ const AdminFeaturedPlansPage = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Packs de mise en avant</h1>
+          <h1 className="text-2xl font-bold">{t("admin.featuredPlans.title")}</h1>
           <p className="mt-1 text-sm text-gray-500">
             Configure les plans que les vendeurs peuvent acheter pour booster leurs annonces.
           </p>
@@ -195,7 +195,7 @@ const AdminFeaturedPlansPage = () => {
           className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-primary-dark transition-colors"
         >
           <Plus className="h-4 w-4" />
-          Nouveau plan
+          {t("admin.featuredPlans.actions.newPlan")}
         </button>
       </div>
 
@@ -206,7 +206,7 @@ const AdminFeaturedPlansPage = () => {
             onClick={fetchPlans}
             className="ml-4 text-sm underline"
           >
-            Réessayer
+            {t("common.retry")}
           </button>
         </div>
       )}
@@ -215,7 +215,7 @@ const AdminFeaturedPlansPage = () => {
       <div className="overflow-hidden rounded-lg bg-white shadow-sm">
         {plans.length === 0 ? (
           <div className="p-6 text-center text-gray-500">
-            Aucun pack de mise en avant configuré.
+            {t("admin.featuredPlans.empty")}
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -223,22 +223,22 @@ const AdminFeaturedPlansPage = () => {
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                    Nom
+                    {t("admin.featuredPlans.table.name")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                    Durée
+                    {t("admin.featuredPlans.table.duration")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                    Prix
+                    {t("admin.featuredPlans.table.price")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                    Statut
+                    {t("admin.featuredPlans.table.status")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                    Créé le
+                    {t("admin.featuredPlans.table.createdAt")}
                   </th>
                   <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
-                    Actions
+                    {t("common.actions")}
                   </th>
                 </tr>
               </thead>
@@ -273,12 +273,12 @@ const AdminFeaturedPlansPage = () => {
                       {plan.is_active ? (
                         <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2.5 py-1 text-xs font-medium text-green-800">
                           <CheckCircle className="h-3 w-3" />
-                          Actif
+                          {t("admin.featuredPlans.status.active")}
                         </span>
                       ) : (
                         <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">
                           <XCircle className="h-3 w-3" />
-                          Inactif
+                          {t("admin.featuredPlans.status.inactive")}
                         </span>
                       )}
                     </td>
@@ -294,7 +294,7 @@ const AdminFeaturedPlansPage = () => {
                           className="inline-flex items-center gap-1 text-sm text-primary hover:text-primary-dark"
                         >
                           <Pencil className="h-4 w-4" />
-                          Modifier
+                          {t("common.edit")}
                         </button>
 
                         <button
@@ -302,7 +302,7 @@ const AdminFeaturedPlansPage = () => {
                           className="inline-flex items-center gap-1 text-sm text-red-600 hover:text-red-800"
                         >
                           <Trash2 className="h-4 w-4" />
-                          Désactiver
+                          {t("admin.featuredPlans.actions.disable")}
                         </button>
                       </div>
                     </td>
@@ -320,7 +320,9 @@ const AdminFeaturedPlansPage = () => {
           <div className="w-full max-w-lg rounded-xl bg-white p-6 shadow-xl">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-lg font-semibold">
-                {mode === "create" ? "Nouveau plan de mise en avant" : "Modifier le plan"}
+                {mode === "create"
+                  ? t("admin.featuredPlans.modal.createTitle")
+                  : t("admin.featuredPlans.modal.editTitle")}
               </h2>
               <button
                 onClick={closeModal}
@@ -334,7 +336,7 @@ const AdminFeaturedPlansPage = () => {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Nom du plan
+                  {t("admin.featuredPlans.form.name")}
                 </label>
                 <input
                   type="text"
@@ -349,7 +351,7 @@ const AdminFeaturedPlansPage = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Description (optionnelle)
+                  {t("admin.featuredPlans.form.description")} (optionnelle)
                 </label>
                 <textarea
                   name="description"
@@ -364,7 +366,7 @@ const AdminFeaturedPlansPage = () => {
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Durée (jours)
+                    {t("admin.featuredPlans.table.duration")} (jours)
                   </label>
                   <input
                     type="number"
@@ -379,7 +381,7 @@ const AdminFeaturedPlansPage = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Prix (MAD)
+                    {t("admin.featuredPlans.table.price")} (MAD)
                   </label>
                   <input
                     type="number"
@@ -418,7 +420,7 @@ const AdminFeaturedPlansPage = () => {
                   disabled={saving}
                   className="rounded-md border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                 >
-                  Annuler
+                  {t("common.cancel")}
                 </button>
 
                 <button
@@ -427,7 +429,7 @@ const AdminFeaturedPlansPage = () => {
                   className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-dark disabled:opacity-70"
                 >
                   {saving && <Loader2 className="h-4 w-4 animate-spin" />}
-                  {mode === "create" ? "Créer le plan" : "Enregistrer"}
+                  {mode === "create" ? t("admin.featuredPlans.actions.create") : t("common.save")}
                 </button>
               </div>
             </form>

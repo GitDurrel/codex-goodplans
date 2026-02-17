@@ -51,19 +51,19 @@ type AdminByCategoryItem = {
 
 const CATEGORY_LABELS: Record<string, { label: string; icon: JSX.Element }> = {
   vehicle: {
-    label: "Véhicules",
+    label: t("admin.dashboard.categories.vehicle"),
     icon: <CarFront className="h-4 w-4" />,
   },
   craft: {
-    label: "Artisanat & déco",
+    label: t("admin.dashboard.categories.craft"),
     icon: <Hammer className="h-4 w-4" />,
   },
   real_estate: {
-    label: "Immobilier",
+    label: t("admin.dashboard.categories.realEstate"),
     icon: <Home className="h-4 w-4" />,
   },
   service: {
-    label: "Services",
+    label: t("admin.dashboard.categories.service"),
     icon: <BadgePercent className="h-4 w-4" />,
   },
 };
@@ -181,7 +181,7 @@ export default function AdminDashboardPage() {
           avgDurationDays,
         });
       } catch (err) {
-        console.error("Erreur chargement mises en avant", err);
+        console.error(t("admin.dashboard.errors.featuredLoad"), err);
         // on garde le dashboard utilisable même si ça plante
       } finally {
         if (!cancelled) setFeaturedLoading(false);
@@ -224,7 +224,7 @@ export default function AdminDashboardPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-xl font-bold sm:text-2xl">
-            Tableau de bord Admin
+            {t("admin.dashboard.title")}
           </h1>
           <p className="text-sm text-slate-500">
             Vue globale de l&apos;activité des annonces.
@@ -286,7 +286,7 @@ export default function AdminDashboardPage() {
               className="flex items-center gap-2 rounded-md bg-slate-100 px-3 py-1 text-xs text-slate-700 hover:bg-slate-200"
             >
               <RefreshCw className="h-4 w-4" />
-              Actualiser
+              {t("admin.common.actions.refresh")}
             </button>
             <div className="hidden text-xs text-slate-500 sm:block">
               {today.toLocaleDateString("fr-FR", {
@@ -303,7 +303,7 @@ export default function AdminDashboardPage() {
       {/* erreurs */}
       {error && (
         <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
-          {error.message || "Erreur lors du chargement des données"}
+          {error.message || t("admin.dashboard.errors.loadFailed")}
         </div>
       )}
 
@@ -320,27 +320,27 @@ export default function AdminDashboardPage() {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <StatCard
               icon={ShoppingBag}
-              title="Total annonces"
+              title={t("admin.dashboard.stats.total")}
               value={stats?.total ?? 0}
               subtitle="Toutes les annonces du site"
             />
             <StatCard
               icon={Users}
-              title="Approuvées"
+              title={t("admin.dashboard.stats.approved")}
               value={stats?.approved ?? 0}
-              subtitle="Annonces publiées"
+              subtitle={t("admin.dashboard.stats.approvedSubtitle")}
             />
             <StatCard
               icon={Clock}
               title={t("admin.common.status.pending")}
               value={stats?.pending ?? 0}
-              subtitle="En cours de modération"
+              subtitle={t("admin.dashboard.stats.pendingSubtitle")}
             />
             <StatCard
               icon={Clock}
-              title="Rejetées"
+              title={t("admin.dashboard.stats.rejected")}
               value={stats?.rejected ?? 0}
-              subtitle="Refusées par la modération"
+              subtitle={t("admin.dashboard.stats.rejectedSubtitle")}
             />
           </div>
 
@@ -348,12 +348,12 @@ export default function AdminDashboardPage() {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <SimpleCard
               icon={Eye}
-              title="Vues cumulées"
+              title={t("admin.dashboard.stats.views")}
               value={engagement?.totalViews ?? 0}
             />
             <SimpleCard
               icon={Heart}
-              title="Favoris cumulés"
+              title={t("admin.dashboard.stats.favorites")}
               value={engagement?.totalFavorites ?? 0}
             />
           </div>
@@ -371,13 +371,13 @@ export default function AdminDashboardPage() {
           {/* par catégorie */}
           <div className="rounded-lg border border-slate-100 bg-white p-4 shadow-sm">
             <h2 className="mb-4 text-base font-semibold">
-              Annonces par catégorie
+              {t("admin.dashboard.byCategory.title")}
             </h2>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {(byCategory ?? []).map((item) => {
                 const key = item.category ?? "unknown";
                 const info = CATEGORY_LABELS[key] ?? {
-                  label: item.category ?? "Autres",
+                  label: item.category ?? t("admin.dashboard.categories.other"),
                   icon: <ShoppingBag className="h-4 w-4" />,
                 };
 
@@ -393,20 +393,20 @@ export default function AdminDashboardPage() {
                       <div>
                         <p className="text-sm font-medium">{info.label}</p>
                         <p className="text-xs text-slate-500">
-                          {item.approved} approuvées
+                          {item.approved} {t("admin.dashboard.byCategory.approved")}
                         </p>
                       </div>
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-semibold">{item.total}</p>
-                      <p className="text-[11px] text-slate-400">Total</p>
+                      <p className="text-[11px] text-slate-400">{t("admin.dashboard.byCategory.total")}</p>
                     </div>
                   </div>
                 );
               })}
               {(byCategory?.length ?? 0) === 0 && (
                 <p className="col-span-full text-sm text-slate-500">
-                  Aucune annonce pour cette période.
+                  {t("admin.dashboard.byCategory.empty")}
                 </p>
               )}
             </div>
@@ -489,14 +489,14 @@ function FeaturedHighlightCard({
           </div>
           <div>
             <p className="text-sm font-semibold text-slate-800">
-              Mises en avant / annonces sponsorisées
+              {t("admin.dashboard.featured.title")}
             </p>
           </div>
         </div>
         {loading && (
           <div className="flex items-center gap-2 text-xs text-slate-500">
             <div className="h-3 w-3 animate-spin rounded-full border-b-2 border-amber-500" />
-            Chargement…
+            {t("common.loading")}
           </div>
         )}
       </div>
@@ -504,7 +504,7 @@ function FeaturedHighlightCard({
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <div className="rounded-md bg-white/70 px-3 py-2">
           <p className="text-[11px] font-medium text-slate-500">
-            Revenu généré
+            {t("admin.dashboard.featured.revenue")}
           </p>
           <p className="mt-1 text-sm font-semibold text-slate-900">
             {madFormatter.format(totalRevenueMad)}
@@ -512,7 +512,7 @@ function FeaturedHighlightCard({
         </div>
         <div className="rounded-md bg-white/70 px-3 py-2">
           <p className="text-[11px] font-medium text-slate-500">
-            Mises en avant actives
+            {t("admin.dashboard.featured.active")}
           </p>
           <p className="mt-1 text-sm font-semibold text-slate-900">
             {activeCount}
@@ -520,7 +520,7 @@ function FeaturedHighlightCard({
         </div>
         <div className="rounded-md bg-white/70 px-3 py-2">
           <p className="text-[11px] font-medium text-slate-500">
-            Mises en avant inactives
+            {t("admin.dashboard.featured.inactive")}
           </p>
           <p className="mt-1 text-sm font-semibold text-slate-900">
             {inactiveCount}
@@ -528,11 +528,11 @@ function FeaturedHighlightCard({
         </div>
         <div className="rounded-md bg-white/70 px-3 py-2">
           <p className="text-[11px] font-medium text-slate-500">
-            Durée moyenne
+            {t("admin.dashboard.featured.avgDuration")}
           </p>
           <p className="mt-1 text-sm font-semibold text-slate-900 flex items-center gap-1">
             <Star className="h-3 w-3 text-amber-500 fill-amber-500" />
-            {avgDurationDays > 0 ? `${avgDurationDays} jours` : "—"}
+            {avgDurationDays > 0 ? `${avgDurationDays} ${t("admin.dashboard.featured.days")}` : "—"}
           </p>
         </div>
       </div>
