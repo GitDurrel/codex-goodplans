@@ -1706,66 +1706,6 @@ export const translations = {
                 },
             },
         },
-        common: {
-            loading: "Chargement...",
-            confirm: "Confirmer",
-            cancel: "Annuler",
-            delete: "Supprimer",
-            edit: "Modifier",
-            save: "Enregistrer",
-            search: "Rechercher",
-            noData: "Aucune donnée",
-            actions: "Actions",
-            retry: "Réessayer",
-            success: "Succès",
-            error: "Erreur",
-        },
-
-        admin: {
-            common: {
-                actions: {
-                    refresh: "Actualiser",
-                    replyByEmail: "Répondre par email",
-                },
-                filters: {
-                    allStatuses: "Tous les statuts",
-                },
-                status: {
-                    pending: "En attente",
-                    read: "Lu",
-                    replied: "Répondu",
-                    archived: "Archivé",
-                },
-                empty: {
-                    noNote: "Aucune note",
-                },
-                success: {
-                    statusUpdated: "Statut mis à jour avec succès",
-                    notesUpdated: "Notes mises à jour avec succès",
-                },
-                errors: {
-                    statusUpdateFailed: "Erreur lors de la mise à jour du statut",
-                    notesUpdateFailed: "Erreur lors de la mise à jour des notes",
-                },
-            },
-            contacts: {
-                errors: {
-                    loadFailed: "Impossible de charger les messages",
-                },
-            },
-            devis: {
-                errors: {
-                    loadFailed: "Impossible de charger les demandes",
-                },
-            },
-            dashboard: {},
-            users: {},
-            listings: {},
-            reports: {},
-            featuredOrders: {},
-            featuredPlans: {},
-            promoBanners: {},
-        },
 
     en: {
         // ******************************** Register ****************************************
