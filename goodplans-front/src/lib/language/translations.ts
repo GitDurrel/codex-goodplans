@@ -23,6 +23,67 @@ export const translations = {
             loading: " Traitement en cours...",
         },
 
+        common: {
+            loading: "Loading...",
+            confirm: "Confirm",
+            cancel: "Cancel",
+            delete: "Delete",
+            edit: "Edit",
+            save: "Save",
+            search: "Search",
+            noData: "No data",
+            actions: "Actions",
+            retry: "Retry",
+            success: "Success",
+            error: "Error",
+        },
+
+        admin: {
+            common: {
+                actions: {
+                    refresh: "Refresh",
+                    replyByEmail: "Reply by email",
+                },
+                filters: {
+                    allStatuses: "All statuses",
+                },
+                status: {
+                    pending: "Pending",
+                    read: "Read",
+                    replied: "Replied",
+                    archived: "Archived",
+                },
+                empty: {
+                    noNote: "No note",
+                },
+                success: {
+                    statusUpdated: "Status updated successfully",
+                    notesUpdated: "Notes updated successfully",
+                },
+                errors: {
+                    statusUpdateFailed: "Error while updating status",
+                    notesUpdateFailed: "Error while updating notes",
+                },
+            },
+            contacts: {
+                errors: {
+                    loadFailed: "Unable to load messages",
+                },
+            },
+            devis: {
+                errors: {
+                    loadFailed: "Unable to load quote requests",
+                },
+            },
+            dashboard: {},
+            users: {},
+            listings: {},
+            reports: {},
+            featuredOrders: {},
+            featuredPlans: {},
+            promoBanners: {},
+        },
+
         // ******************************** Connexion ****************************************
         login: {
             title: "Se connecter",
@@ -1519,6 +1580,68 @@ export const translations = {
                 },
             },
         },
+
+        common: {
+            loading: "Chargement...",
+            confirm: "Confirmer",
+            cancel: "Annuler",
+            delete: "Supprimer",
+            edit: "Modifier",
+            save: "Enregistrer",
+            search: "Rechercher",
+            noData: "Aucune donnée",
+            actions: "Actions",
+            retry: "Réessayer",
+            success: "Succès",
+            error: "Erreur",
+        },
+
+        admin: {
+            common: {
+                actions: {
+                    refresh: "Actualiser",
+                    replyByEmail: "Répondre par email",
+                },
+                filters: {
+                    allStatuses: "Tous les statuts",
+                },
+                status: {
+                    pending: "En attente",
+                    read: "Lu",
+                    replied: "Répondu",
+                    archived: "Archivé",
+                },
+                empty: {
+                    noNote: "Aucune note",
+                },
+                success: {
+                    statusUpdated: "Statut mis à jour avec succès",
+                    notesUpdated: "Notes mises à jour avec succès",
+                },
+                errors: {
+                    statusUpdateFailed: "Erreur lors de la mise à jour du statut",
+                    notesUpdateFailed: "Erreur lors de la mise à jour des notes",
+                },
+            },
+            contacts: {
+                errors: {
+                    loadFailed: "Impossible de charger les messages",
+                },
+            },
+            devis: {
+                errors: {
+                    loadFailed: "Impossible de charger les demandes",
+                },
+            },
+            dashboard: {},
+            users: {},
+            listings: {},
+            reports: {},
+            featuredOrders: {},
+            featuredPlans: {},
+            promoBanners: {},
+        },
+
 
     en: {
         // ******************************** Register ****************************************

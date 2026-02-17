@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { Loader2, Plus, Pencil, Trash2, CheckCircle, XCircle } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { useLanguage } from "../../lib/language/LanguageContext";
 import {
   apiAdminGetFeaturedPlans,
   apiAdminCreateFeaturedPlan,
@@ -30,6 +31,7 @@ const emptyForm: PlanFormState = {
 };
 
 const AdminFeaturedPlansPage = () => {
+  const { t } = useLanguage();
   const [plans, setPlans] = useState<AdminFeaturedPlan[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);

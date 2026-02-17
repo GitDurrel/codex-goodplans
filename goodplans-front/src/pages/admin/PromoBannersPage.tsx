@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Loader2, Plus, Trash2, Edit3, Check, X } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { useLanguage } from "../../lib/language/LanguageContext";
 
 import {
   type PromoBanner,
@@ -91,6 +92,7 @@ function parsePlacements(p: any): Record<string, boolean> {
 }
 
 export default function PromoBannersPage() {
+  const { t } = useLanguage();
   const [searchParams] = useSearchParams();
   const fromRequestId = searchParams.get("fromRequest");
 

@@ -29,6 +29,7 @@ import {
   type AdminRole,
 } from "../../features/admin/adminApi";
 import { toast } from "react-hot-toast";
+import { useLanguage } from "../../lib/language/LanguageContext";
 
 type Filters = {
   search: string;
@@ -47,6 +48,7 @@ function isBanned(user: AdminUser): boolean {
 }
 
 export default function AdminUsersPage() {
+  const { t } = useLanguage();
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [meta, setMeta] = useState<UsersMeta | null>(null);
   const [page, setPage] = useState(1);
