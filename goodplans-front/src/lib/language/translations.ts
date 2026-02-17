@@ -23,6 +23,193 @@ export const translations = {
             loading: " Traitement en cours...",
         },
 
+        common: {
+            loading: "Loading...",
+            confirm: "Confirm",
+            cancel: "Cancel",
+            delete: "Delete",
+            edit: "Edit",
+            save: "Save",
+            search: "Search",
+            noData: "No data",
+            actions: "Actions",
+            retry: "Retry",
+            success: "Success",
+            error: "Error",
+        },
+
+        admin: {
+            common: {
+                actions: {
+                    refresh: "Refresh",
+                    replyByEmail: "Reply by email",
+                },
+                filters: {
+                    allStatuses: "All statuses",
+                },
+                status: {
+                    pending: "Pending",
+                    read: "Read",
+                    replied: "Replied",
+                    archived: "Archived",
+                },
+                empty: {
+                    noNote: "No note",
+                },
+                success: {
+                    statusUpdated: "Status updated successfully",
+                    notesUpdated: "Notes updated successfully",
+                },
+                errors: {
+                    statusUpdateFailed: "Error while updating status",
+                    notesUpdateFailed: "Error while updating notes",
+                },
+            },
+            contacts: {
+                errors: {
+                    loadFailed: "Unable to load messages",
+                },
+            },
+            devis: {
+                errors: {
+                    loadFailed: "Unable to load quote requests",
+                },
+            },
+            dashboard: {},
+            users: {},
+            listings: {
+                success: {
+                    deleted: "Annonce supprimée définitivement",
+                    published: "Annonce publiée",
+                    rejected: "Annonce rejetée",
+                    suspended: "Annonce suspendue",
+                },
+                errors: {
+                    updateFailed: "Erreur lors de la mise à jour",
+                },
+                stats: { published: "Publiées" },
+                filters: {
+                    allCategories: "Toutes les catégories",
+                    rejected: "Rejetées",
+                    archived: "Archivées",
+                },
+                table: {
+                    createdAt: "Créée le",
+                    notSpecified: "Non spécifié",
+                },
+                actions: { deletePermanent: "Supprimer définitivement" },
+                empty: "Aucune annonce trouvée avec ces filtres.",
+                pagination: { previous: "Précédent" },
+                confirm: { deleteTitle: "Supprimer définitivement l’annonce" },
+            },
+            reports: {
+                subtitle: "Suivi détaillé des annonces, par période, catégorie et vendeur.",
+                loading: "Chargement des données…",
+                export: { categories: "catégories" },
+                filters: {
+                    startDate: "Date de début",
+                    category: "Catégorie",
+                    vehicles: "Véhicules",
+                    published: "Publié",
+                    rejected: "Rejeté",
+                    reset: "Réinitialiser les filtres",
+                },
+                stats: {
+                    approved: "Approuvées",
+                    rejectedSuspended: "Rejetées / suspendues",
+                },
+                tabs: { byCategory: "Par catégorie" },
+                table: {
+                    unknown: "Inconnue",
+                    approvedListings: "Annonces approuvées",
+                    total: "Total",
+                    approved: "Approuvées",
+                    seller: "Vendeur",
+                },
+                empty: {
+                    period: "Aucune donnée pour cette période.",
+                    category: "Aucune catégorie trouvée pour ces filtres.",
+                    seller: "Aucun vendeur trouvé pour ces filtres.",
+                },
+                errors: {
+                    loadRaw: "Erreur lors du chargement des données de reporting.",
+                    loadFailed: "Impossible de charger les données de reporting",
+                },
+            },
+            featuredOrders: {},
+            featuredPlans: {
+                title: "Packs de mise en avant",
+                subtitle: "Configure les plans sponsorisés proposés aux vendeurs.",
+                empty: "Aucun pack de mise en avant configuré.",
+                status: { active: "Actif", inactive: "Inactif" },
+                table: {
+                    name: "Nom",
+                    duration: "Durée",
+                    price: "Prix",
+                    status: "Statut",
+                    createdAt: "Créé le",
+                },
+                actions: {
+                    newPlan: "Nouveau plan",
+                    disable: "Désactiver",
+                    create: "Créer le plan",
+                },
+                form: {
+                    name: "Nom du plan",
+                    description: "Description",
+                    duration: "Durée (jours)",
+                    price: "Prix (MAD)",
+                    active: "Activer ce plan",
+                },
+                modal: {
+                    createTitle: "Nouveau plan de mise en avant",
+                    editTitle: "Modifier le plan",
+                },
+                confirm: {
+                    disable: "Désactiver ce plan ? Il ne sera plus proposé aux vendeurs.",
+                },
+                success: {
+                    created: "Plan créé avec succès",
+                    updated: "Plan mis à jour avec succès",
+                    disabled: "Plan désactivé avec succès",
+                },
+                errors: {
+                    loadRaw: "Erreur lors du chargement des packs",
+                    loadFailed: "Impossible de charger les packs de mise en avant",
+                    requiredFields: "Durée et prix sont obligatoires",
+                    saveFailed: "Erreur lors de l'enregistrement du plan",
+                    disableFailed: "Erreur lors de la désactivation du plan",
+                },
+            },
+            promoBanners: {
+                empty: "Aucun encart trouvé.",
+                form: {
+                    createTitle: "Créer un encart publicitaire",
+                    editTitle: "Modifier l’encart",
+                    startDate: "Date de début",
+                    searchBanner: "Bannière page de recherche",
+                },
+                actions: {
+                    cancelEdit: "Annuler l’édition",
+                    create: "Créer l’encart",
+                    saveChanges: "Enregistrer les modifications",
+                },
+                success: {
+                    created: "Encart publicitaire créé",
+                    updated: "Encart publicitaire mis à jour",
+                    deleted: "Encart supprimé",
+                },
+                errors: {
+                    readImage: "Impossible de lire l'image",
+                    prefillFailed: "Impossible de pré-remplir l’encart depuis ce devis",
+                    uploadFailed: "Upload impossible. Réessaie plus tard.",
+                    startDatePast: "La date de début ne peut pas être dans le passé.",
+                    endDatePast: "La date de fin ne peut pas être dans le passé.",
+                    endDateBeforeStart: "La date de fin doit être supérieure à la date de début.",
+                },
+            },
+        },
+
         // ******************************** Connexion ****************************************
         login: {
             title: "Se connecter",
@@ -1181,15 +1368,6 @@ export const translations = {
                 missingFields: "Certains champs obligatoires sont manquants.",
             },
 
-            images: {
-                maxReached: "Vous avez déjà atteint le maximum de 10 images.",
-                uploadSuccess: "Images ajoutées avec succès.",
-                uploadError:
-                    "Erreur lors de l’upload des images. Veuillez réessayer.",
-                noUrlReturned:
-                    "Aucune URL d’image retournée par le serveur.",
-            },
-
             success: {
                 created: "Votre annonce a été créée avec succès !",
             },
@@ -1293,6 +1471,89 @@ export const translations = {
                 },
             },
 
+            filters: {
+                title: "Filtres supplémentaires",
+                condition: "État",
+                select: "Sélectionner",
+                new: "Neuf",
+                used: "Occasion",
+                color: "Couleur",
+                colorPlaceholder: "Rouge / Noir / Beige…",
+                brandType: "Marque / Type",
+                brandTypePlaceholder: "Ex: BMW, Dior, Artisanat Marocain…",
+            },
+
+            pricing: {
+                title: "Tarification",
+                transactionType: "Type de transaction",
+                forSale: "À vendre",
+                forRent: "À louer",
+                rentalPrice: "Prix de location",
+                price: "Prix",
+                rentalPricePlaceholder: "Ex : 5000 (par période)",
+                pricePlaceholder: "Ex : 250000",
+                priceError: "Le prix est obligatoire et doit être supérieur à 0.",
+                rentalPeriod: "Période de location",
+                rentalPeriodError: "La période de location est obligatoire.",
+                tipsTitle: "Conseils de tarification",
+                tipsDescription: "Comparez les annonces similaires et renseignez un prix réaliste pour obtenir plus de contacts.",
+                noteTitle: "Bon à savoir",
+                noteDescription: "Un prix clair et compétitif augmente vos chances d'être contacté rapidement.",
+            },
+
+            submission: {
+                title: "Finalisation",
+                subtitle: "Vérifiez vos informations avant de publier l’annonce.",
+                summaryTitle: "Résumé de l’annonce",
+                category: "Catégorie",
+                transactionType: "Type de transaction",
+                location: "Localisation",
+                imagesCount: "image",
+                requiredFields: "Champs obligatoires",
+                requiredFieldsOk: "Tous les champs essentiels semblent remplis.",
+                requiredFieldsMissing: "Certains champs obligatoires sont manquants (titre, description, prix, localisation, type de transaction, etc.).",
+                imagesAdded: "image(s) ajoutée(s).",
+                noImages: "Aucune image ajoutée. Ajoutez au moins une photo pour attirer plus de visiteurs.",
+                publish: "Publier mon annonce",
+                publishing: "Publication en cours...",
+                moderationNotice: "En publiant, vous acceptez que votre annonce puisse être modérée avant mise en ligne.",
+                rentalByDay: "Par jour",
+                rentalByWeek: "Par semaine",
+                rentalByMonth: "Par mois",
+                rentalByYear: "Par an",
+            },
+
+            navigation: {
+                back: "Retour",
+                next: "Suivant",
+                publish: "Publier l'annonce",
+                uploading: "Téléchargement",
+                step: "Étape",
+            },
+
+            images: {
+                maxReached: "Vous avez déjà atteint le maximum de 10 images.",
+                uploadSuccess: "Images ajoutées avec succès.",
+                uploadError:
+                    "Erreur lors de l’upload des images. Veuillez réessayer.",
+                noUrlReturned:
+                    "Aucune URL d’image retournée par le serveur.",
+                helper: "Ajoutez au moins une photo pour mettre votre annonce en avant.",
+                uploading: "Upload en cours...",
+                addOne: "Ajouter une photo",
+                required: "Au moins une image est requise.",
+                emptyTitle: "Aucune image pour le moment",
+                emptyDescription: "Cliquez pour sélectionner des images depuis votre appareil (max 10).",
+                imageAlt: "Image",
+                delete: "Supprimer",
+                add: "Ajouter",
+                tipsTitle: "Conseils pour de bonnes photos :",
+                tip1: "Utilisez une bonne lumière (lumière du jour si possible).",
+                tip2: "Photographiez votre bien sous plusieurs angles.",
+                tip3: "Évitez les arrière-plans trop chargés.",
+                tip4: "La première image est la plus importante : choisissez la meilleure.",
+            },
+
             categoryStep: {
                 loading: "Chargement des catégories…",
                 error: "Impossible de charger les catégories. Vérifiez l’API /categories.",
@@ -1312,6 +1573,199 @@ export const translations = {
         },
 
     },
+
+
+        authCallback: {
+            loading: {
+                title: "Connexion en cours…",
+                finalizing: "Finalisation Google OAuth…",
+                redirecting: "Redirection…",
+            },
+            success: {
+                googleLogin: "Connexion Google réussie 🎉",
+            },
+            errors: {
+                sessionNotFound: "Session Google introuvable. Réessaie.",
+                missingTokens: "Tokens manquants dans la réponse OAuth finalize.",
+                googleLoginFailed: "Connexion Google échouée",
+            },
+        },
+
+        seller: {
+            overview: {
+                totalViews: "vues cumulées",
+                published: "publiées",
+            },
+            help: {
+                title: "Questions fréquentes",
+                faq: {
+                    createListing: {
+                        question: "Comment créer une annonce ?",
+                        answer: "Pour créer une annonce, cliquez sur le bouton \"Déposer une annonce\" dans la barre de navigation ou dans votre tableau de bord vendeur. Suivez ensuite les étapes pour ajouter les détails, les photos et le prix de votre article.",
+                    },
+                    replyMessages: {
+                        question: "Comment répondre aux messages des acheteurs ?",
+                        answer: "Vous pouvez accéder à tous vos messages dans la section \"Messages\" de votre tableau de bord vendeur. Cliquez sur une conversation pour voir les messages et y répondre.",
+                    },
+                    payments: {
+                        question: "Comment sont gérés les paiements ?",
+                        answer: "Les paiements sont sécurisés via notre système. Lorsqu’un acheteur effectue un achat, le montant est mis en attente jusqu’à la confirmation de la réception de l’article. Vous recevez ensuite le paiement sur votre compte associé.",
+                    },
+                    fees: {
+                        question: "Quels sont les frais pour les vendeurs ?",
+                        answer: "Goodplans prélève une commission de 5% sur chaque vente réussie. Il n’y a pas de frais pour publier une annonce ou communiquer avec les acheteurs.",
+                    },
+                    promote: {
+                        question: "Comment promouvoir mes annonces ?",
+                        answer: "Ajoutez des photos de qualité, des descriptions détaillées et répondez rapidement aux messages. Des options de promotion premium seront bientôt disponibles.",
+                    },
+                },
+                contact: {
+                    title: "Besoin d’aide ?",
+                    description: "Notre équipe support est là pour vous aider en cas de question sur vos annonces, vos ventes ou votre compte vendeur.",
+                    emailTitle: "Par e-mail",
+                    emailDelay: "Réponse sous 24 à 48h (jours ouvrables).",
+                    phoneTitle: "Par téléphone",
+                    phoneHours: "Du lundi au vendredi, 9h – 18h.",
+                    chatTitle: "Chat en ligne",
+                    chatDescription: "Discutez avec un conseiller quand le chat est disponible.",
+                    openChat: "Ouvrir le chat",
+                },
+            },
+            featuredOrders: {
+                title: "Mes mises en avant",
+                subtitle: "Suis les annonces boostées et leurs dates de fin.",
+                empty: "Aucune mise en avant pour le moment.",
+                day: "jour",
+                from: "Du",
+                to: "au",
+                table: {
+                    listing: "Annonce",
+                    plan: "Plan",
+                    period: "Période",
+                    status: "Statut",
+                    actions: "Actions",
+                },
+                actions: {
+                    refresh: "Actualiser",
+                    viewListing: "Voir l’annonce",
+                },
+                status: {
+                    active: "Active",
+                    pending: "En attente",
+                    cancelled: "Annulée",
+                    expired: "Expirée",
+                },
+                errors: {
+                    loadFailed: "Erreur lors du chargement des mises en avant",
+                },
+            },
+            listings: {
+                title: "Mes annonces",
+                subtitle: "Gérez vos annonces et suivez leurs performances.",
+                empty: "Aucune annonce trouvée.",
+                filters: {
+                    searchPlaceholder: "Rechercher...",
+                    newest: "Plus récentes",
+                    oldest: "Plus anciennes",
+                    priceHigh: "Prix décroissant",
+                    priceLow: "Prix croissant",
+                    views: "Plus vues",
+                },
+                table: {
+                    listing: "Annonce",
+                    price: "Prix",
+                    status: "Statut",
+                    views: "Vues",
+                    date: "Date",
+                    actions: "Actions",
+                },
+                status: {
+                    pending: "En attente",
+                    published: "Publié",
+                    suspended: "Suspendu",
+                    sold: "Vendu",
+                    rejected: "Rejeté",
+                },
+                actions: {
+                    delete: "Supprimer",
+                    cancel: "Annuler",
+                },
+                deleteModal: {
+                    title: "Supprimer cette annonce ?",
+                    description: "Cette action est irréversible.",
+                },
+                errors: {
+                    loadFailed: "Erreur lors du chargement de vos annonces",
+                    deleteFailed: "Impossible de supprimer l'annonce",
+                    statusUpdateFailed: "Erreur lors de la mise à jour du statut",
+                },
+                success: {
+                    deleted: "Annonce supprimée",
+                    statusUpdated: "Statut mis à jour",
+                },
+            },
+        },
+        common: {
+            loading: "Chargement...",
+            confirm: "Confirmer",
+            cancel: "Annuler",
+            delete: "Supprimer",
+            edit: "Modifier",
+            save: "Enregistrer",
+            search: "Rechercher",
+            noData: "Aucune donnée",
+            actions: "Actions",
+            retry: "Réessayer",
+            success: "Succès",
+            error: "Erreur",
+        },
+
+        admin: {
+            common: {
+                actions: {
+                    refresh: "Actualiser",
+                    replyByEmail: "Répondre par email",
+                },
+                filters: {
+                    allStatuses: "Tous les statuts",
+                },
+                status: {
+                    pending: "En attente",
+                    read: "Lu",
+                    replied: "Répondu",
+                    archived: "Archivé",
+                },
+                empty: {
+                    noNote: "Aucune note",
+                },
+                success: {
+                    statusUpdated: "Statut mis à jour avec succès",
+                    notesUpdated: "Notes mises à jour avec succès",
+                },
+                errors: {
+                    statusUpdateFailed: "Erreur lors de la mise à jour du statut",
+                    notesUpdateFailed: "Erreur lors de la mise à jour des notes",
+                },
+            },
+            contacts: {
+                errors: {
+                    loadFailed: "Impossible de charger les messages",
+                },
+            },
+            devis: {
+                errors: {
+                    loadFailed: "Impossible de charger les demandes",
+                },
+            },
+            dashboard: {},
+            users: {},
+            listings: {},
+            reports: {},
+            featuredOrders: {},
+            featuredPlans: {},
+            promoBanners: {},
+        },
 
     en: {
         // ******************************** Register ****************************************
@@ -1335,6 +1789,242 @@ export const translations = {
             submitButton: "Sign up",
             loginRedirect: "Already have an account? Log in",
             loading: "Processing...",
+        },
+
+        common: {
+            loading: "Loading...",
+            confirm: "Confirm",
+            cancel: "Cancel",
+            delete: "Delete",
+            edit: "Edit",
+            save: "Save",
+            search: "Search",
+            noData: "No data",
+            actions: "Actions",
+            retry: "Retry",
+            success: "Success",
+            error: "Error",
+        },
+
+        admin: {
+            common: {
+                actions: { refresh: "Refresh", replyByEmail: "Reply by email" },
+                filters: { allStatuses: "All statuses" },
+                status: { pending: "Pending", read: "Read", replied: "Replied", archived: "Archived" },
+                empty: { noNote: "No note" },
+                success: {
+                    statusUpdated: "Status updated successfully",
+                    notesUpdated: "Notes updated successfully",
+                },
+                errors: {
+                    statusUpdateFailed: "Error while updating status",
+                    notesUpdateFailed: "Error while updating notes",
+                },
+            },
+            contacts: {
+                title: "Contact requests",
+                subtitle: "Messages sent from the website contact form.",
+                empty: "No message found.",
+                status: { repliedPlural: "Replied", archivedPlural: "Archived" },
+                details: {
+                    title: "Message details",
+                    receivedAt: "Received on",
+                    selectPrompt: "Select a message from the list to view details.",
+                },
+                errors: {
+                    loadFailed: "Unable to load messages",
+                    loadRaw: "Error while loading messages",
+                },
+            },
+            devis: {
+                title: "Quote requests",
+                empty: "No request found",
+                status: { repliedPlural: "Replied", archivedPlural: "Archived" },
+                details: {
+                    title: "Request details",
+                    receivedAt: "Received on",
+                    duration: "Requested duration",
+                    searchBanner: "Search page banner",
+                    selectPrompt: "Select a request to view details",
+                },
+                actions: { createBanner: "Create banner from this request" },
+                errors: {
+                    loadFailed: "Unable to load quote requests",
+                    loadRaw: "Error while loading quote requests",
+                },
+            },
+            dashboard: {
+                title: "Admin dashboard",
+                subtitle: "Global overview of listing activity.",
+                errors: {
+                    featuredLoad: "Error loading featured data",
+                    loadFailed: "Error while loading data",
+                },
+                categories: {
+                    vehicle: "Vehicles",
+                    craft: "Craft & decor",
+                    realEstate: "Real estate",
+                    service: "Services",
+                    other: "Other",
+                },
+                stats: {
+                    total: "Total listings",
+                    approved: "Approved",
+                    approvedSubtitle: "Published listings",
+                    pendingSubtitle: "Pending moderation",
+                    rejected: "Rejected",
+                    rejectedSubtitle: "Rejected by moderation",
+                    views: "Total views",
+                    favorites: "Total favorites",
+                },
+                byCategory: {
+                    title: "Listings by category",
+                    approved: "approved",
+                    total: "Total",
+                    empty: "No listing for this period.",
+                },
+                featured: {
+                    title: "Featured / sponsored listings",
+                    revenue: "Revenue generated",
+                    active: "Active featured",
+                    inactive: "Inactive featured",
+                    avgDuration: "Average duration",
+                    days: "days",
+                    na: "—",
+                },
+            },
+            users: {
+                stats: { total: "Total users", approvedSellers: "Approved sellers" },
+                filters: {
+                    allAccountTypes: "All (buyers & sellers)",
+                    allSellerStatuses: "All seller statuses",
+                    unapprovedSellers: "Unapproved sellers",
+                },
+                table: { createdAt: "Created at", lastLogin: "Last login" },
+                badges: { sellerApproved: "Approved seller", sellerPending: "Seller pending" },
+                actions: { unban: "Unban", deleteUser: "Delete user" },
+                empty: "No user found with these filters.",
+                confirm: {
+                    unbanTitle: "Unban user",
+                    deleteTitle: "Permanently delete account",
+                    reasonPlaceholder: "Describe the reason…",
+                },
+                adminModal: { role: "Role", create: "Create admin" },
+                success: {
+                    unbanned: "User unbanned",
+                    sellerApproved: "Seller approved",
+                    sellerRejected: "Seller rejected",
+                    deleted: "User deleted",
+                    adminCreated: "Admin created successfully",
+                },
+                errors: {
+                    loadRaw: "Error while loading users",
+                    loadFailed: "Unable to load users",
+                    actionFailed: "Action failed",
+                    adminCreateFailed: "Error while creating admin",
+                },
+            },
+            listings: {
+                success: {
+                    deleted: "Listing permanently deleted",
+                    published: "Listing published",
+                    rejected: "Listing rejected",
+                    suspended: "Listing suspended",
+                },
+                errors: { updateFailed: "Error while updating" },
+                stats: { published: "Published" },
+                filters: { allCategories: "All categories", rejected: "Rejected", archived: "Archived" },
+                table: { createdAt: "Created at", notSpecified: "Not specified" },
+                actions: { deletePermanent: "Delete permanently" },
+                empty: "No listing found with these filters.",
+                pagination: { previous: "Previous" },
+                confirm: { deleteTitle: "Permanently delete listing" },
+            },
+            reports: {
+                subtitle: "Detailed listing tracking by period, category, and seller.",
+                loading: "Loading data…",
+                export: { categories: "categories" },
+                filters: {
+                    startDate: "Start date",
+                    category: "Category",
+                    vehicles: "Vehicles",
+                    published: "Published",
+                    rejected: "Rejected",
+                    reset: "Reset filters",
+                },
+                stats: { approved: "Approved", rejectedSuspended: "Rejected / suspended" },
+                tabs: { byCategory: "By category" },
+                table: {
+                    unknown: "Unknown",
+                    approvedListings: "Approved listings",
+                    total: "Total",
+                    approved: "Approved",
+                    seller: "Seller",
+                },
+                empty: {
+                    period: "No data for this period.",
+                    category: "No category found for these filters.",
+                    seller: "No seller found for these filters.",
+                },
+                errors: {
+                    loadRaw: "Error while loading reporting data.",
+                    loadFailed: "Unable to load reporting data",
+                },
+            },
+            featuredOrders: {
+                status: {
+                    active: "Active",
+                    expired: "Expired",
+                    cancelled: "Cancelled",
+                    expiredPlural: "Expired",
+                    cancelledPlural: "Cancelled",
+                },
+                subtitle: "History of sponsored featured listings.",
+                empty: "No featured order found.",
+                table: { listing: "Listing", plan: "Plan", period: "Period", price: "Price", status: "Status" },
+                actions: { managePlans: "Manage plans", viewListing: "View listing" },
+                filters: { all: "All" },
+                confirm: { cancel: "Cancel this featured order? Listing will lose priority." },
+                success: { cancelled: "Featured order cancelled successfully" },
+                errors: {
+                    loadRaw: "Error while loading featured orders",
+                    loadFailed: "Unable to load featured orders",
+                    cancelFailed: "Cancellation failed",
+                },
+            },
+            featuredPlans: {
+                title: "Featured plans",
+                subtitle: "Configure sponsored plans offered to sellers.",
+                empty: "No featured plan configured.",
+                status: { active: "Active", inactive: "Inactive" },
+                table: { name: "Name", duration: "Duration", price: "Price", status: "Status", createdAt: "Created at" },
+                actions: { newPlan: "New plan", disable: "Disable", create: "Create plan" },
+                form: { name: "Plan name", description: "Description", duration: "Duration (days)", price: "Price (MAD)", active: "Enable this plan" },
+                modal: { createTitle: "New featured plan", editTitle: "Edit plan" },
+                confirm: { disable: "Disable this plan? It will no longer be available to sellers." },
+                success: { created: "Plan created successfully", updated: "Plan updated successfully", disabled: "Plan disabled successfully" },
+                errors: {
+                    loadRaw: "Error while loading plans",
+                    loadFailed: "Unable to load featured plans",
+                    requiredFields: "Duration and price are required",
+                    saveFailed: "Error while saving plan",
+                    disableFailed: "Error while disabling plan",
+                },
+            },
+            promoBanners: {
+                empty: "No banner found.",
+                form: { createTitle: "Create ad banner", editTitle: "Edit banner", startDate: "Start date", searchBanner: "Search page banner" },
+                actions: { cancelEdit: "Cancel edit", create: "Create banner", saveChanges: "Save changes" },
+                success: { created: "Ad banner created", updated: "Ad banner updated", deleted: "Banner deleted" },
+                errors: {
+                    readImage: "Unable to read image",
+                    prefillFailed: "Unable to prefill banner from this request",
+                    uploadFailed: "Upload failed. Try again later.",
+                    startDatePast: "Start date cannot be in the past.",
+                    endDatePast: "End date cannot be in the past.",
+                    endDateBeforeStart: "End date must be after start date.",
+                },
+            },
         },
 
         // ******************************** Login ****************************************
@@ -2500,15 +3190,6 @@ export const translations = {
                 missingFields: "Some required fields are missing.",
             },
 
-            images: {
-                maxReached: "You have already reached the maximum of 10 images.",
-                uploadSuccess: "Images successfully uploaded.",
-                uploadError:
-                    "Error uploading images. Please try again.",
-                noUrlReturned:
-                    "No image URL returned by the server.",
-            },
-
             success: {
                 created: "Your listing has been successfully created!",
             },
@@ -2612,6 +3293,89 @@ export const translations = {
                 },
             },
 
+            filters: {
+                title: "Additional filters",
+                condition: "Condition",
+                select: "Select",
+                new: "New",
+                used: "Used",
+                color: "Color",
+                colorPlaceholder: "Red / Black / Beige…",
+                brandType: "Brand / Type",
+                brandTypePlaceholder: "Ex: BMW, Dior, Moroccan craft…",
+            },
+
+            pricing: {
+                title: "Pricing",
+                transactionType: "Transaction type",
+                forSale: "For sale",
+                forRent: "For rent",
+                rentalPrice: "Rental price",
+                price: "Price",
+                rentalPricePlaceholder: "Ex: 5000 (per period)",
+                pricePlaceholder: "Ex: 250000",
+                priceError: "Price is required and must be greater than 0.",
+                rentalPeriod: "Rental period",
+                rentalPeriodError: "Rental period is required.",
+                tipsTitle: "Pricing tips",
+                tipsDescription: "Compare similar listings and set a realistic price to get more contacts.",
+                noteTitle: "Good to know",
+                noteDescription: "A clear and competitive price improves your chances of being contacted quickly.",
+            },
+
+            submission: {
+                title: "Final review",
+                subtitle: "Review your information before publishing your listing.",
+                summaryTitle: "Listing summary",
+                category: "Category",
+                transactionType: "Transaction type",
+                location: "Location",
+                imagesCount: "image",
+                requiredFields: "Required fields",
+                requiredFieldsOk: "All essential fields appear to be completed.",
+                requiredFieldsMissing: "Some required fields are missing (title, description, price, location, transaction type, etc.).",
+                imagesAdded: "image(s) added.",
+                noImages: "No image added yet. Add at least one photo to attract more visitors.",
+                publish: "Publish my listing",
+                publishing: "Publishing...",
+                moderationNotice: "By publishing, you accept that your listing may be moderated before going live.",
+                rentalByDay: "Per day",
+                rentalByWeek: "Per week",
+                rentalByMonth: "Per month",
+                rentalByYear: "Per year",
+            },
+
+            navigation: {
+                back: "Back",
+                next: "Next",
+                publish: "Publish listing",
+                uploading: "Uploading",
+                step: "Step",
+            },
+
+            images: {
+                maxReached: "You have already reached the maximum of 10 images.",
+                uploadSuccess: "Images successfully uploaded.",
+                uploadError:
+                    "Error uploading images. Please try again.",
+                noUrlReturned:
+                    "No image URL returned by the server.",
+                helper: "Add at least one photo to make your listing stand out.",
+                uploading: "Uploading...",
+                addOne: "Add a photo",
+                required: "At least one image is required.",
+                emptyTitle: "No image yet",
+                emptyDescription: "Click to select images from your device (max 10).",
+                imageAlt: "Image",
+                delete: "Delete",
+                add: "Add",
+                tipsTitle: "Tips for great photos:",
+                tip1: "Use good lighting (daylight if possible).",
+                tip2: "Take photos from multiple angles.",
+                tip3: "Avoid cluttered backgrounds.",
+                tip4: "The first image matters most: choose your best one.",
+            },
+
             categoryStep: {
                 loading: "Loading categories…",
                 error:
@@ -2632,7 +3396,139 @@ export const translations = {
 
 
 
-        }
+        },
+
+        authCallback: {
+            loading: {
+                title: "Signing you in…",
+                finalizing: "Finalizing Google OAuth…",
+                redirecting: "Redirecting…",
+            },
+            success: {
+                googleLogin: "Google login successful 🎉",
+            },
+            errors: {
+                sessionNotFound: "Google session not found. Please try again.",
+                missingTokens: "Missing tokens in OAuth finalize response.",
+                googleLoginFailed: "Google login failed",
+            },
+        },
+
+        seller: {
+            overview: {
+                totalViews: "total views",
+                published: "published",
+            },
+            help: {
+                title: "Frequently asked questions",
+                faq: {
+                    createListing: {
+                        question: "How do I create a listing?",
+                        answer: "To create a listing, click the \"Post a listing\" button in the navigation bar or in your seller dashboard. Then follow the steps to add details, photos, and price.",
+                    },
+                    replyMessages: {
+                        question: "How do I reply to buyer messages?",
+                        answer: "You can access all your messages in the \"Messages\" section of your seller dashboard. Click a conversation to view and reply.",
+                    },
+                    payments: {
+                        question: "How are payments handled?",
+                        answer: "Payments are secured through our system. When a buyer makes a purchase, the amount is held until delivery is confirmed. You then receive the payment on your linked account.",
+                    },
+                    fees: {
+                        question: "What are the seller fees?",
+                        answer: "Goodplans charges a 5% commission on each successful sale. There are no fees to post a listing or communicate with buyers.",
+                    },
+                    promote: {
+                        question: "How can I promote my listings?",
+                        answer: "Add high-quality photos, detailed descriptions, and reply quickly to messages. Premium promotion options will be available soon.",
+                    },
+                },
+                contact: {
+                    title: "Need help?",
+                    description: "Our support team is here to help with questions about your listings, sales, or seller account.",
+                    emailTitle: "By email",
+                    emailDelay: "Reply within 24 to 48 hours (business days).",
+                    phoneTitle: "By phone",
+                    phoneHours: "Monday to Friday, 9am – 6pm.",
+                    chatTitle: "Live chat",
+                    chatDescription: "Chat with an advisor when live chat is available.",
+                    openChat: "Open chat",
+                },
+            },
+            featuredOrders: {
+                title: "My featured orders",
+                subtitle: "Track boosted listings and their end dates.",
+                empty: "No featured order yet.",
+                day: "day",
+                from: "From",
+                to: "to",
+                table: {
+                    listing: "Listing",
+                    plan: "Plan",
+                    period: "Period",
+                    status: "Status",
+                    actions: "Actions",
+                },
+                actions: {
+                    refresh: "Refresh",
+                    viewListing: "View listing",
+                },
+                status: {
+                    active: "Active",
+                    pending: "Pending",
+                    cancelled: "Cancelled",
+                    expired: "Expired",
+                },
+                errors: {
+                    loadFailed: "Failed to load featured orders",
+                },
+            },
+            listings: {
+                title: "My listings",
+                subtitle: "Manage your listings and monitor their performance.",
+                empty: "No listing found.",
+                filters: {
+                    searchPlaceholder: "Search...",
+                    newest: "Newest first",
+                    oldest: "Oldest first",
+                    priceHigh: "Price: high to low",
+                    priceLow: "Price: low to high",
+                    views: "Most viewed",
+                },
+                table: {
+                    listing: "Listing",
+                    price: "Price",
+                    status: "Status",
+                    views: "Views",
+                    date: "Date",
+                    actions: "Actions",
+                },
+                status: {
+                    pending: "Pending",
+                    published: "Published",
+                    suspended: "Suspended",
+                    sold: "Sold",
+                    rejected: "Rejected",
+                },
+                actions: {
+                    delete: "Delete",
+                    cancel: "Cancel",
+                },
+                deleteModal: {
+                    title: "Delete this listing?",
+                    description: "This action cannot be undone.",
+                },
+                errors: {
+                    loadFailed: "Failed to load your listings",
+                    deleteFailed: "Unable to delete listing",
+                    statusUpdateFailed: "Failed to update status",
+                },
+                success: {
+                    deleted: "Listing deleted",
+                    statusUpdated: "Status updated",
+                },
+            },
+        },
 
     },
 

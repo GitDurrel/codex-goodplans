@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useLanguage } from "../../lib/language/LanguageContext";
 
 import {
   apiAdminGetListings,
@@ -46,6 +47,7 @@ type ModalState = {
 const ITEMS_PER_PAGE = 10;
 
 export default function AdminListingsPage() {
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const [listings, setListings] = useState<AdminListing[]>([]);
@@ -108,7 +110,7 @@ export default function AdminListingsPage() {
   const normalizeStatus = (l: AdminListing): string => {
     const raw =
       l.status ??
-      (l.is_approved ? "Publié" : "En attente");
+      (l.is_approved ? "Publié" : t("admin.common.status.pending"));
     return raw.toString().toLowerCase();
   };
 
@@ -123,7 +125,7 @@ export default function AdminListingsPage() {
     }
     if (s.includes("attente") || s === "pending") {
       return {
-        label: "En attente",
+        label: t("admin.common.status.pending"),
         className: "bg-amber-50 text-amber-700",
       };
     }
@@ -147,7 +149,7 @@ export default function AdminListingsPage() {
     }
     if (s.includes("archive")) {
       return {
-        label: "Archivé",
+        label: t("admin.common.status.archived"),
         className: "bg-slate-50 text-slate-700",
       };
     }
@@ -469,8 +471,8 @@ export default function AdminListingsPage() {
       {/* stats */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
         <StatCard label="Total annonces" value={stats.total} icon={Tag} />
-        <StatCard label="En attente" value={stats.pending} icon={AlertCircle} />
-        <StatCard label="Publiées" value={stats.published} icon={Check} />
+        <StatCard label={t("admin.common.status.pending")} value={stats.pending} icon={AlertCircle} />
+        <StatCard label={t("admin.listings.stats.published")} value={stats.published} icon={Check} />
         <StatCard label="Suspendues" value={stats.suspended} icon={Pause} />
       </div>
 
@@ -620,7 +622,7 @@ export default function AdminListingsPage() {
                       {l.price?.toLocaleString("fr-FR")} MAD
                     </div>
                     <div className="text-xs text-slate-500">
-                      {l.transaction_type || "Non spécifié"}
+                      {l.transaction_type || t("admin.listings.table.notSpecified")}
                     </div>
                   </Td>
 

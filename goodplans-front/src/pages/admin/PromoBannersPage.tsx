@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Loader2, Plus, Trash2, Edit3, Check, X } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { useLanguage } from "../../lib/language/LanguageContext";
 
 import {
   type PromoBanner,
@@ -60,7 +61,7 @@ function readImageSize(file: File): Promise<{ width: number; height: number }> {
     };
     img.onerror = () => {
       URL.revokeObjectURL(url);
-      reject(new Error("Impossible de lire l'image"));
+      reject(new Error(t("admin.promoBanners.errors.readImage")));
     };
     img.src = url;
   });
@@ -91,6 +92,7 @@ function parsePlacements(p: any): Record<string, boolean> {
 }
 
 export default function PromoBannersPage() {
+  const { t } = useLanguage();
   const [searchParams] = useSearchParams();
   const fromRequestId = searchParams.get("fromRequest");
 
@@ -188,7 +190,7 @@ export default function PromoBannersPage() {
         });
       } catch (e: any) {
         console.error(e);
-        toast.error(e?.message || "Impossible de pré-remplir l’encart depuis ce devis");
+        toast.error(e?.message || t("admin.promoBanners.errors.prefillFailed"));
       }
     }
 
@@ -304,7 +306,7 @@ export default function PromoBannersPage() {
         err?.data?.message ||
         err?.message;
 
-      toast.error(backendMsg || "Upload impossible. Réessaie plus tard.");
+      toast.error(backendMsg || t("admin.promoBanners.errors.uploadFailed"));
     } finally {
       setUploading(false);
     }
@@ -332,17 +334,17 @@ export default function PromoBannersPage() {
     const end = form.end_date ? toLocalDateOnly(form.end_date) : null;
 
     if (start && start < today) {
-      toast.error("La date de début ne peut pas être dans le passé.");
+      toast.error(t("admin.promoBanners.errors.startDatePast"));
       return;
     }
 
     if (end && end < today) {
-      toast.error("La date de fin ne peut pas être dans le passé.");
+      toast.error(t("admin.promoBanners.errors.endDatePast"));
       return;
     }
 
     if (start && end && end <= start) {
-      toast.error("La date de fin doit être supérieure à la date de début.");
+      toast.error(t("admin.promoBanners.errors.endDateBeforeStart"));
       return;
     }
 
@@ -382,7 +384,7 @@ export default function PromoBannersPage() {
 
       if (mode === "create") {
         await apiCreatePromoBanner(payload);
-        toast.success("Encart publicitaire créé");
+        toast.success(t("admin.promoBanners.success.created"));
 
         if (fromRequestId) {
           try {
@@ -393,7 +395,7 @@ export default function PromoBannersPage() {
         }
       } else if (mode === "edit" && selectedId) {
         await apiUpdatePromoBanner(selectedId, payload);
-        toast.success("Encart publicitaire mis à jour");
+        toast.success(t("admin.promoBanners.success.updated"));
       }
 
       await load();
@@ -411,7 +413,7 @@ export default function PromoBannersPage() {
     try {
       setDeleting(true);
       await apiDeletePromoBanner(id as any);
-      toast.success("Encart supprimé");
+      toast.success(t("admin.promoBanners.success.deleted"));
       if (selectedId === id) resetToCreate();
       await load();
     } catch (e: any) {
@@ -550,7 +552,7 @@ export default function PromoBannersPage() {
         {/* Formulaire */}
         <div className="bg-white rounded-lg shadow-lg border border-gray-100 p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-1">
-            {mode === "create" ? "Créer un encart publicitaire" : "Modifier l’encart"}
+            {mode === "create" ? t("admin.promoBanners.form.createTitle") : t("admin.promoBanners.form.editTitle")}
           </h2>
 
           <p className="text-xs text-gray-500 mb-4">
@@ -736,7 +738,7 @@ export default function PromoBannersPage() {
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm hover:from-blue-700 hover:to-blue-800 disabled:opacity-60 shadow-md transition"
               >
                 {saving && <Loader2 className="h-4 w-4 animate-spin" />}
-                {mode === "create" ? "Créer l’encart" : "Enregistrer les modifications"}
+                {mode === "create" ? t("admin.promoBanners.actions.create") : t("admin.promoBanners.actions.saveChanges")}
               </button>
             </div>
           </form>

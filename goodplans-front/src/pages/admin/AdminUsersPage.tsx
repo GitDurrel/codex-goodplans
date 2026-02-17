@@ -29,6 +29,7 @@ import {
   type AdminRole,
 } from "../../features/admin/adminApi";
 import { toast } from "react-hot-toast";
+import { useLanguage } from "../../lib/language/LanguageContext";
 
 type Filters = {
   search: string;
@@ -47,6 +48,7 @@ function isBanned(user: AdminUser): boolean {
 }
 
 export default function AdminUsersPage() {
+  const { t } = useLanguage();
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [meta, setMeta] = useState<UsersMeta | null>(null);
   const [page, setPage] = useState(1);
@@ -211,7 +213,7 @@ export default function AdminUsersPage() {
 
       if (type === "unban") {
         await apiUnbanUser(user.user_id);
-        toast.success("Utilisateur débanni");
+        toast.success(t("admin.users.success.unbanned"));
         setUsers((prev) =>
           prev.map((u) =>
             u.user_id === user.user_id
@@ -223,7 +225,7 @@ export default function AdminUsersPage() {
 
       if (type === "approveSeller") {
         await apiApproveSeller(user.user_id);
-        toast.success("Vendeur approuvé");
+        toast.success(t("admin.users.success.sellerApproved"));
         setUsers((prev) =>
           prev.map((u) =>
             u.user_id === user.user_id ? { ...u, seller_approved: true } : u
@@ -240,7 +242,7 @@ export default function AdminUsersPage() {
         }
 
         await apiRejectSeller(user.user_id, reason);
-        toast.success("Vendeur rejeté");
+        toast.success(t("admin.users.success.sellerRejected"));
         setUsers((prev) =>
           prev.map((u) =>
             u.user_id === user.user_id
@@ -252,7 +254,7 @@ export default function AdminUsersPage() {
 
       if (type === "delete") {
         await apiDeleteUser(user.user_id);
-        toast.success("Utilisateur supprimé");
+        toast.success(t("admin.users.success.deleted"));
         setUsers((prev) => prev.filter((u) => u.user_id !== user.user_id));
       }
     } catch (err: any) {
@@ -278,7 +280,7 @@ export default function AdminUsersPage() {
     try {
       setAdminLoading(true);
       await apiCreateAdmin({ email, role: adminRole });
-      toast.success("Administrateur créé avec succès");
+      toast.success(t("admin.users.success.adminCreated"));
       setShowAdminModal(false);
       setAdminEmail("");
       setAdminRole("admin");

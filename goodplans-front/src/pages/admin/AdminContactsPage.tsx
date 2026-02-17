@@ -5,6 +5,7 @@ import {
   Pencil,
 } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { useLanguage } from "../../lib/language/LanguageContext";
 import {
   apiGetContactMessages,
   apiUpdateContactStatus,
@@ -30,22 +31,23 @@ function getStatusColor(status: ContactMessageStatus) {
   }
 }
 
-function getStatusLabel(status: ContactMessageStatus) {
+function getStatusLabel(status: ContactMessageStatus, t: (path: string) => string) {
   switch (status) {
     case "pending":
-      return "En attente";
+      return t("admin.common.status.pending");
     case "read":
-      return "Lu";
+      return t("admin.common.status.read");
     case "replied":
-      return "Répondu";
+      return t("admin.common.status.replied");
     case "archived":
-      return "Archivé";
+      return t("admin.common.status.archived");
     default:
       return status;
   }
 }
 
 export default function AdminContactsPage() {
+  const { t } = useLanguage();
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -77,8 +79,8 @@ export default function AdminContactsPage() {
       }
     } catch (err: any) {
       console.error(err);
-      setError("Erreur lors du chargement des messages");
-      toast.error("Impossible de charger les messages");
+      setError(t("admin.contacts.errors.loadRaw"));
+      toast.error(t("admin.contacts.errors.loadFailed"));
     } finally {
       setLoading(false);
     }
@@ -110,10 +112,10 @@ export default function AdminContactsPage() {
         setSelectedMessage(updated);
       }
 
-      toast.success("Statut mis à jour avec succès");
+      toast.success(t("admin.common.success.statusUpdated"));
     } catch (err) {
       console.error(err);
-      toast.error("Erreur lors de la mise à jour du statut");
+      toast.error(t("admin.common.errors.statusUpdateFailed"));
     }
   }
 
@@ -132,10 +134,10 @@ export default function AdminContactsPage() {
 
       setSelectedMessage(updated);
       setIsEditingNotes(false);
-      toast.success("Notes mises à jour avec succès");
+      toast.success(t("admin.common.success.notesUpdated"));
     } catch (err) {
       console.error(err);
-      toast.error("Erreur lors de la mise à jour des notes");
+      toast.error(t("admin.common.errors.notesUpdateFailed"));
     }
   }
 
@@ -152,9 +154,9 @@ export default function AdminContactsPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Demandes de contact</h1>
+          <h1 className="text-2xl font-bold">{t("admin.contacts.title")}</h1>
           <p className="text-sm text-slate-500">
-            Messages envoyés depuis le formulaire de contact du site.
+            {t("admin.contacts.subtitle")}
           </p>
         </div>
 
@@ -169,8 +171,8 @@ export default function AdminContactsPage() {
             <option value="all">Tous les statuts</option>
             <option value="pending">En attente</option>
             <option value="read">Lus</option>
-            <option value="replied">Répondus</option>
-            <option value="archived">Archivés</option>
+            <option value="replied">{t("admin.contacts.status.repliedPlural")}</option>
+            <option value="archived">{t("admin.contacts.status.archivedPlural")}</option>
           </select>
 
           <button
@@ -190,14 +192,14 @@ export default function AdminContactsPage() {
             onClick={fetchMessages}
             className="ml-2 underline"
           >
-            Réessayer
+            {t("common.retry")}
           </button>
         </div>
       )}
 
       {messages.length === 0 ? (
         <div className="rounded-lg border border-slate-100 bg-white p-6 text-center text-sm text-slate-500">
-          Aucun message trouvé.
+          {t("admin.contacts.empty")}
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -226,7 +228,7 @@ export default function AdminContactsPage() {
                           message.status
                         )}`}
                       >
-                        {getStatusLabel(message.status)}
+                        {getStatusLabel(message.status, t)}
                       </span>
                     </div>
                     <p className="mt-0.5 truncate text-xs text-slate-500">
@@ -250,10 +252,10 @@ export default function AdminContactsPage() {
                 <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                   <div>
                     <h2 className="text-lg font-semibold text-slate-900">
-                      Détails du message
+                      {t("admin.contacts.details.title")}
                     </h2>
                     <p className="mt-1 text-xs text-slate-500">
-                      Reçu le{" "}
+                      {t("admin.contacts.details.receivedAt")}{" "}
                       {new Date(
                         selectedMessage.created_at
                       ).toLocaleDateString("fr-FR", {
@@ -277,8 +279,8 @@ export default function AdminContactsPage() {
                     >
                       <option value="pending">En attente</option>
                       <option value="read">Lu</option>
-                      <option value="replied">Répondu</option>
-                      <option value="archived">Archivé</option>
+                      <option value="replied">{t("admin.common.status.replied")}</option>
+                      <option value="archived">{t("admin.common.status.archived")}</option>
                     </select>
                   </div>
                 </div>
@@ -381,14 +383,14 @@ export default function AdminContactsPage() {
                       className="inline-flex items-center rounded-full border border-blue-600 px-4 py-2 text-xs font-semibold text-blue-600 hover:bg-blue-50"
                     >
                       <Mail className="mr-2 h-4 w-4" />
-                      Répondre par email
+                      {t("admin.common.actions.replyByEmail")}
                     </a>
                   </div>
                 </div>
               </div>
             ) : (
               <div className="flex h-full items-center justify-center rounded-lg border border-dashed border-slate-200 bg-slate-50 p-6 text-sm text-slate-500">
-                Sélectionne un message dans la liste pour voir les détails.
+                {t("admin.contacts.details.selectPrompt")}
               </div>
             )}
           </div>
