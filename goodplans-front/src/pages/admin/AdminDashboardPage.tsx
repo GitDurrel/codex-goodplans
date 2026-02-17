@@ -79,6 +79,7 @@ const madFormatter = new Intl.NumberFormat("fr-MA", {
 });
 
 export default function AdminDashboardPage() {
+  const { t } = useLanguage();
   // ----- filtres dates -----
   const today = useMemo(() => new Date(), []);
   const [from, setFrom] = useState<string>(() => {
@@ -331,7 +332,7 @@ export default function AdminDashboardPage() {
             />
             <StatCard
               icon={Clock}
-              title="En attente"
+              title={t("admin.common.status.pending")}
               value={stats?.pending ?? 0}
               subtitle="En cours de modération"
             />

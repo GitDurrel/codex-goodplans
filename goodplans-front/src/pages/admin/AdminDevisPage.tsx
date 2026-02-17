@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Loader2, FileText, Mail, Pencil, Megaphone } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { useLanguage } from "../../lib/language/LanguageContext";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -12,6 +13,7 @@ import {
 } from "../../features/admin/adminApi";
 
 const Devis = () => {
+  const { t } = useLanguage();
   const [requests, setRequests] = useState<AdvertisingRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -34,7 +36,7 @@ const Devis = () => {
       setError(
         err?.message || "Erreur lors du chargement des demandes de devis"
       );
-      toast.error("Impossible de charger les demandes");
+      toast.error(t("admin.devis.errors.loadFailed"));
     } finally {
       setLoading(false);
     }
@@ -61,10 +63,10 @@ const Devis = () => {
         );
       }
 
-      toast.success("Statut mis à jour avec succès");
+      toast.success(t("admin.common.success.statusUpdated"));
     } catch (err) {
       console.error("Error updating request status:", err);
-      toast.error("Erreur lors de la mise à jour du statut");
+      toast.error(t("admin.common.errors.statusUpdateFailed"));
     }
   };
 
@@ -89,10 +91,10 @@ const Devis = () => {
         prev ? { ...prev, admin_notes: adminNotes } : null
       );
       setIsEditingNotes(false);
-      toast.success("Notes mises à jour avec succès");
+      toast.success(t("admin.common.success.notesUpdated"));
     } catch (err) {
       console.error("Error updating admin notes:", err);
-      toast.error("Erreur lors de la mise à jour des notes");
+      toast.error(t("admin.common.errors.notesUpdateFailed"));
     }
   };
 
@@ -128,13 +130,13 @@ const Devis = () => {
   const getStatusLabel = (status: AdvertisingRequestStatus) => {
     switch (status) {
       case "pending":
-        return "En attente";
+        return t("admin.common.status.pending");
       case "read":
-        return "Lu";
+        return t("admin.common.status.read");
       case "replied":
-        return "Répondu";
+        return t("admin.common.status.replied");
       case "archived":
-        return "Archivé";
+        return t("admin.common.status.archived");
       default:
         return status;
     }

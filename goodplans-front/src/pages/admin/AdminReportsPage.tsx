@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Download, FileText, Filter, RefreshCw } from "lucide-react";
 import { CSVLink } from "react-csv";
 import { toast } from "react-hot-toast";
+import { useLanguage } from "../../lib/language/LanguageContext";
 import { apiRequest } from "../../lib/apiRequest";
 
 // ==== Types qui matchent ton AdminStatsService ====
@@ -74,6 +75,7 @@ function buildQueryString(filters: Filters): string {
 }
 
 export default function AdminReportsPage() {
+  const { t } = useLanguage();
   // Période par défaut : 30 derniers jours
   const [filters, setFilters] = useState<Filters>(() => {
     const now = new Date();
@@ -332,7 +334,7 @@ export default function AdminReportsPage() {
               className="rounded-md border border-slate-200 px-2 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             >
               <option value="">Tous</option>
-              <option value="En attente">En attente</option>
+              <option value="pending">{t("admin.common.status.pending")}</option>
               <option value="Publié">Publié</option>
               <option value="Rejeté">Rejeté</option>
               <option value="Suspendu">Suspendu</option>
@@ -383,7 +385,7 @@ export default function AdminReportsPage() {
           variant="success"
         />
         <StatCard
-          label="En attente"
+          label={t("admin.common.status.pending")}
           value={overview?.listings.pending ?? 0}
           variant="warning"
         />

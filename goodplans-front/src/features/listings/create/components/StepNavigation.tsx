@@ -1,5 +1,5 @@
-// src/features/listings/create/components/StepNavigation.tsx
 import { Loader2 } from "lucide-react";
+import { useLanguage } from "../../../../lib/language/LanguageContext";
 
 interface StepNavigationProps {
   currentStep: number;
@@ -9,8 +9,8 @@ interface StepNavigationProps {
   onNext: () => void;
   disabled?: boolean;
   loading?: boolean;
-  currentStepKey?: string;          // ex: "images"
-  uploadProgress?: number | null;   // 0–100
+  currentStepKey?: string;
+  uploadProgress?: number | null;
 }
 
 export function StepNavigation({
@@ -24,6 +24,7 @@ export function StepNavigation({
   currentStepKey,
   uploadProgress = null,
 }: StepNavigationProps) {
+  const { t } = useLanguage();
   const canGoPrev = currentStep > 0;
 
   const isUploadingImages =
@@ -31,7 +32,6 @@ export function StepNavigation({
 
   return (
     <div className="sticky bottom-0 px-3 py-3 sm:px-6 sm:py-4 bg-gray-50 flex items-center justify-between border-t border-gray-200 shadow-[0_-2px_4px_rgba(0,0,0,0.05)] z-10">
-      {/* BOUTON RETOUR */}
       {canGoPrev ? (
         <button
           type="button"
@@ -43,20 +43,18 @@ export function StepNavigation({
               : "border-gray-200 text-gray-400 cursor-not-allowed bg-gray-50"
           }`}
         >
-          Retour
+          {t("createListing.navigation.back")}
         </button>
       ) : (
-        // pour garder l'alignement
         <div className="w-[90px]" />
       )}
 
-      {/* PROGRESSION UPLOAD IMAGES (centré) */}
       {isUploadingImages ? (
         <div className="flex-1 mx-3 sm:mx-4">
           <div className="relative pt-1">
             <div className="flex mb-1 items-center justify-between">
               <span className="text-xs font-semibold text-blue-600">
-                Téléchargement
+                {t("createListing.navigation.uploading")}
               </span>
               <span className="text-xs font-semibold text-blue-600">
                 {Math.round(uploadProgress)}%
@@ -71,15 +69,13 @@ export function StepNavigation({
           </div>
         </div>
       ) : (
-        // si pas d'upload, on affiche juste l’info d’étape au centre
         <div className="flex-1 mx-3 sm:mx-4 text-center">
           <span className="text-xs text-gray-500">
-            Étape {currentStep + 1} / {totalSteps}
+            {t("createListing.navigation.step")} {currentStep + 1} / {totalSteps}
           </span>
         </div>
       )}
 
-      {/* BOUTON SUIVANT / PUBLIER */}
       <button
         type="button"
         onClick={onNext}
@@ -96,7 +92,7 @@ export function StepNavigation({
             aria-hidden="true"
           />
         )}
-        {isLastStep ? "Publier l'annonce" : "Suivant"}
+        {isLastStep ? t("createListing.navigation.publish") : t("createListing.navigation.next")}
       </button>
     </div>
   );

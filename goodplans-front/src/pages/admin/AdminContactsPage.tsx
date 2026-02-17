@@ -5,6 +5,7 @@ import {
   Pencil,
 } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { useLanguage } from "../../lib/language/LanguageContext";
 import {
   apiGetContactMessages,
   apiUpdateContactStatus,
@@ -33,19 +34,20 @@ function getStatusColor(status: ContactMessageStatus) {
 function getStatusLabel(status: ContactMessageStatus) {
   switch (status) {
     case "pending":
-      return "En attente";
+      return t("admin.common.status.pending");
     case "read":
-      return "Lu";
+      return t("admin.common.status.read");
     case "replied":
-      return "Répondu";
+      return t("admin.common.status.replied");
     case "archived":
-      return "Archivé";
+      return t("admin.common.status.archived");
     default:
       return status;
   }
 }
 
 export default function AdminContactsPage() {
+  const { t } = useLanguage();
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -78,7 +80,7 @@ export default function AdminContactsPage() {
     } catch (err: any) {
       console.error(err);
       setError("Erreur lors du chargement des messages");
-      toast.error("Impossible de charger les messages");
+      toast.error(t("admin.contacts.errors.loadFailed"));
     } finally {
       setLoading(false);
     }
@@ -110,10 +112,10 @@ export default function AdminContactsPage() {
         setSelectedMessage(updated);
       }
 
-      toast.success("Statut mis à jour avec succès");
+      toast.success(t("admin.common.success.statusUpdated"));
     } catch (err) {
       console.error(err);
-      toast.error("Erreur lors de la mise à jour du statut");
+      toast.error(t("admin.common.errors.statusUpdateFailed"));
     }
   }
 
@@ -132,10 +134,10 @@ export default function AdminContactsPage() {
 
       setSelectedMessage(updated);
       setIsEditingNotes(false);
-      toast.success("Notes mises à jour avec succès");
+      toast.success(t("admin.common.success.notesUpdated"));
     } catch (err) {
       console.error(err);
-      toast.error("Erreur lors de la mise à jour des notes");
+      toast.error(t("admin.common.errors.notesUpdateFailed"));
     }
   }
 

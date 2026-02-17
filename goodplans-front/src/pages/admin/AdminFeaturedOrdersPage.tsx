@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { Loader2, Star, XCircle } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { useLanguage } from "../../lib/language/LanguageContext";
 import { Link } from "react-router-dom";
 import {
   apiAdminGetFeaturedOrders,
@@ -25,12 +26,12 @@ function getStatusBadgeClasses(status: FeaturedOrderStatus) {
   }
 }
 
-function getStatusLabel(status: FeaturedOrderStatus) {
+function getStatusLabel(status: FeaturedOrderStatus, t: (path: string) => string) {
   switch (status) {
     case "ACTIVE":
       return "Active";
     case "PENDING":
-      return "En attente";
+      return t("admin.common.status.pending");
     case "EXPIRED":
       return "Expirée";
     case "CANCELLED":
@@ -41,6 +42,7 @@ function getStatusLabel(status: FeaturedOrderStatus) {
 }
 
 const AdminFeaturedOrdersPage = () => {
+  const { t } = useLanguage();
   const [orders, setOrders] = useState<AdminFeaturedOrder[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -246,7 +248,7 @@ const AdminFeaturedOrdersPage = () => {
                           order.status
                         )}`}
                       >
-                        {getStatusLabel(order.status)}
+                        {getStatusLabel(order.status, t)}
                       </span>
                     </td>
 
